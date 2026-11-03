@@ -2,691 +2,445 @@
 <html lang="fr">  
 <head>  
 <meta charset="UTF-8"/>  
-<meta name="viewport" content="width=device-width,initial-scale=1"/>  
-<title>Crédit Mutuel</title>  
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>  
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>  
+<title>Banque Atlantique</title>  
 <style>  
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}  
-html,body{font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;background:#ffffff;min-height:100vh;font-size:16px}  
-button,input,select{font-family:inherit;font-size:16px!important}  
-:root{--blue:#0a3e7a;--dblue:#082d58;--red:#e2001a;--navy2:#f0f6ff;--dark:#1a1a1a;--gray:#6b7280;--border:#c8dff5}  
-.login-page{min-height:100vh;background:linear-gradient(135deg,#e8f1ff 0%,#f0f6ff 40%,#dde9ff 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}  
-.login-logo-wrap{display:flex;align-items:center;gap:12px;margin-bottom:6px}  
-.login-logo-icon{display:flex;align-items:center;justify-content:center}  
-.login-logo-img{width:250px;max-width:80vw;height:auto;display:block}  
-.login-logo{font-size:22px;font-weight:900;color:#004d85;letter-spacing:1px}  
-.login-sub{font-size:10px;color:#0066b3;margin-bottom:32px;letter-spacing:2px;text-align:center;text-transform:uppercase}  
-.login-card{width:100%;max-width:340px;background:rgba(255,255,255,0.98);border-radius:16px;padding:24px 20px;box-shadow:0 8px 40px rgba(0,0,0,0.12),0 0 0 1px rgba(0,102,179,0.15)}  
-.login-field{margin-bottom:14px}  
-.login-field label{display:block;font-size:10px;font-weight:600;color:rgba(0,77,133,0.8);margin-bottom:5px;text-transform:uppercase;letter-spacing:.8px}  
-.login-field input{width:100%;padding:11px 13px;border:1.5px solid rgba(0,102,179,0.2);border-radius:9px;font-size:13px;color:#003355;outline:none;background:rgba(0,77,133,0.04)}  
-.login-field input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,102,179,0.1)}  
-.login-err{background:rgba(220,38,38,0.1);border:1px solid rgba(220,38,38,0.3);border-radius:8px;padding:9px 13px;font-size:11px;color:#dc2626;margin-bottom:12px;display:none}  
-.login-err.show{display:block}  
-.btn-blue{width:100%;padding:13px;background:linear-gradient(135deg,#004d85,#0066b3);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;margin-top:4px;box-shadow:0 4px 20px rgba(0,102,179,0.3)}  
-.login-footer{font-size:9px;color:rgba(0,77,133,0.5);text-align:center;margin-top:18px;line-height:1.6}  
-.topbar{background:#ffffff;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(0,77,133,0.15)}  
-.topbar-logo-wrap{display:flex;align-items:center;gap:8px}  
-.topbar-logo-img{height:22px;width:auto;display:block}  
-.topbar-logo{font-size:13px;font-weight:900;color:#004d85;letter-spacing:.5px}  
-.topbar-icons{display:flex;align-items:center;gap:14px}  
-.topbar-icons svg{width:20px;height:20px;color:#0066b3}  
-  
-/* ── Compte (Accueil) : rouge & blanc ── */  
-.solde-card{background:linear-gradient(135deg,#e2001a 0%,#c40016 100%);margin:10px 10px 0;border-radius:14px;padding:18px 17px;border:1px solid #e2001a;box-shadow:0 4px 24px rgba(226,0,26,0.25)}  
-.solde-label{font-size:10px;color:rgba(255,255,255,0.85);font-weight:600;letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px}  
-.solde-amount{font-size:26px;font-weight:800;color:#ffffff;letter-spacing:0;white-space:nowrap}  
-.solde-ville{font-size:11px;color:rgba(255,255,255,0.85);margin-top:6px}  
-.section{background:#ffffff;margin:10px 10px 0;border-radius:11px;padding:13px;border:1px solid #f3c4ca}  
-.section-title{font-size:10px;font-weight:800;color:#e2001a;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px}  
-.histo-row{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid #f6dde0}  
-.histo-row:last-child{border-bottom:none}  
-.histo-icon{width:34px;height:34px;border-radius:50%;background:#fdecee;border:1px solid #f3c4ca;display:flex;align-items:center;justify-content:center;flex-shrink:0}  
-.histo-icon svg{width:16px;height:16px;color:#e2001a}  
-.histo-info{flex:1}  
-.histo-name{font-size:12px;font-weight:600;color:#1a1a1a}  
-.histo-date{font-size:10px;color:#888;margin-top:2px}  
-.histo-right{text-align:right}  
-.histo-montant{font-size:13px;font-weight:800}  
-.histo-montant.pos{color:#e2001a}  
-  
-.lg-wrap{max-width:430px;margin:0 auto;min-height:100vh;background:#fff}  
-.lg-head{background:linear-gradient(180deg,#d63b38 0%,#c92d27 100%);padding:34px 20px 30px;text-align:center}  
-.lg-logo-pill{display:inline-block;background:#fff;border-radius:14px;padding:12px 18px;box-shadow:0 4px 14px rgba(0,0,0,0.12)}  
-.lg-logo-pill img{display:block;width:210px;max-width:62vw;height:auto}  
-.lg-espace{margin-top:16px;color:#fff;font-size:12px;font-weight:600;letter-spacing:3px;text-transform:uppercase;opacity:.95}  
-.lg-body{padding:30px 22px 40px}  
-.lg-title{font-size:26px;font-weight:800;color:#141c3a}  
-.lg-sub{font-size:14px;color:#6f7691;margin:4px 0 22px}  
-.lg-label{display:block;font-size:13px;font-weight:700;color:#141c3a;margin:0 0 8px}  
-.lg-field{position:relative;margin-bottom:18px}  
-.lg-field input{width:100%;padding:16px 46px 16px 48px;background:#f3f4fa;border:1.5px solid #e4e6f1;border-radius:16px;color:#141c3a;outline:none}  
-.lg-field input::placeholder{color:#a3a8bb}  
-.lg-field input:focus{border-color:#c8302a;background:#fff}  
-.lg-ic{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:#5a6280}  
-.lg-eye{position:absolute;right:14px;top:50%;transform:translateY(-50%);width:22px;height:22px;color:#5a6280;cursor:pointer}  
-.lg-forgot{text-align:right;font-size:13px;font-weight:700;color:#c8302a;margin:-4px 0 34px;cursor:pointer}  
-.lg-btn{width:100%;border:none;border-radius:30px;padding:18px;background:linear-gradient(180deg,#d63b38,#c92d27);color:#fff;font-weight:700;cursor:pointer;box-shadow:0 8px 20px rgba(200,48,42,0.28)}  
-.lg-or{display:flex;align-items:center;gap:12px;color:#6f7691;font-size:13px;margin:20px 0}  
-.lg-or:before,.lg-or:after{content:"";flex:1;height:1px;background:#e4e6ec}  
-.lg-face{width:100%;border:1.5px solid #e4e6f1;background:#fff;border-radius:30px;padding:16px;color:#141c3a;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer}  
-.lg-face svg{width:20px;height:20px;color:#5a6280}  
-.lg-foot{text-align:center;font-size:14px;color:#141c3a;margin-top:20px}  
-.lg-foot b{color:#c8302a}  
-.cartes-wrap{background:#f5f5f7;min-height:100vh;padding:18px 14px 110px}  
-.cc{position:relative;width:100%;aspect-ratio:1.586;perspective:1200px;cursor:pointer}  
-.cc-inner{position:relative;width:100%;height:100%;transition:transform .75s cubic-bezier(.45,.05,.25,1);transform-style:preserve-3d;-webkit-transform-style:preserve-3d}  
-.cc.flipped .cc-inner{transform:rotateY(180deg)}  
-.cc-face{position:absolute;top:0;left:0;right:0;bottom:0;border-radius:20px;overflow:hidden;color:#fff;-webkit-backface-visibility:hidden;backface-visibility:hidden;box-shadow:0 10px 26px rgba(0,0,0,.22)}  
-.cc-front{padding:18px 20px;display:flex;flex-direction:column;justify-content:space-between}  
-.cc-back{transform:rotateY(180deg)}  
-.cc-front:before{content:"";position:absolute;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.08);top:-130px;right:-90px;pointer-events:none}  
-.cc-front:after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.05);bottom:-110px;left:-60px;pointer-events:none}  
-.cc-top{display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:1}  
-.cc-bank{font-size:15px;font-weight:800;letter-spacing:.3px}  
-.cc-name{font-size:10px;letter-spacing:2px;text-transform:uppercase;opacity:.8;margin-top:3px}  
-.cc-nfc{width:26px;height:26px;opacity:.9}  
-.cc-chip{width:42px;height:32px;border-radius:7px;background:linear-gradient(135deg,#d9b84a,#f6e8a6 50%,#c9a23a);position:relative;z-index:1;box-shadow:inset 0 0 0 1px rgba(0,0,0,.18)}  
-.cc-chip:before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(0,0,0,.25)}  
-.cc-chip:after{content:"";position:absolute;top:0;bottom:0;left:50%;width:1px;background:rgba(0,0,0,.25)}  
-.cc-bottom{position:relative;z-index:1}  
-.cc-num{font-family:'SF Mono',Menlo,Consolas,monospace;font-size:19px;letter-spacing:2px;font-weight:600;margin-bottom:12px;text-shadow:0 1px 2px rgba(0,0,0,.25);white-space:nowrap}  
-.cc-num.reveal{animation:ccFade .5s}  
-@keyframes ccFade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}  
-.cc-row{display:flex;align-items:flex-end;gap:22px}  
-.cc-row span{display:block;font-size:8px;letter-spacing:1.5px;text-transform:uppercase;opacity:.65;margin-bottom:2px}  
-.cc-row b{font-size:12px;font-weight:700;letter-spacing:.5px}  
-.cc-visa{margin-left:auto;font-size:24px;font-weight:900;font-style:italic;letter-spacing:1px}  
-.cc-mc{margin-left:auto;display:flex}  
-.cc-mc i{width:28px;height:28px;border-radius:50%;display:block}  
-.cc-mc i:first-child{background:#eb001b}  
-.cc-mc i:last-child{background:#f79e1b;margin-left:-11px;opacity:.92}  
-.cc-hint{text-align:center;font-size:12px;color:#8a8fa5;margin:11px 0 24px}  
-.pro-title{font-size:13px;font-weight:800;color:#1a2340;margin:6px 2px 10px;letter-spacing:.3px}  
-.pro-row{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1.5px solid #e3e3e8;border-radius:14px;padding:14px 16px;margin-bottom:9px;font-size:13px}  
-.pro-row span{color:#6f7691}  
-.pro-row b{color:#141c3a;font-weight:700}  
-.pro-row b.ok{color:#3f8f5a}  
-.cc-back{display:block}  
-.cc-front,.cc-back{transition:opacity 0s linear .37s}  
-.cc-front{opacity:1}  
-.cc-back{opacity:0}  
-.cc.flipped .cc-front{opacity:0}  
-.cc.flipped .cc-back{opacity:1}  
-.cc-stripe{position:absolute;left:0;right:0;top:8%;height:18%;background:#0a0a0a}  
-.cc-cvvbar{position:absolute;left:5%;right:5%;top:47%;height:19%;background:#fff;border-radius:12px;display:flex;align-items:center;justify-content:space-between;padding:0 6%}  
-.cc-cvvbar span{font-size:17px;font-weight:700;color:#6f7691;letter-spacing:.5px}  
-.cc-cvvbar b{font-size:30px;font-weight:800;color:#141c3a;letter-spacing:5px}  
-.cc-backhint{position:absolute;left:0;right:0;bottom:8%;text-align:center;font-size:14px;color:rgba(255,255,255,.72)}  
-.cc-hint{min-height:16px}  
-.pg-wrap{background:#f5f5f7;min-height:100vh;padding:18px 14px 110px}  
-.pg-card{background:#fff;border:1.5px solid #e3e3e8;border-radius:18px;padding:16px;margin-bottom:12px}  
-.ring-wrap{position:relative;display:inline-block}  
-.ring-c{position:absolute;left:0;top:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}  
-.ring-c small{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#8a8fa5}  
-.ring-c b{font-size:15px;color:#141c3a;font-weight:800;margin-top:2px}  
-.ac-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}  
-.ac-ic,.menu-ic,.rl-dl{width:38px;height:38px;border-radius:50%;background:#fdecee;color:#c8302a;display:flex;align-items:center;justify-content:center;flex-shrink:0}  
-.ac-ic svg,.menu-ic svg,.rl-dl svg{width:19px;height:19px}  
-.ac-head b{display:block;font-size:15px;color:#141c3a}  
-.ac-head span{font-size:11px;color:#8a8fa5}  
-.ac-center{text-align:center;margin:6px 0 14px}  
-.kv{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-top:1px solid #f0f0f4;font-size:13px}  
-.kv span{color:#6f7691;white-space:nowrap}  
-.kv b{color:#141c3a;text-align:right;font-weight:700}  
-.mini-row{display:flex;gap:10px}  
-.mini-row .pg-card{flex:1;text-align:center;padding:14px 8px}  
-.mini-row p{font-size:12px;font-weight:700;color:#141c3a;margin:8px 0 2px}  
-.mini-row small{font-size:10px;color:#8a8fa5}  
-.back-btn{display:inline-flex;align-items:center;gap:4px;color:#c8302a;font-weight:700;font-size:13px;cursor:pointer;margin-bottom:8px}  
-.rl-row,.menu-row,.al-row{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid #e3e3e8;border-radius:16px;padding:12px 14px;margin-bottom:9px}  
-.rl-info,.al-info{flex:1}  
-.rl-info b,.al-info b{display:block;font-size:13px;color:#141c3a}  
-.rl-info span,.al-info span{font-size:11px;color:#8a8fa5;display:block;margin-top:2px}  
-.rl-ring{position:relative;width:44px;height:44px;flex-shrink:0}  
-.rl-ring .ring-c b{font-size:10px;margin:0}  
-.menu-row span{flex:1;font-size:13px;font-weight:600;color:#141c3a}  
-.menu-row .chev{width:16px;height:16px;color:#b2b6c6}  
-.al-dot{width:9px;height:9px;border-radius:50%;background:#e2392a;flex-shrink:0}  
-.pl-head{background:linear-gradient(135deg,#d63b38,#a8121a);border-radius:20px;padding:20px 18px;display:flex;align-items:center;gap:14px;color:#fff;margin-bottom:14px;box-shadow:0 8px 20px rgba(200,48,42,.25)}  
-.pl-av{width:58px;height:58px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0}  
-.pl-head b{display:block;font-size:17px}  
-.pl-head span{font-size:12px;opacity:.85}  
-.pl-out{width:100%;margin-top:8px;padding:15px;background:#fff;border:1.5px solid #c8302a;color:#c8302a;border-radius:30px;font-weight:700;cursor:pointer}  
-.histo-montant.neg{color:#141c3a}  
-.vir-err{color:#c8302a;font-size:12px;font-weight:600;text-align:center;margin:0 0 6px}  
-.ov{position:fixed;left:0;right:0;top:0;bottom:0;background:rgba(10,15,30,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:24px}  
-.ov-card{background:#fff;border-radius:22px;padding:26px 22px;max-width:340px;width:100%;text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.25)}  
-.ov-ic{width:60px;height:60px;border-radius:50%;background:#e9f6ee;color:#3f8f5a;margin:0 auto 14px;display:flex;align-items:center;justify-content:center}  
-.ov-ic svg{width:30px;height:30px}  
-.ov-card h3{font-size:19px;color:#141c3a;margin-bottom:6px}  
-.ov-card p{font-size:13px;color:#6f7691}  
-.ov-amt{font-size:24px;font-weight:800;color:#c8302a;margin:10px 0 18px}  
-.ov-btn{width:100%;border:none;border-radius:30px;padding:15px;background:linear-gradient(135deg,#e2001a,#b3261e);color:#fff;font-weight:700;cursor:pointer}  
-.pro-row b{text-align:right}  
-.pro-title{margin-top:16px}  
-.cpt-card{background:linear-gradient(135deg,#d63b38,#a8121a);color:#fff;border-radius:20px;padding:18px;box-shadow:0 8px 20px rgba(200,48,42,.25)}  
-.cpt-top{display:flex;justify-content:space-between;align-items:center;font-size:11px;letter-spacing:1px;text-transform:uppercase;opacity:.9}  
-.cpt-pill{background:rgba(255,255,255,.2);border-radius:20px;padding:3px 10px;font-size:10px;font-weight:700;letter-spacing:.5px}  
-.cpt-amt{font-size:28px;font-weight:800;margin:10px 0 4px;white-space:nowrap}  
-.cpt-sub{font-size:12px;opacity:.85}  
-.quick-row{display:flex;gap:8px;margin:12px 10px 0}  
-.quick-btn{flex:1;background:#fff;border:1px solid #ececf3;border-radius:12px;padding:12px 4px 10px;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,0.04)}  
-.quick-btn svg{width:22px;height:22px;color:#c8302a}  
-.quick-btn span{font-size:11px;font-weight:500;color:#1a2340}  
-.vir-wrap{background:#f5f5f7;min-height:100vh;padding:18px 14px 110px}  
-.vir-title{font-size:22px;font-weight:800;color:#1a1a1a}  
-.vir-sub{font-size:12px;color:#9a9aa5;margin:3px 0 14px}  
-.vir-card{background:#fff;border:1.5px solid #e3e3e8;border-radius:16px;padding:14px 16px 12px;margin-bottom:11px}  
-.vir-card label{display:block;font-size:10px;font-weight:700;color:#c8302a;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px}  
-.vir-card input{width:100%;border:none;outline:none;background:transparent;color:#1a1a1a;padding:0;font-size:16px}  
-.vir-card input::placeholder{color:#a9a9b3}  
-.vir-solde{display:flex;justify-content:space-between;align-items:center;padding:10px 6px 14px}  
-.vir-solde b{font-size:13px;color:#000}  
-.vir-solde span{font-size:13px;font-weight:800;color:#3f8f5a}  
-.vir-send{width:100%;border:none;border-radius:30px;padding:17px;background:linear-gradient(135deg,#e2001a,#b3261e);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;box-shadow:0 6px 18px rgba(200,48,42,0.3)}  
-.vir-send svg{width:18px;height:18px}  
-.bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:#ffffff;display:flex;padding:9px 0 16px;z-index:200;border-top:1px solid #ececf3}  
-.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}  
-.bn-item svg{width:24px;height:24px;color:#6b7090;overflow:visible}  
-.bn-item span{font-size:10px;color:#6b7090;font-weight:500;white-space:nowrap}  
-.bn-item.active svg{color:#c8302a}  
-.bn-item.active span{color:#c8302a;font-weight:700}  
-.app-wrap{display:flex;flex-direction:column;min-height:100vh;background:#fff;max-width:430px;margin:0 auto}  
+body{background:#f2f2f2;font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;max-width:95%;margin:0 auto;min-height:100vh}  
+button{font-family:inherit;cursor:pointer}  
+:root{--red:#d07a00}  
+.login-wrap{min-height:100vh;display:flex;flex-direction:column;background:#fff}  
+.login-top{background:#d07a00;padding:40px 24px 32px;display:flex;flex-direction:column;align-items:center}  
+.ba-wordmark{color:#fff;font-size:22px;font-weight:900;letter-spacing:2px}  
+.ba-suisse{color:rgba(255,255,255,.75);font-size:11px;letter-spacing:3px;font-weight:600}  
+.login-body{flex:1;padding:32px 24px;display:flex;flex-direction:column}  
+.field-label{font-size:11px;font-weight:700;color:#555;display:block;margin-bottom:6px;letter-spacing:.5px;text-transform:uppercase}  
+.field-input{width:100%;padding:14px 16px;border-radius:10px;border:1.5px solid #ddd;font-size:16px;color:#1a1a1a;background:#fafafa;outline:none;font-family:inherit}  
+.field-input:focus{border-color:#d07a00}  
+.err-box{background:#fff5f5;border:1px solid #fca5a5;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:#d07a00;font-weight:500}  
+.btn-ba{width:100%;background:#d07a00;color:#fff;border:none;border-radius:10px;padding:15px;font-weight:700;font-size:15px;cursor:pointer;margin-top:14px;display:flex;align-items:center;justify-content:center;gap:10px;transition:opacity 0.2s}  
+.btn-ba:active{opacity:0.85}  
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}  
+.login-spinner{width:20px;height:20px;border:3px solid rgba(255,255,255,0.3);border-top:3px solid #fff;border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0}  
+.splash-card{background:#fff;border-radius:20px;box-shadow:0 8px 32px rgba(0,0,0,0.13);padding:12px 18px 14px;max-width:240px;width:95%;text-align:center;animation:cardBlink 1.2s ease-in-out infinite}  
+@keyframes cardBlink{0%,100%{opacity:1}50%{opacity:0.15}}  
+.splash-icon-wrap{width:44px;height:44px;border-radius:50%;background:#fff3e0;display:flex;align-items:center;justify-content:center;margin:0 auto 8px}  
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.1}}  
+.blink-icon{animation:blink 1.1s ease-in-out infinite}  
+.splash-title{font-size:13px;font-weight:800;color:#1a1a1a;margin-bottom:5px}  
+.splash-msg{font-size:10px;color:#555;line-height:1.4;margin-bottom:10px}  
+.btn-ok{width:100%;background:#d07a00;color:#fff;border:none;border-radius:50px;padding:11px;font-size:15px;font-weight:800;cursor:pointer}  
+.app-wrap{display:flex;flex-direction:column;height:100vh;background:#f2f2f2}  
+.topbar{background:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #eee;position:sticky;top:0;z-index:100}  
+.scroll{flex:1;overflow-y:auto;padding-bottom:70px}  
+.bottombar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:#fff;border-top:1px solid #eee;display:flex;z-index:200}  
+.tab-btn{flex:1;background:none;border:none;padding:10px 0 8px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}  
+.tab-lbl{font-size:10px;color:#aaa;font-weight:500}  
+.tab-lbl.act{color:#d07a00;font-weight:700}  
+.bloque-card{background:#fff5f5;border:1.5px solid #fca5a5;border-radius:10px;margin:12px 14px 0;padding:4px 12px;display:flex;gap:10px;align-items:center}  
+.bloque-icon{width:28px;height:28px;border-radius:50%;background:#d07a00;display:flex;align-items:center;justify-content:center;flex-shrink:0}  
+.bloque-btn{background:#d07a00;color:#fff;border:none;border-radius:6px;padding:2px 7px;font-size:8px;font-weight:700;white-space:nowrap}  
+.solde-grid{display:grid;grid-template-columns:1fr 1fr}  
+.solde-cell{padding:7px 10px}  
+.solde-cell:first-child{border-right:1px solid #f0f0f0}  
+.solde-label{font-size:9px;color:#6b7280;margin-bottom:3px}  
+.solde-val{font-size:14px;font-weight:900;color:#d07a00;line-height:1}  
+.solde-val.black{color:#1a1a1a}  
+.solde-chf{font-size:9px;font-weight:700;color:#6b7280;margin-left:2px}  
+.iban-row{padding:5px 10px;border-top:1px solid #f0f0f0;display:flex;justify-content:space-between}  
+.iban-lbl{font-size:8px;color:#6b7280;font-weight:600;margin-bottom:1px}  
+.iban-val{font-size:9px;color:#1a1a1a;font-weight:600;display:flex;align-items:center;gap:3px}  
+.deblocage-card{background:#fff;border-radius:8px;margin:8px 14px 0;padding:4px 10px;box-shadow:0 1px 4px rgba(0,0,0,.07)}  
+.deblocage-row{display:flex;justify-content:space-between;align-items:center;margin-top:3px}  
+.frais-val{font-size:11px;font-weight:900;color:#d07a00}  
+.gest-card{background:#fff;border-radius:14px;margin:10px 14px 0;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.07)}  
+.gest-head{font-size:10px;font-weight:700;color:#6b7280;letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px}  
+.gest-name{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:2px}  
+.gest-role{font-size:11px;color:#6b7280;margin-bottom:10px}  
+.op-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #f0f0f0}  
+.op-row:last-child{border-bottom:none}  
+.op-icon{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}  
+.op-info{flex:1}  
+.op-date{font-size:11px;color:#6b7280;margin-bottom:2px}  
+.op-label{font-size:13px;font-weight:600;color:#1a1a1a}  
+.op-amt{font-size:13px;font-weight:700}  
+.op-amt.plus{color:#16a34a}  
+.menu-row{display:flex;align-items:center;padding:15px 18px;border-bottom:1px solid #f5f5f5;background:#fff;gap:12px}  
+.menu-row:last-child{border-bottom:none}  
+.menu-icon-wrap{width:34px;height:34px;border-radius:50%;background:#fff5f5;display:flex;align-items:center;justify-content:center;flex-shrink:0}  
+.invest-wrap{padding:14px;padding-bottom:90px}  
+.invest-summary{background:linear-gradient(135deg,#d07a00 0%,#7a1515 100%);border-radius:12px;padding:10px 14px;margin-bottom:10px;color:#fff}  
+.invest-summary-label{font-size:8px;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px}  
+.invest-summary-val{font-size:16px;font-weight:900;margin-bottom:2px}  
+.invest-summary-perf{display:flex;align-items:center;gap:4px;font-size:9px;color:rgba(255,255,255,.85)}  
+.invest-summary-badge{background:rgba(255,255,255,.2);border-radius:20px;padding:2px 7px;font-size:8px;font-weight:700}  
+.invest-summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.15)}  
+.invest-summary-cell{text-align:center}  
+.invest-summary-cell:first-child{border-right:1px solid rgba(255,255,255,.15)}  
+.invest-summary-cell-label{font-size:8px;color:rgba(255,255,255,.6);margin-bottom:2px}  
+.invest-summary-cell-val{font-size:7px;font-weight:800;color:#90ee90}  
+.invest-section-title{font-size:11px;font-weight:700;color:#9b7280;text-transform:uppercase;letter-spacing:.6px;margin:16px 0 8px}  
+.invest-card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:10px}  
+.invest-asset-row{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid #f5f5f5}  
+.invest-asset-row:last-child{border-bottom:none}  
+.invest-asset-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}  
+.invest-asset-info{flex:1;min-width:0}  
+.invest-asset-name{font-size:13px;font-weight:800;color:#1a1a1a;margin-bottom:1px}  
+.invest-asset-detail{font-size:11px;color:#9b7280}  
+.invest-asset-right{text-align:right;flex-shrink:0}  
+.invest-asset-val{font-size:14px;font-weight:800;color:#1a1a1a;margin-bottom:2px}  
+.invest-asset-perf{font-size:7px;font-weight:700}  
+.invest-asset-perf.pos{color:#16a34a}  
+.invest-asset-perf.neg{color:#dc2626}  
+.invest-donut-wrap{padding:18px;display:flex;align-items:center;gap:16px}  
+.invest-legend{flex:1;display:flex;flex-direction:column;gap:8px}  
+.invest-legend-item{display:flex;align-items:center;gap:8px}  
+.invest-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}  
+.invest-legend-name{font-size:12px;color:#555;flex:1}  
+.invest-legend-pct{font-size:12px;font-weight:800;color:#1a1a1a}  
+.invest-bar-row{padding:0 16px 14px}  
+.invest-bar-label-row{display:flex;justify-content:space-between;margin-bottom:5px}  
+.invest-bar-label{font-size:11px;font-weight:700;color:#555}  
+.invest-bar-val{font-size:11px;font-weight:700;color:#1a1a1a}  
+.invest-bar-track{height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden;margin-bottom:12px}  
+.invest-bar-fill{height:100%;border-radius:4px}  
+.invest-perf-row{display:flex;align-items:center;padding:13px 16px;border-bottom:1px solid #f5f5f5}  
+.invest-perf-row:last-child{border-bottom:none}  
+.invest-perf-period{flex:1;font-size:13px;font-weight:600;color:#555}  
+.invest-perf-val{font-size:9px;font-weight:800}  
+.invest-perf-val.pos{color:#16a34a}  
+.card-flip-wrap{width:100%;perspective:1000px;cursor:pointer;margin-bottom:8px}  
+.card-flip-inner{position:relative;width:100%;transition:transform 0.7s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d}  
+.card-flip-inner.flipped{transform:rotateY(180deg)}  
+.card-face{position:absolute;width:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:18px;overflow:hidden}  
+.card-back{transform:rotateY(180deg)}  
+.card-placeholder{width:100%;aspect-ratio:85.6/54;visibility:hidden}  
 </style>  
 </head>  
 <body>  
 <div id="root"></div>  
 <script>  
-var BLUE='#0066b3';  
-var RED='#c8302a';  
-var LOGO_SRC='data:image/png;base64,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';  
-var page='login';  
-var tab='accueil';  
+var BRAND='#d07a00';  
+var currentPage='login';  
+var currentTab='accueil';  
 var loginErr='';  
-var VALID_ID='3535442323';  
-var VALID_CODE='124222';  
+var loginLoading=false;  
+var showCode=false;  
+var cardClicks=0;  
   
-var BANQUE={nom:'Crédit Mutuel',ville:'Paris',solde:180000000.00};  
+var NOM='Nicolas Leclerc';  
+var INITIALES='NL';  
+var EMAIL_TITULAIRE='leclercnicolas229@gmail.com';  
+var SOLDE=1090000;  
+var FRAIS=109000;  
+var VILLE="ABIDJAN / CÔTE D’IVOIRE";  
+var DATE_CREATION='21/05/2008';  
+var NOM_GEST='Thierry Louys';  
+var INITIALES_GEST='TL';  
+var EMAIL_GEST='Thierrylouys41@gmail.com';  
+var N_CLIENT='00 937 251 18';  
   
-var HISTO=[  
-  {montant:87000,date:'14/03/2016'},  
-  {montant:67000,date:'22/05/2016'},  
-  {montant:148000,date:'09/07/2016'},  
-  {montant:277000,date:'18/09/2016'},  
-  {montant:63000,date:'02/11/2016'},  
-  {montant:79000,date:'20/12/2016'}  
-];  
+// FORMAT CORRIGÉ : fr-FR = espaces comme séparateurs de milliers, virgule décimale  
+function fmt(v){  
+  return Math.abs(v).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2});  
+}  
+function getFrDT(){var n=new Date();var d=n.toLocaleDateString('fr-FR',{timeZone:'Africa/Abidjan',day:'2-digit',month:'2-digit',year:'numeric'});var t=n.toLocaleTimeString('fr-FR',{timeZone:'Africa/Abidjan',hour:'2-digit',minute:'2-digit'});return{date:d,time:t};}  
   
-var OPS=[];  
-function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}  
-function todayFr(){return new Date().toLocaleDateString('fr-FR',{timeZone:'Europe/Paris',day:'2-digit',month:'2-digit',year:'numeric'});}  
-function fmt(v){return Math.abs(v).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2});}  
-  
-function cmLogo(size){  
-  size=size||48;  
-  return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 100 90" fill="none">'  
-    +'<path d="M50 4 L94 84 L6 84 Z" fill="#e2001a"/>'  
-    +'<circle cx="50" cy="40" r="16" fill="#ffffff"/>'  
-    +'<circle cx="34" cy="62" r="16" fill="#ffffff"/>'  
-    +'<circle cx="66" cy="62" r="16" fill="#ffffff"/>'  
+function ubsLogo(size){  
+  // Logo officiel Banque Atlantique : cheval galopant dans cercle orange/marron  
+  var s=size;  
+  return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">'  
+    +'<circle cx="50" cy="50" r="47" fill="#fff" stroke="#c07800" stroke-width="5"/>'  
+    +'<g fill="#3d1a00">'  
+    // Corps principal du cheval  
+    +'<path d="M28,62 C26,56 27,50 30,45 C33,40 38,37 43,36 C46,35 48,33 48,30 C48,27 46,24 44,22 C42,20 43,17 46,17 C49,17 52,19 53,22 C55,26 54,31 56,34 C59,36 63,36 66,34 C69,32 70,29 68,26 C67,24 68,22 70,23 C72,24 73,27 72,30 C71,33 68,36 68,39 C68,43 70,46 70,50 C70,54 68,57 65,59 C62,61 58,61 56,63 C54,65 54,68 55,71 C56,74 55,76 53,76 C51,76 50,74 50,71 C50,68 51,65 50,62 C49,60 46,59 43,60 C40,61 38,64 38,67 C38,70 37,73 35,73 C33,73 32,71 33,68 C34,65 35,62 34,60 C33,58 30,58 28,62 Z"/>'  
+    // Tête et cou  
+    +'<path d="M44,22 C43,19 44,16 47,15 C50,14 53,15 55,18 C57,21 56,25 54,27 C52,29 49,29 47,27 C45,25 44,24 44,22 Z"/>'  
+    // Crinière  
+    +'<path d="M47,15 C46,12 48,10 50,11 C52,12 53,14 52,16 C51,14 49,13 47,15 Z"/>'  
+    +'<path d="M50,11 C50,8 52,7 54,9 C53,10 51,10 50,11 Z"/>'  
+    // Jambe avant tendue (galop)  
+    +'<path d="M34,60 C32,57 30,54 28,52 C26,50 25,53 26,56 C27,59 29,61 28,62 Z"/>'  
+    // Jambe arrière tendue  
+    +'<path d="M56,63 C58,65 60,68 59,71 C58,74 56,74 55,71 Z"/>'  
+    // Queue  
+    +'<path d="M70,50 C74,47 78,45 80,42 C78,44 75,47 73,50 C76,49 79,47 81,44 C79,47 77,51 74,53 C72,54 70,53 70,50 Z"/>'  
+    +'</g>'  
     +'</svg>';  
 }  
+function svgEyeOn(){return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="#9b7a7a" stroke-width="1.8"/><circle cx="12" cy="12" r="3" stroke="#9b7a7a" stroke-width="1.8"/></svg>';}  
+function svgEyeOff(){return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94" stroke="#9b7a7a" stroke-width="1.8" stroke-linecap="round"/><line x1="1" y1="1" x2="23" y2="23" stroke="#9b7a7a" stroke-width="1.8" stroke-linecap="round"/></svg>';}  
+function svgHome(a){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z" fill="'+(a?BRAND:'none')+'" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8"/><path d="M9 22V12h6v10" stroke="'+(a?'#fff':'#aaa')+'" stroke-width="1.8"/></svg>';}  
+function svgCard(a){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="2" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8"/><line x1="2" y1="10" x2="22" y2="10" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8"/></svg>';}  
+function svgTransfer(a){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 9h14M5 9l4-4M5 9l4 4" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 15H5M19 15l-4-4M19 15l-4 4" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';}  
+function svgChart(a){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><polyline points="3,17 8,12 13,14 21,7" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="20" x2="21" y2="20" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8" stroke-linecap="round"/></svg>';}  
+function svgDots(a){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="1.5" fill="'+(a?BRAND:'#aaa')+'"/><circle cx="12" cy="12" r="1.5" fill="'+(a?BRAND:'#aaa')+'"/><circle cx="19" cy="12" r="1.5" fill="'+(a?BRAND:'#aaa')+'"/></svg>';}  
+function svgHistory(a){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8"/><polyline points="12,7 12,12 15,15" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8" stroke-linecap="round"/></svg>';}  
+function svgMenu(){return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><line x1="3" y1="6" x2="21" y2="6" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"/><line x1="3" y1="12" x2="21" y2="12" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"/><line x1="3" y1="18" x2="21" y2="18" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"/></svg>';}  
+function svgBell(){return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"/><path d="M13.73 21a2 2 0 01-3.46 0" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"/></svg>';}  
+function svgLogout(){return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"/><polyline points="16,17 21,12 16,7" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><line x1="21" y1="12" x2="9" y2="12" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"/></svg>';}  
+function svgLock(col,size){size=size||20;col=col||'#fff';return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="none"><rect x="3" y="11" width="18" height="12" rx="2" fill="'+col+'" fill-opacity=".15" stroke="'+col+'" stroke-width="1.8"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="'+col+'" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="17" r="1.5" fill="'+col+'"/></svg>';}  
+function svgMail(){return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="#d07a00" stroke-width="1.8"/><path d="M2 8l10 7 10-7" stroke="#d07a00" stroke-width="1.8" stroke-linecap="round"/></svg>';}  
+function svgCopy(){return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="13" height="13" rx="2" stroke="#d07a00" stroke-width="1.8"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke="#d07a00" stroke-width="1.8" stroke-linecap="round"/></svg>';}  
+function svgNfc(){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.6" stroke-linecap="round"><path d="M12 2a10 10 0 010 20"/><path d="M12 6a6 6 0 010 12"/><path d="M12 10a2 2 0 010 4"/></svg>';}  
+function svgTriangle(){return '<svg class="blink-icon" width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="#c0837a" stroke-width="1.6" fill="#fff3e0"/><line x1="12" y1="9" x2="12" y2="13" stroke="#c0837a" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1" fill="#c0837a"/></svg>';}  
   
-function svgBell(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>';}  
-function svgHome(a){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 01-1 1H5a1 1 0 01-1-1z" fill="'+(a?RED:'none')+'"/><path d="M9 22V12h6v10" stroke="'+(a?'#fff':'currentColor')+'"/></svg>';}  
-function svgCard(a){return '<svg viewBox="0 0 24 24" fill="none" stroke="'+(a?RED:'currentColor')+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>';}  
-function svgTransfer(a){return '<svg viewBox="0 0 24 24" fill="none" stroke="'+(a?RED:'currentColor')+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="9" x2="19" y2="9"/><polyline points="15 5 19 9 15 13"/><line x1="19" y1="15" x2="5" y2="15"/><polyline points="9 11 5 15 9 19"/></svg>';}  
-function svgDots(a){return '<svg viewBox="0 0 24 24" fill="none" stroke="'+(a?RED:'currentColor')+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>';}  
-function svgDoc(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2.5"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>';}  
-function svgBellNav(a){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/><circle cx="19" cy="4" r="2.6" fill="#e2392a" stroke="none"/></svg>';}  
-function svgUp(){return '<svg viewBox="0 0 24 24" fill="none" stroke="#141c3a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>';}  
-function svgDown(){return '<svg viewBox="0 0 24 24" fill="none" stroke="#e2001a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="5 12 12 19 19 12"/></svg>';}  
+function donutSVG(){  
+  var data=[{pct:42,color:'#d07a00'},{pct:28,color:'#2563eb'},{pct:18,color:'#16a34a'},{pct:8,color:'#f59e0b'},{pct:4,color:'#7c3aed'}];  
+  var r=44,cx=56,cy=56,stroke=18,circ=2*Math.PI*r,offset=0,slices='';  
+  data.forEach(function(d){var dash=circ*(d.pct/100),gap=circ-dash;slices+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+d.color+'" stroke-width="'+stroke+'" stroke-dasharray="'+dash+' '+gap+'" stroke-dashoffset="'+(-offset)+'" transform="rotate(-90 '+cx+' '+cy+')" />';offset+=dash;});  
+  return '<svg width="112" height="112" viewBox="0 0 112 112">'+slices+'<text x="56" y="52" font-family="Arial" font-weight="900" font-size="13" fill="#1a1a1a" text-anchor="middle">1 500 000</text><text x="56" y="66" font-family="Arial" font-weight="600" font-size="9" fill="#9b7280" text-anchor="middle">EUR total</text></svg>';  
+}  
+function sparklineSVG(pts,col){var w=80,h=32,pad=4,min=Math.min.apply(null,pts),max=Math.max.apply(null,pts),rng=max-min||1;var coords=pts.map(function(v,i){return (pad+i*((w-pad*2)/(pts.length-1)))+','+(h-pad-(((v-min)/rng)*(h-pad*2)));});return '<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'"><polyline points="'+coords.join(' ')+'" fill="none" stroke="'+col+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';}  
   
-function togglePwd(){var i=document.getElementById('inp-code');if(i)i.type=(i.type==='password'?'text':'password');}  
+function flipCard(){  
+  cardClicks++;  
+  if(cardClicks===1){  
+    var g2=document.getElementById('grp2');var g3=document.getElementById('grp3');  
+    if(g2) g2.textContent='8472';if(g3) g3.textContent='9163';  
+  } else {  
+    var ci=document.getElementById('card-inner');  
+    if(ci) ci.classList.toggle('flipped');  
+    cardClicks=0;  
+    var g2=document.getElementById('grp2');var g3=document.getElementById('grp3');  
+    if(g2) g2.textContent='\u2022\u2022\u2022\u2022';if(g3) g3.textContent='\u2022\u2022\u2022\u2022';  
+  }  
+}  
+  
+function showSplashOverlay(){  
+  var d=document.createElement('div');  
+  d.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.5s ease';  
+  var card=document.createElement('div');  
+  card.className='splash-card';  
+  card.innerHTML='<div class="splash-icon-wrap">'+svgTriangle()+'</div><div class="splash-title">&#9888; Compte bloqu&eacute;</div><div class="splash-msg">Votre compte est actuellement bloqu&eacute;. Aucune transaction n\'est possible jusqu\'&agrave; la lib&eacute;ration des fonds.</div><button class="btn-ok" id="ok-btn">OK</button>';  
+  d.appendChild(card);document.body.appendChild(d);  
+  document.getElementById('ok-btn').addEventListener('click',function(){d.style.opacity='0';setTimeout(function(){d.remove();},500);});  
+}  
   
 function renderLogin(){  
-  var user='<svg class="lg-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.2 3.6-7 8-7s8 2.8 8 7"/></svg>';  
-  var lock='<svg class="lg-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>';  
-  var eye='<svg class="lg-eye" onclick="togglePwd()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12z"/><circle cx="12" cy="12" r="3"/></svg>';  
-  var lockSm='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>';  
-  return '<div class="lg-wrap">'  
-    +'<div class="lg-head">'  
-      +'<div class="lg-logo-pill"><img src="'+LOGO_SRC+'" alt="Crédit Mutuel"/></div>'  
-      +'<div class="lg-espace">Espace privé</div>'  
-    +'</div>'  
-    +'<div class="lg-body">'  
-      +'<div class="lg-title">Connexion</div>'  
-      +'<div class="lg-sub">Accédez à votre espace sécurisé</div>'  
-      +'<div id="loginErr" class="login-err'+(loginErr?' show':'')+'">'+loginErr+'</div>'  
-      +'<label class="lg-label">Identifiant</label>'  
-      +'<div class="lg-field">'+user+'<input id="inp-id" type="text" inputmode="numeric" placeholder="Votre identifiant"/></div>'  
-      +'<label class="lg-label">Code d\'accès</label>'  
-      +'<div class="lg-field">'+lock+'<input id="inp-code" type="password" inputmode="numeric" placeholder="••••••"/>'+eye+'</div>'  
-      +'<div class="lg-forgot">Identifiant ou code oublié ?</div>'  
-      +'<button class="lg-btn" id="btnLogin">Connexion</button>'  
-      +'<div class="lg-or">ou</div>'  
-      +'<button class="lg-face">'+lockSm+'Se connecter avec Face ID / Touch ID</button>'  
-      +'<div class="lg-foot">Pas encore client ? <b>Ouvrir un compte</b></div>'  
-    +'</div>'  
-    +'</div>';  
+  return '<div class="login-wrap">'+  
+    '<div class="login-top"><div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:6px">'+ubsLogo(72)+'<div style="color:#fff;font-size:18px;font-weight:900;letter-spacing:2px;text-transform:uppercase;">Banque Atlantique</div></div></div>'+  
+    '<div class="login-body">'+  
+      '<div style="font-size:22px;font-weight:800;color:#1a1a1a;margin-bottom:4px">Connexion</div>'+  
+      '<div style="font-size:13px;color:#6b7280;margin-bottom:28px">Acc&eacute;dez &agrave; votre espace bancaire s&eacute;curis&eacute;</div>'+  
+      '<div style="margin-bottom:14px;position:relative"><label class="field-label">Identifiant client</label><input id="inp-id" class="field-input" type="text" inputmode="numeric" placeholder="Votre identifiant" autocomplete="off"/></div>'+  
+      '<div style="margin-bottom:14px;position:relative"><label class="field-label">Code secret</label><input id="inp-code" class="field-input" type="'+(showCode?'text':'password')+'" inputmode="numeric" placeholder="\u2022\u2022\u2022\u2022\u2022\u2022" autocomplete="off"/><button id="btn-eye" style="position:absolute;right:14px;bottom:14px;background:none;border:none;padding:0;cursor:pointer">'+(showCode?svgEyeOff():svgEyeOn())+'</button></div>'+  
+      (loginErr?'<div class="err-box">'+loginErr+'</div>':'')+  
+      '<button id="btn-login" class="btn-ba" style="display:flex;align-items:center;justify-content:center;gap:10px;transition:opacity 0.2s">Se connecter</button>'+  
+      '<div style="text-align:center;margin-top:20px;font-size:13px;color:#9b7a7a">Identifiant ou code oubli&eacute; ?<br><span style="color:#d07a00;font-weight:700;cursor:pointer">Contactez votre conseiller</span></div>'+  
+    '</div>'+  
+  '</div>';  
 }  
   
-function renderTopbar(){  
-  return '<div class="topbar">'  
-    +'<div class="topbar-logo-wrap"><img class="topbar-logo-img" src="'+LOGO_SRC+'" alt="Crédit Mutuel"/></div>'  
-    +'<div class="topbar-icons"><div style="cursor:pointer" onclick="setTab(\'alertes\');render()">'+svgBell()+'</div></div>'  
-    +'</div>';  
+function renderTopBar(){  
+  return '<div class="topbar">'+  
+    '<button onclick="document.getElementById(\'side-panel\').style.transform=\'translateX(0)\';document.getElementById(\'side-overlay\').style.display=\'block\'" style="background:none;border:none;padding:4px;cursor:pointer">'+svgMenu()+'</button>'+  
+    '<div style="display:flex;align-items:center;gap:8px">'+ubsLogo(34)+'<span style="font-size:13px;font-weight:900;color:#3d1a00;letter-spacing:1px;text-transform:uppercase;line-height:1.1">BANQUE<br>ATLANTIQUE</span></div>'+  
+    '<div style="display:flex;align-items:center;gap:14px">'+  
+      '<div style="position:relative;cursor:pointer" onclick="document.getElementById(\'notif-panel\').style.display=\'flex\'">'+svgBell()+'<div style="position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:#d07a00;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;font-weight:700">2</div></div>'+  
+      '<button id="btn-logout" style="background:none;border:none;padding:4px;cursor:pointer">'+svgLogout()+'</button>'+  
+    '</div>'+  
+  '</div>';  
 }  
   
-function renderBottomNav(){  
-  var items=[  
-    ['accueil','Accueil',svgHome],  
-    ['comptes','Comptes',svgCard],  
-    ['virement','Virements',svgTransfer],  
-    ['cartes','Cartes',svgCard],  
-    ['alertes','Alertes',svgBellNav],  
-    ['plus','Plus',svgDots]  
-  ];  
-  return '<div class="bottom-nav">'+items.map(function(it){  
-    var a=tab===it[0];  
-    return '<div class="bn-item'+(a?' active':'')+'" onclick="setTab(\''+it[0]+'\');render()">'+it[2](a)+'<span>'+it[1]+'</span></div>';  
-  }).join('')+'</div>';  
+function renderBottomBar(){  
+  var tabs=[{id:'accueil',label:'Accueil',svg:svgHome},{id:'comptes',label:'Comptes',svg:svgCard},{id:'virements',label:'Virements',svg:svgTransfer},{id:'historique',label:'Historique',svg:svgHistory},{id:'investissements',label:'Placements',svg:svgChart},{id:'plus',label:'Plus',svg:svgDots}];  
+  return '<div class="bottombar">'+tabs.map(function(t){var a=currentTab===t.id;return '<button class="tab-btn" data-tab="'+t.id+'">'+t.svg(a)+'<span class="tab-lbl'+(a?' act':'')+'">'+t.label+'</span></button>';}).join('')+'</div>';  
 }  
+  
+var IC_VIRIN='<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="11" fill="#e8f5e9"/><path d="M6 8.5h10M14 6.5l2 2-2 2" stroke="#3a7d44" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 13.5H6M8 11.5l-2 2 2 2" stroke="#3a7d44" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';  
+var IC_VIROUT='<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#fee2e2"/><path d="M12 16V8M8 10l4-4 4 4" stroke="#d07a00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';  
+var IC_SHOP='<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#dbeafe"/><path d="M7 8h10l-1.5 7H8.5L7 8z" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/><path d="M5 5h1.5l.5 3" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round"/><circle cx="10" cy="17.5" r="1" fill="#2563eb"/><circle cx="15" cy="17.5" r="1" fill="#2563eb"/></svg>';  
+var IC_GAS='<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#fef3c7"/><rect x="7" y="9" width="5" height="3" rx="0.5" stroke="#d97706" stroke-width="1.5"/><path d="M7 21V8a1 1 0 011-1h4a1 1 0 011 1v13" stroke="#d97706" stroke-width="1.5" stroke-linecap="round"/><path d="M14 12h1a1 1 0 011 1v2a0.5 0.5 0 001 0v-5l-1.5-2" stroke="#d97706" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';  
+var ALL_OPS=[  
+  {date:'17/08/2008',label:'Virement re\u00e7u',detail:'Cr\u00e9dit re\u00e7u',amt:32000,plus:true,bg:'#f0fdf4',ic:IC_VIRIN,devise:'EUR'},  
+  {date:'13/01/2009',label:'Virement re\u00e7u',detail:'Cr\u00e9dit re\u00e7u',amt:21000,plus:true,bg:'#f0fdf4',ic:IC_VIRIN,devise:'EUR'},  
+  {date:'20/12/2013',label:'Virement re\u00e7u',detail:'Cr\u00e9dit re\u00e7u',amt:44000,plus:true,bg:'#f0fdf4',ic:IC_VIRIN,devise:'EUR'},  
+  {date:'07/09/2015',label:'Virement re\u00e7u',detail:'Cr\u00e9dit re\u00e7u',amt:22000,plus:true,bg:'#f0fdf4',ic:IC_VIRIN,devise:'EUR'},  
+  {date:'19/11/2019',label:'Virement re\u00e7u',detail:'Cr\u00e9dit re\u00e7u',amt:18000,plus:true,bg:'#f0fdf4',ic:IC_VIRIN,devise:'EUR'},  
+  {date:'09/09/2020',label:'Virement re\u00e7u',detail:'Cr\u00e9dit re\u00e7u',amt:44000,plus:true,bg:'#f0fdf4',ic:IC_VIRIN,devise:'EUR'},  
+];  
   
 function renderAccueil(){  
-  var all=OPS.concat(HISTO.map(function(o){return {montant:o.montant,date:o.date,type:'in',label:'Virement reçu',sub:''};}));  
-  var h=all.map(function(op){  
-    var out=op.type==='out';  
-    return '<div class="histo-row">'  
-      +'<div class="histo-icon">'+(out?svgUp():svgDown())+'</div>'  
-      +'<div class="histo-info"><div class="histo-name">'+op.label+(op.sub?' — '+esc(op.sub):'')+'</div><div class="histo-date">'+op.date+(op.statut==='en_attente'?' · <span style="color:#2e7d52;font-weight:600;">En attente</span>':op.statut==='bloque'?' · <span style="color:#c8302a;font-weight:600;">Bloqué</span>':'')+'</div></div>'  
-      +'<div class="histo-right"><span class="histo-montant '+(out?'neg':'pos')+'">'+(out?'- ':'+ ')+fmt(op.montant)+' €</span></div>'  
-    +'</div>';  
-  }).join('');  
-  return '<div style="flex:1;overflow-y:auto;padding-bottom:80px">'  
-    +'<div class="solde-card">'  
-      +'<div class="solde-label">Solde du compte</div>'  
-      +'<div class="solde-amount">'+fmt(BANQUE.solde).replace(/[\u202f\u00a0]/g,' ')+'€</div>'  
-      +'<div class="solde-ville">Agence Crédit Mutuel — '+BANQUE.ville+'</div>'  
-    +'</div>'  
-    +'<div class="quick-row">'  
-      +'<div class="quick-btn" onclick="setTab(\'virement\');render()">'+svgTransfer(false)+'<span>Virements</span></div>'  
-      +'<div class="quick-btn" onclick="setTab(\'cartes\');render()">'+svgCard(false)+'<span>Cartes</span></div>'  
-      +'<div class="quick-btn" onclick="setTab(\'releves\');render()">'+svgDoc()+'<span>Relevés</span></div>'  
-      +'<div class="quick-btn" onclick="setTab(\'plus\');render()">'+svgDots(false)+'<span>Plus</span></div>'  
-    +'</div>'  
-    +'<div class="section" style="margin-top:14px">'  
-      +'<div class="section-title">Dernières opérations</div>'  
-      +h  
-    +'</div>'  
-    +'</div>';  
+  var dt=getFrDT();  
+  var ops=ALL_OPS;  
+  return '<div style="padding-bottom:10px">'+  
+    '<div style="background:#fff;border-radius:14px;margin:12px 14px 0;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.07);display:flex;align-items:center;gap:12px"><div style="width:46px;height:46px;border-radius:50%;background:#f5f5f5;display:flex;align-items:center;justify-content:center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#aaa" stroke-width="1.8"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#aaa" stroke-width="1.8" stroke-linecap="round"/></svg></div><div><div style="font-weight:800;font-size:16px;color:#1a1a1a">'+NOM+'</div><div style="font-size:11px;color:#6b7280">Actionnaire &middot; Banque priv&eacute;e Banque Atlantique</div><div style="font-size:10px;color:#aaa;margin-top:1px">Derni&egrave;re connexion : '+dt.date+' &agrave; '+dt.time+'</div></div></div>'+  
+    '<div class="bloque-card"><div class="bloque-icon">'+svgLock('#fff',14)+'</div><div style="flex:1"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-weight:900;font-size:9px;color:#d07a00">COMPTE BLOQU&Eacute;</div><button class="bloque-btn">Bloqu&eacute;</button></div><div style="font-size:8px;color:#555;margin-top:2px">Votre compte est actuellement bloqu&eacute;.<br>Aucune op&eacute;ration n\'est possible jusqu\'&agrave; nouvel ordre.</div></div></div>'+  
+    '<div style="background:#fff;border-radius:14px;margin:12px 14px 0;padding:0;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)"><div class="solde-grid"><div class="solde-cell"><div class="solde-label">Solde disponible</div><div class="solde-val">0,00<span class="solde-chf">EUR</span></div></div><div class="solde-cell"><div class="solde-label">Solde total</div><div class="solde-val black" style="font-size:12px;white-space:nowrap">'+fmt(SOLDE)+' <span class="solde-chf">EUR</span></div></div></div><div class="iban-row"><div><div class="iban-lbl">IBAN</div><div class="iban-val">CI93 BF059 01010100654119 74</div></div><div style="text-align:right"><div class="iban-lbl">BIC / SWIFT</div><div class="iban-val" style="justify-content:flex-end">BAAFCIAB</div></div></div></div>'+  
+    '<div class="deblocage-card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:2px"><div style="width:24px;height:24px;border-radius:50%;background:#fff5f5;display:flex;align-items:center;justify-content:center;flex-shrink:0">'+svgLock('#d07a00',12)+'</div><div style="font-weight:800;font-size:11px;color:#1a1a1a">D&Eacute;TAILS DE D&Eacute;BLOCAGE</div></div><div style="font-size:9px;color:#6b7280;line-height:1.5">Les frais ci-dessous sont n&eacute;cessaires pour lever le blocage.</div><div class="deblocage-row"><span style="font-size:10px;font-weight:700;color:#1a1a1a">Frais de d&eacute;blocage</span><span class="frais-val">'+fmt(FRAIS)+' EUR</span></div></div>'+  
+    '<div class="gest-card"><div class="gest-head">VOTRE GESTIONNAIRE</div><div style="display:flex;gap:12px;align-items:flex-start"><div style="width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#d07a00,#7a1515);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;font-weight:900;font-size:18px">'+INITIALES_GEST+'</div><div style="flex:1"><div class="gest-name">'+NOM_GEST+'</div><div class="gest-role">Conseiller client&egrave;le priv&eacute; &mdash; Banque Atlantique Abidjan</div><div style="display:flex;gap:10px;margin-top:8px"><button onclick="var el=document.getElementById(\'gest-mail\');el.style.display=el.style.display===\'none\'?\'block\':\'none\'" style="display:flex;align-items:center;gap:6px;background:#fff5f5;border:1.5px solid #d07a00;color:#d07a00;border-radius:8px;padding:8px 12px;font-size:12px;font-weight:700;cursor:pointer">'+svgMail()+' Mail</button></div><div id="gest-mail" style="display:none;margin-top:8px;background:#f5f5f5;border-radius:8px;padding:8px 12px;font-size:13px;font-weight:700;color:#1a1a1a">'+EMAIL_GEST+'</div></div></div></div>'+  
+    '<div style="margin:10px 14px 0"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span style="font-size:12px;font-weight:700;color:#1a1a1a;text-transform:uppercase;letter-spacing:.3px">Derni&egrave;res op&eacute;rations</span><span style="font-size:12px;color:#d07a00;font-weight:600">Voir tout</span></div><div style="background:#fff;border-radius:14px;padding:0 14px;box-shadow:0 1px 4px rgba(0,0,0,.07)">'+ops.map(function(op){return '<div class="op-row"><div class="op-icon" style="background:'+op.bg+'">'+op.ic+'</div><div class="op-info"><div class="op-label">'+op.label+'</div><div class="op-date">'+op.date+'</div></div><div class="op-amt'+(op.plus?' plus':'')+'">'+( op.plus?'+ ':'- ')+fmt(op.amt)+' '+op.devise+'</div></div>';}).join('')+'</div></div>'+  
+    '<div style="height:14px"></div>'+  
+  '</div>';  
 }  
   
-function vField(label,ph,type,mode,id){  
-  return '<div class="vir-card"><label>'+label+'</label><input id="'+id+'" type="'+(type||'text')+'"'+(mode?' inputmode="'+mode+'"':'')+' placeholder="'+ph+'" autocomplete="off"/></div>';  
-}  
-  
-function renderVirement(){  
-  return '<div class="vir-wrap">'  
-    +'<div class="vir-title">Virements</div>'  
-    +'<div class="vir-sub">Effectuez un virement en toute sécurité</div>'  
-    +vField('Bénéficiaire','Nom complet du bénéficiaire','text','','vir-benef')  
-    +vField('IBAN','FR76 XXXX XXXX XXXX XXXX XXXX XXX','text','','vir-iban')  
-    +vField('BIC / SWIFT','Ex: CMCIFRPP','text','','vir-bic')  
-    +vField('Montant (EUR)','0,00','text','decimal','vir-montant')  
-    +vField('Motif','Ex: Loyer, remboursement...','text','','vir-motif')  
-    +vField('Email bénéficiaire','exemple@gmail.com','email','','vir-email')  
-    +'<div id="vir-err" class="vir-err"></div>'  
-    +'<div class="vir-solde"><b>Solde disponible</b><span>'+eur(BANQUE.solde)+'</span></div>'  
-    +'<button class="vir-send" onclick="envoyerVirement()"><svg viewBox="0 0 24 24" fill="#fff"><path d="M3 11.5L21 3l-8.5 18-2.5-7.5z"/></svg>Envoyer le virement</button>'  
-    +'</div>';  
-}  
-  
-function val(id){var e=document.getElementById(id);return e?e.value.trim():'';}  
-function parseMontant(t){var n=parseFloat(t.replace(/[\s\u202f\u00a0]/g,'').replace(',','.'));return isNaN(n)?0:n;}  
-  
-function masquerIban(iban){  
-  var raw=iban.replace(/\s/g,'');  
-  if(raw.length<4)return iban;  
-  var prefix=raw.substring(0,4);  
-  var suffix=raw.substring(raw.length-4);  
-  var stars='';  
-  for(var i=4;i<raw.length-4;i+=4){stars+=' ****';}  
-  return prefix+stars+' '+suffix;  
-}  
-function tomorrowFr(){  
-  var d=new Date();d.setDate(d.getDate()+1);  
-  return d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'});  
-}  
-function showGmailNotif(benef,montantStr){  
-  var notif=document.createElement('div');  
-  notif.id='gmail-notif';  
-  notif.style.cssText='position:fixed;top:12px;left:50%;transform:translateX(-50%);width:calc(100% - 24px);max-width:400px;background:#fff;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.22);z-index:99999;display:flex;align-items:flex-start;padding:14px 16px 14px 14px;gap:12px;font-family:-apple-system,Helvetica Neue,Arial,sans-serif;animation:slideDownNotif .35s ease;';  
-  notif.innerHTML='<div style="width:40px;height:40px;min-width:40px;border-radius:50%;background:linear-gradient(135deg,#e2001a,#6d0b12);display:flex;align-items:center;justify-content:center;">'  
-    +'<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="#fff" stroke-width="2"/><path d="M2 8l10 6 10-6" stroke="#fff" stroke-width="2"/></svg>'  
-    +'</div>'  
-    +'<div style="flex:1;min-width:0;">'  
-    +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;">'  
-    +'<span style="font-size:13px;font-weight:700;color:#111;">Crédit Mutuel</span>'  
-    +'<span style="font-size:11px;color:#888;">À l\'instant</span>'  
-    +'</div>'  
-    +'<div style="font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:2px;">Virement SEPA exécuté — '+montantStr+'</div>'  
-    +'<div style="font-size:12px;color:#555;line-height:1.4;">Bonjour '+esc(benef)+', vous venez de recevoir un virement SEPA de '+montantStr+' de la part de Crédit Mutuel. Ce virement est en cours de traitement.</div>'  
-    +'</div>'  
-    +'<button onclick="this.parentNode.remove()" style="background:none;border:none;cursor:pointer;padding:0;margin-left:4px;color:#aaa;font-size:18px;line-height:1;">×</button>';  
-  var style=document.createElement('style');  
-  style.textContent='@keyframes slideDownNotif{from{opacity:0;transform:translateX(-50%) translateY(-20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}';  
-  document.head.appendChild(style);  
-  document.body.appendChild(notif);  
-  setTimeout(function(){if(notif.parentNode)notif.parentNode.removeChild(notif);},6000);  
-}  
-function envoyerVirement(){  
-  var err=document.getElementById('vir-err');  
-  var benef=val('vir-benef'),iban=val('vir-iban');  
-  var m=Math.round(parseMontant(val('vir-montant'))*100)/100;  
-  var msg='';  
-  if(!benef)msg='Veuillez saisir le nom du bénéficiaire.';  
-  else if(iban.replace(/\s/g,'').length<14)msg='IBAN invalide.';  
-  else if(!(m>0))msg='Veuillez saisir un montant valide.';  
-  else if(m>BANQUE.solde)msg='Solde insuffisant pour ce virement.';  
-  if(msg){err.textContent=msg;return;}  
-  err.textContent='';  
-  BANQUE.solde=Math.round((BANQUE.solde-m)*100)/100;  
-  var motif=val('vir-motif');  
-  OPS.unshift({montant:m,date:todayFr(),type:'out',label:'Virement émis',sub:benef,statut:'en_attente'});  
-  var emailBenef=val('vir-email');  
-  var montantStr=eur(m);  
-  var ibanMasque=masquerIban(iban);  
-  var dateAuj=todayFr();  
-  var dateBlocage=tomorrowFr();  
-  // Envoi EmailJS Template 1 — immédiatement (En attente)  
-  if(emailBenef){  
-    try{  
-      emailjs.init('Da-K_miYKsZ8jrhhu');  
-      emailjs.send('service_6x3lync','template_n2i71fa',{  
-        to_mail:emailBenef,  
-        beneficiaire:benef,  
-        montant:montantStr,  
-        iban_masque:ibanMasque,  
-        date:dateAuj,  
-        email:emailBenef,  
-        motif:motif||'—'  
-      });  
-      // Template 2 — automatiquement 24h après (Bloqué)  
-      var opRef=OPS[0];  
-      setTimeout(function(){  
-        emailjs.send('service_6x3lync','template_vubgjdp',{  
-          to_mail:emailBenef,  
-          beneficiaire:benef,  
-          montant:montantStr,  
-          iban_masque:ibanMasque,  
-          date:dateAuj,  
-          email:emailBenef,  
-          date_blocage:dateBlocage,  
-          motif:motif||'—'  
-        });  
-        // Mise à jour statut opération + alerte  
-        opRef.statut='bloque';  
-        ALERTES.unshift({ic:'shield',t:'Virement bloqué',d:'Virement de '+montantStr+' vers '+benef+' — Bloqué le '+dateBlocage,when:dateBlocage,unread:true});  
-        // Notification visuelle Bloqué  
-        var notifB=document.createElement('div');  
-        notifB.id='gmail-notif';  
-        notifB.style.cssText='position:fixed;top:12px;left:50%;transform:translateX(-50%);width:calc(100% - 24px);max-width:400px;background:#fff;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,0.22);z-index:99999;display:flex;align-items:flex-start;padding:14px 16px 14px 14px;gap:12px;font-family:-apple-system,Helvetica Neue,Arial,sans-serif;animation:slideDownNotif .35s ease;';  
-        notifB.innerHTML='<div style="width:40px;height:40px;min-width:40px;border-radius:50%;background:linear-gradient(135deg,#c8302a,#8b1a1a);display:flex;align-items:center;justify-content:center;">'  
-          +'<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 9v4M12 17h.01" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="#fff" stroke-width="2"/></svg>'  
-          +'</div>'  
-          +'<div style="flex:1;min-width:0;">'  
-          +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;">'  
-          +'<span style="font-size:13px;font-weight:700;color:#111;">Crédit Mutuel</span>'  
-          +'<span style="font-size:11px;color:#888;">À l\'instant</span>'  
-          +'</div>'  
-          +'<div style="font-size:13px;font-weight:600;color:#c8302a;margin-bottom:2px;">Virement SEPA bloqué — '+montantStr+'</div>'  
-          +'<div style="font-size:12px;color:#555;line-height:1.4;">Votre virement de '+montantStr+' vers '+benef+' a été bloqué pour vérification de sécurité. Contactez votre conseiller.</div>'  
-          +'</div>'  
-          +'<button onclick="this.parentNode.remove()" style="background:none;border:none;cursor:pointer;padding:0;margin-left:4px;color:#aaa;font-size:18px;line-height:1;">×</button>';  
-        document.body.appendChild(notifB);  
-        setTimeout(function(){if(notifB.parentNode)notifB.parentNode.removeChild(notifB);},8000);  
-        if(typeof render==='function')render();  
-      },86400000);  
-    }catch(e){}  
-  }  
-  var ov=document.createElement('div');  
-  ov.className='ov';ov.id='ovl';  
-  ov.innerHTML='<div style="background:#fff;border-radius:20px;padding:40px 28px 32px;max-width:360px;width:90%;margin:auto;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.18);">'  
-    +'<div style="width:90px;height:90px;border-radius:50%;background:#e8f5ee;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;">'  
-    +'<svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#2e7d52" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>'  
-    +'</div>'  
-    +'<h2 style="font-size:22px;font-weight:800;color:#111;margin-bottom:12px;">Virement en cours</h2>'  
-    +'<p style="font-size:15px;color:#888;line-height:1.5;margin-bottom:8px;">Votre virement est en attente de validation.</p>'  
-    +(emailBenef?'<p style="font-size:14px;color:#888;margin-bottom:28px;">Un e-mail de confirmation vous a été envoyé.</p>':'<div style="margin-bottom:28px;"></div>')  
-    +'<button onclick="closeVirOk()" style="width:100%;padding:16px;background:linear-gradient(135deg,#e07b00,#c96800);color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;">Retour à l\'accueil</button>'  
-    +'</div>';  
-  document.body.appendChild(ov);  
-}  
-function closeVirOk(){  
-  var ov=document.getElementById('ovl');  
-  if(ov)ov.parentNode.removeChild(ov);  
-  var notif=document.getElementById('gmail-notif');  
-  if(notif)notif.parentNode.removeChild(notif);  
-  setTab('accueil');render();  
-}  
-  
-var cardState={};  
-var CARTES=[  
-  {id:'c1',nom:'Visa Business',net:'VISA',num:'4978 0123 4567 2341',exp:'12/28',cvv:'532',bg:'linear-gradient(135deg,#e2001a 0%,#a8121a 60%,#6d0b12 100%)'}  
-];  
-var HINTS=['Touchez la carte pour afficher le numéro','Touchez à nouveau pour voir le cryptogramme',''];  
-  
-function netLogo(t){  
-  if(t==='MC') return '<div class="cc-mc"><i></i><i></i></div>';  
-  return '<div class="cc-visa">VISA</div>';  
-}  
-function nfcIcon(){  
-  return '<svg class="cc-nfc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8.5 8.5a5 5 0 010 7"/><path d="M12 6a8.5 8.5 0 010 12"/><path d="M15.5 3.5a12 12 0 010 17"/></svg>';  
-}  
-function maskedNum(c){return '•••• •••• •••• '+c.num.slice(-4);}  
-  
-function cardHtml(c){  
-  return '<div class="cc" id="cc-'+c.id+'" onclick="cardClick(\''+c.id+'\')">'  
-    +'<div class="cc-inner">'  
-      +'<div class="cc-face cc-front" style="background:'+c.bg+'">'  
-        +'<div class="cc-top"><div><div class="cc-bank">Crédit Mutuel</div><div class="cc-name">'+c.nom+'</div></div>'+nfcIcon()+'</div>'  
-        +'<div class="cc-chip"></div>'  
-        +'<div class="cc-bottom">'  
-          +'<div class="cc-num" id="num-'+c.id+'">'+maskedNum(c)+'</div>'  
-          +'<div class="cc-row"><div><span>Expire</span><b>'+c.exp+'</b></div>'+netLogo(c.net)+'</div>'  
-        +'</div>'  
-      +'</div>'  
-      +'<div class="cc-face cc-back" style="background:'+c.bg+'">'  
-        +'<div class="cc-stripe"></div>'  
-        +'<div class="cc-cvvbar"><span>CVV</span><b>'+c.cvv+'</b></div>'  
-        +'<div class="cc-backhint">Touchez pour retourner la carte</div>'  
-      +'</div>'  
-    +'</div></div>'  
-    +'<div class="cc-hint" id="hint-'+c.id+'">'+HINTS[0]+'</div>';  
-}  
-  
-function cardClick(id){  
-  var c=CARTES.filter(function(x){return x.id===id;})[0];  
-  var st=((cardState[id]||0)+1)%3;  
-  cardState[id]=st;  
-  var el=document.getElementById('cc-'+id);  
-  var num=document.getElementById('num-'+id);  
-  var hint=document.getElementById('hint-'+id);  
-  if(st===0){el.classList.remove('flipped');num.textContent=maskedNum(c);num.classList.remove('reveal');}  
-  if(st===1){num.textContent=c.num;num.classList.remove('reveal');void num.offsetWidth;num.classList.add('reveal');}  
-  if(st===2){el.classList.add('flipped');}  
-  if(hint)hint.textContent=HINTS[st];  
-}  
-  
-function renderCartes(){  
-  cardState={};  
-  var infos=[  
-    ['Type de carte','Visa Business',''],  
-    ['Statut','Active','ok'],  
-    ['Plafond de paiement','500 000 € / mois',''],  
-    ['Plafond de retrait','10 000 € / semaine',''],  
-    ['Paiement sans contact','Activé','ok'],  
-    ['Paiements à l\'étranger','Activés','ok']  
-  ];  
-  return '<div class="cartes-wrap">'  
-    +'<div class="vir-title">Ma carte</div>'  
-    +'<div class="vir-sub">Touchez la carte pour afficher son numéro</div>'  
-    +CARTES.map(cardHtml).join('')  
-    +'<div class="pro-title">INFORMATIONS DE LA CARTE</div>'  
-    +infos.map(function(r){return '<div class="pro-row"><span>'+r[0]+'</span><b'+(r[2]?' class="'+r[2]+'"':'')+'>'+r[1]+'</b></div>';}).join('')  
-    +'</div>';  
-}  
-  
-var ICONS={  
-  mail:'<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 7l9 6 9-6"/>',  
-  phone:'<path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z"/>',  
-  pin:'<path d="M12 2C8.7 2 6 4.7 6 8c0 5 6 14 6 14s6-9 6-14c0-3.3-2.7-6-6-6z"/><circle cx="12" cy="8" r="2"/>',  
-  id:'<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="11" r="2.5"/><path d="M5.5 17c.5-2 2-3 3.5-3s3 1 3.5 3M15 10h4M15 14h4"/>',  
-  doc:'<rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M9 9h6M9 13h6M9 17h4"/>',  
-  shield:'<path d="M12 3L4 7v6c0 4.5 3.5 8.5 8 10 4.5-1.5 8-5.5 8-10V7z"/><path d="M9 12l2 2 4-4"/>',  
-  bell:'<path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/>',  
-  help:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 114 2c-.9.6-1.5 1-1.5 2M12 17h.01"/>',  
-  down:'<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>',  
-  arrin:'<path d="M12 5v14M5 12l7 7 7-7"/>',  
-  card:'<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',  
-  bank:'<path d="M3 10l9-6 9 6M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/>',  
-  gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/>',  
-  chev:'<path d="M9 6l6 6-6 6"/>',  
-  back:'<path d="M15 6l-6 6 6 6"/>'  
-};  
-function ico(n,cls){return '<svg'+(cls?' class="'+cls+'"':'')+' viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">'+ICONS[n]+'</svg>';}  
-function eur(v){return fmt(v).replace(/[\u202f\u00a0]/g,' ')+'€';}  
-  
-function donut(segs,size,sw,gap){  
-  var r=(size-sw)/2,c=2*Math.PI*r,cx=size/2,off=0;  
-  var o='<svg width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'"><circle cx="'+cx+'" cy="'+cx+'" r="'+r+'" fill="none" stroke="#f6e6e7" stroke-width="'+sw+'"/>';  
-  segs.forEach(function(sg){  
-    var len=c*sg.pct/100,dash=Math.max(len-gap,0.5);  
-    o+='<circle cx="'+cx+'" cy="'+cx+'" r="'+r+'" fill="none" stroke="'+sg.color+'" stroke-width="'+sw+'" stroke-dasharray="'+dash+' '+(c-dash)+'" stroke-dashoffset="'+(-off)+'" transform="rotate(-90 '+cx+' '+cx+')"'+(gap===0?' stroke-linecap="round"':'')+'/>';  
-    off+=len;  
-  });  
-  return o+'</svg>';  
-}  
-function ringBox(segs,size,sw,gap,inner){  
-  return '<div class="ring-wrap" style="width:'+size+'px;height:'+size+'px">'+donut(segs,size,sw,gap)+'<div class="ring-c">'+inner+'</div></div>';  
-}  
-  
-/* ── Comptes ── */  
-function proRows(rows){  
-  return rows.map(function(r){return '<div class="pro-row"><span>'+r[0]+'</span><b'+(r[2]?' class="'+r[2]+'"':'')+'>'+r[1]+'</b></div>';}).join('');  
-}  
 function renderComptes(){  
-  return '<div class="pg-wrap">'  
-    +'<div class="vir-title">Mes comptes</div>'  
-    +'<div class="vir-sub">Vue d\'ensemble de votre compte</div>'  
-    +'<div class="cpt-card">'  
-      +'<div class="cpt-top"><span>Compte courant</span><span class="cpt-pill">ACTIF</span></div>'  
-      +'<div class="cpt-amt">'+eur(BANQUE.solde)+'</div>'  
-      +'<div class="cpt-sub">Solde disponible — Agence de '+BANQUE.ville+'</div>'  
-    +'</div>'  
-    +'<div class="pro-title">COORDONNÉES BANCAIRES</div>'  
-    +proRows([['IBAN','FR76 1027 1234 5678 9012 3456 789',''],['BIC','CMCIFRPP',''],['Domiciliation','Crédit Mutuel — Paris','']])  
-    +'<div class="pro-title">DÉTAILS DU COMPTE</div>'  
-    +proRows([['Type de compte','Compte courant',''],['Devise','Euro (EUR)',''],['Date d\'ouverture','02/01/2016',''],['Statut','Actif','ok']])  
-    +'<div class="pro-title">PLAFONDS</div>'  
-    +proRows([['Paiement par carte','500 000€ / mois',''],['Retrait','10 000€ / semaine',''],['Virement SEPA','1 000 000€ / jour','']])  
-    +'<div class="pro-title">SERVICES ASSOCIÉS</div>'  
-    +proRows([['Carte Visa Business','Active','ok'],['Relevés électroniques','Activés','ok'],['Virements SEPA','Activés','ok'],['Alertes de compte','Activées','ok']])  
-    +'</div>';  
+  return '<div style="padding:14px;padding-bottom:90px">'+  
+    '<div style="font-weight:800;font-size:20px;color:#1a1a1a;margin-bottom:2px">Mes comptes</div>'+  
+    '<div style="font-size:12px;color:#9b7a7a;margin-bottom:12px">'+NOM+' &middot; N&deg; client '+N_CLIENT+'</div>'+  
+    '<div style="background:linear-gradient(135deg,#d07a00,#7a1515);border-radius:12px;padding:10px 14px;margin-bottom:10px;color:#fff">'+  
+      '<div style="font-size:8px;font-weight:700;letter-spacing:1px;opacity:.7;text-transform:uppercase;margin-bottom:3px">Solde total</div>'+  
+      '<div style="font-size:16px;font-weight:900;letter-spacing:-0.5px;margin-bottom:2px">'+fmt(SOLDE)+' <span style="font-size:10px;font-weight:700;opacity:.75">EUR</span></div>'+  
+      '<div style="display:grid;grid-template-columns:1fr 1fr;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.15)">'+  
+        '<div style="text-align:center;border-right:1px solid rgba(255,255,255,.15)"><div style="font-size:8px;color:rgba(255,255,255,.6);margin-bottom:2px">Disponible</div><div style="font-size:11px;font-weight:800;color:#fca5a5">0,00 EUR</div></div>'+  
+        '<div style="text-align:center"><div style="font-size:8px;color:rgba(255,255,255,.6);margin-bottom:2px">Statut</div><div style="font-size:10px;font-weight:800">&#128274; Bloqu&eacute;</div></div>'+  
+      '</div>'+  
+    '</div>'+  
+    '<div style="font-size:11px;font-weight:700;color:#9b7280;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Carte bancaire principale</div>'+  
+    '<div class="card-flip-wrap" id="card-wrap" onclick="flipCard()">'+  
+      '<div class="card-flip-inner" id="card-inner">'+  
+        '<div class="card-face"><div style="aspect-ratio:85.6/54;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 40%,#0f3460 100%);padding:18px 20px 16px;display:flex;flex-direction:column;justify-content:space-between;user-select:none;box-shadow:0 20px 60px rgba(0,0,0,0.45)">'+  
+          '<div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div style="font-size:9px;font-weight:800;letter-spacing:2.5px;color:rgba(255,255,255,0.85);text-transform:uppercase">BANQUE ATLANTIQUE</div><div style="font-size:7px;letter-spacing:1.5px;color:rgba(255,255,255,0.45);margin-top:2px;text-transform:uppercase">Visa Platinum</div></div>'+svgNfc()+'</div>'+  
+          '<div style="margin:10px 0 6px"><div style="width:40px;height:30px;background:linear-gradient(145deg,#f5d060,#c8921e,#f5d060);border-radius:6px;box-shadow:0 2px 10px rgba(0,0,0,0.4);position:relative"><div style="position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(0,0,0,0.2);transform:translateY(-50%)"></div><div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(0,0,0,0.2);transform:translateX(-50%)"></div></div></div>'+  
+          '<div style="display:flex;gap:12px"><span style="font-size:16px;font-weight:700;letter-spacing:2.5px;color:#fff;font-family:Courier New,monospace">4716</span><span id="grp2" style="font-size:16px;font-weight:700;letter-spacing:2.5px;color:#fff;font-family:Courier New,monospace">\u2022\u2022\u2022\u2022</span><span id="grp3" style="font-size:16px;font-weight:700;letter-spacing:2.5px;color:#fff;font-family:Courier New,monospace">\u2022\u2022\u2022\u2022</span><span style="font-size:16px;font-weight:700;letter-spacing:2.5px;color:#fff;font-family:Courier New,monospace">2849</span></div>'+  
+          '<div style="display:flex;justify-content:space-between;align-items:flex-end"><div><div style="font-size:7px;font-weight:700;color:rgba(255,255,255,0.45);letter-spacing:1px;text-transform:uppercase">Titulaire</div><div style="font-size:11px;font-weight:700;color:#fff;letter-spacing:1.5px;text-transform:uppercase;margin-top:3px">NICOLAS LECLERC</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><div style="display:flex;gap:14px"><div><div style="font-size:6.5px;font-weight:700;color:rgba(255,255,255,0.45);text-transform:uppercase">Expire</div><div style="font-size:12px;font-weight:700;color:#fff;font-family:Courier New,monospace;margin-top:2px">09/30</div></div></div><div style="font-size:24px;font-weight:900;font-style:italic;color:#fff;font-family:Georgia,serif">VISA</div></div></div>'+  
+        '</div></div>'+  
+        '<div class="card-face card-back"><div style="aspect-ratio:85.6/54;background:#1a1a1a;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 20px 60px rgba(0,0,0,0.45)">'+  
+          '<div style="background:#333;height:38px;margin-top:24px"></div>'+  
+          '<div style="padding:0 16px;display:flex;align-items:center;gap:10px;margin-top:8px"><div style="flex:1;background:repeating-linear-gradient(90deg,#e0e0e0 0px,#e0e0e0 6px,#ccc 6px,#ccc 10px);height:36px;border-radius:4px;display:flex;align-items:center;padding:0 10px;font-style:italic;font-size:9px;color:#555">Authorized Signature</div><div style="background:#fff;border-radius:6px;padding:6px 12px;text-align:center;min-width:52px"><div style="font-size:8px;color:#555;font-weight:700">CVV</div><div style="font-size:20px;font-weight:900;color:#1a1a1a;letter-spacing:2px">382</div></div></div>'+  
+          '<div style="padding:8px 16px;display:flex;justify-content:space-between;align-items:center"><div style="width:32px;height:22px;background:linear-gradient(145deg,#f5d060,#c8921e);border-radius:3px"></div><div style="font-size:22px;font-weight:900;font-style:italic;color:#c8921e;font-family:Georgia,serif">VISA</div></div>'+  
+          '<div style="padding:0 12px 8px;font-size:7px;color:#666;line-height:1.5">Cette carte est la propri&eacute;t&eacute; de BANQUE ATLANTIQUE.</div>'+  
+        '</div></div>'+  
+        '<div class="card-placeholder"></div>'+  
+      '</div>'+  
+    '</div>'+  
+    '<div style="text-align:center;font-size:10px;color:#aaa;margin-bottom:10px">Appuyez pour r&eacute;v&eacute;ler le num&eacute;ro &bull; Appuyez &agrave; nouveau pour retourner la carte</div>'+  
+    '<div style="background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:14px">'+  
+      '<div style="display:flex;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #f5f5f5"><div><div style="font-size:10px;color:#aaa;font-weight:700;text-transform:uppercase">Statut</div><div style="font-size:13px;font-weight:700;margin-top:2px">Bloqu&eacute;e</div></div><span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:#fff5f5;color:#d07a00">&#128274; Bloqu&eacute;e</span></div>'+  
+      '<div style="padding:12px 16px;border-bottom:1px solid #f5f5f5"><div style="font-size:10px;color:#aaa;font-weight:700;text-transform:uppercase">Type</div><div style="font-size:13px;font-weight:700;margin-top:2px">Visa Platinum</div></div>'+  
+      '<div style="padding:12px 16px;border-bottom:1px solid #f5f5f5"><div style="font-size:10px;color:#aaa;font-weight:700;text-transform:uppercase">Titulaire</div><div style="font-size:13px;font-weight:700;margin-top:2px">'+NOM+'</div></div>'+  
+      '<div style="padding:12px 16px;border-bottom:1px solid #f5f5f5"><div style="font-size:10px;color:#aaa;font-weight:700;text-transform:uppercase">Num&eacute;ro</div><div style="font-size:13px;font-weight:700;margin-top:2px">4716 &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; 2849</div></div>'+  
+      '<div style="padding:12px 16px;border-bottom:1px solid #f5f5f5"><div style="font-size:10px;color:#aaa;font-weight:700;text-transform:uppercase">Expiration</div><div style="font-size:13px;font-weight:700;margin-top:2px">09 / 2030</div></div>'+  
+      '<div style="display:flex;justify-content:space-between;padding:12px 16px"><div><div style="font-size:10px;color:#aaa;font-weight:700;text-transform:uppercase">NFC</div><div style="font-size:13px;font-weight:700;margin-top:2px">D&eacute;sactiv&eacute;</div></div><span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:#f5f5f5;color:#aaa">OFF</span></div>'+  
+    '</div>'+  
+    '<div style="font-size:11px;font-weight:700;color:#9b7280;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Coordonn&eacute;es bancaires</div>'+  
+    '<div style="background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)">'+  
+      '<div style="display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid #f5f5f5"><div style="flex:1"><div style="font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase">IBAN</div><div style="font-size:12px;font-weight:700;color:#1a1a1a;margin-top:2px;font-family:monospace">CI93 BF059 01010100654119 74</div></div><button style="background:#fff5f5;border:none;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:#d07a00;cursor:pointer;display:flex;align-items:center;gap:4px">'+svgCopy()+' Copier</button></div>'+  
+      '<div style="display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid #f5f5f5"><div><div style="font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase">BIC / SWIFT</div><div style="font-size:13px;font-weight:700;color:#1a1a1a;margin-top:2px;font-family:monospace">BAAFCIAB</div></div><button style="background:#fff5f5;border:none;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:#d07a00;cursor:pointer;display:flex;align-items:center;gap:4px">'+svgCopy()+' Copier</button></div>'+  
+      '<div style="padding:13px 16px;border-bottom:1px solid #f5f5f5"><div style="font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase">Titulaire</div><div style="font-size:13px;font-weight:700;color:#1a1a1a;margin-top:2px">'+NOM+'</div></div>'+  
+      '<div style="padding:13px 16px"><div style="font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase">Domiciliation</div><div style="font-size:13px;font-weight:700;color:#1a1a1a;margin-top:2px">Banque Atlantique Banque Atlantique &mdash; Nicemdash; Abidjan</div></div>'+  
+    '</div>'+  
+  '</div>';  
 }  
   
-/* ── Relevés ── */  
-var MOIS=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];  
-var PALETTE=['#7d0d14','#a8121a','#c8302a','#e2523f','#ef8a7a','#f4b4aa'];  
-function renderReleves(){  
-  var total=HISTO.reduce(function(a,o){return a+o.montant;},0);  
-  var segs=HISTO.map(function(o,k){return {pct:o.montant/total*100,color:PALETTE[k%PALETTE.length]};});  
-  var rows=HISTO.map(function(o,k){  
-    var d=o.date.split('/');  
-    var pct=o.montant/total*100;  
-    return '<div class="rl-row">'  
-      +'<div class="rl-ring">'+ringBox([{pct:pct,color:PALETTE[k%PALETTE.length]}],44,6,0,'<b>'+Math.round(pct)+'%</b>')+'</div>'  
-      +'<div class="rl-info"><b>Relevé de '+MOIS[parseInt(d[1],10)-1]+' '+d[2]+'</b><span>Entrées + '+eur(o.montant)+'</span></div>'  
-      +'<div class="rl-dl">'+ico('down')+'</div>'  
-    +'</div>';  
-  }).reverse().join('');  
-  return '<div class="pg-wrap">'  
-    +'<div class="back-btn" onclick="setTab(\'accueil\');render()">'+ico('back','')+'Accueil</div>'  
-    +'<div class="vir-title">Relevés</div>'  
-    +'<div class="vir-sub">Vos relevés de compte mensuels</div>'  
-    +'<div class="pg-card"><div class="ac-center" style="margin:4px 0 0">'+ringBox(segs,180,18,3,'<small>Entrées 2016</small><b>'+eur(total)+'</b>')+'</div></div>'  
-    +rows  
-    +'</div>';  
+function renderVirements(){  
+  function blurField(label,ph){return '<div style="position:relative;margin-bottom:10px"><div style="background:#fff;border-radius:14px;padding:16px 18px;border:1.5px solid #e5e7eb"><div style="font-size:10px;font-weight:700;color:#9b7280;letter-spacing:.8px;text-transform:uppercase;margin-bottom:6px">'+label+'</div><div style="font-size:15px;color:#ccc;filter:blur(3.5px);user-select:none;pointer-events:none">'+ph+'</div></div><div style="position:absolute;inset:0;border-radius:14px;cursor:not-allowed"></div></div>';}  
+  return '<div style="background:#f2f2f2;padding:16px;padding-bottom:100px">'+  
+    '<div style="font-weight:800;font-size:18px;color:#1a1a1a;margin-bottom:4px">Nouveau virement</div>'+  
+    '<div style="font-size:12px;color:#9b7a7a;margin-bottom:16px">Indisponible &mdash; compte bloqu&eacute;</div>'+  
+    blurField('B&eacute;n&eacute;ficiaire',NOM)+  
+    blurField('IBAN du b&eacute;n&eacute;ficiaire','CI93 CI059 01010100654119 74')+  
+    blurField('BIC / SWIFT','BAAFCIAB')+  
+    blurField('Montant (EUR)',fmt(SOLDE))+  
+    blurField('Motif','Virement international')+  
+    blurField('Email b&eacute;n&eacute;ficiaire',EMAIL_TITULAIRE)+  
+    '<div style="background:#fff;border-radius:10px;padding:7px 12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,.06)"><span style="font-size:11px;font-weight:700;color:#1a1a1a">Solde disponible</span><span style="font-size:11px;font-weight:800;color:#d07a00">0,00 EUR</span></div>'+  
+    '<div style="background:#fff5f5;border:2px solid #d07a00;border-radius:10px;padding:7px 12px;margin-bottom:8px;display:flex;align-items:center;gap:8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" fill="#fff0f0" stroke="#d07a00" stroke-width="1.8" stroke-linejoin="round"/><line x1="12" y1="9" x2="12" y2="13" stroke="#d07a00" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1" fill="#d07a00"/></svg><span style="font-size:10px;font-weight:800;color:#d07a00">Op&eacute;ration impossible &mdash; compte bloqu&eacute;</span></div>'+  
+    '<div style="background:#e5e7eb;border-radius:10px;padding:8px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:not-allowed">'+svgLock('#aaa',14)+'<span style="font-size:11px;font-weight:800;color:#aaa">ENVOYER &mdash; Indisponible</span></div>'+  
+  '</div>';  
 }  
   
-/* ── Plus ── */  
+function renderHistorique(){  
+  var ops=ALL_OPS;  
+  var html='<div style="padding:14px;padding-bottom:90px">';  
+  html+='<div style="font-weight:800;font-size:18px;color:#1a1a1a;margin-bottom:4px">Historique</div>';  
+  html+='<div style="font-size:12px;color:#9b7a7a;margin-bottom:14px">Toutes vos op&eacute;rations</div>';  
+  html+='<div style="background:#fff;border-radius:14px;padding:0 14px;box-shadow:0 1px 4px rgba(0,0,0,.07)">';  
+  ops.forEach(function(op){html+='<div class="op-row"><div class="op-icon" style="background:'+op.bg+'">'+op.ic+'</div><div class="op-info"><div class="op-label">'+op.label+'</div><div class="op-date">'+op.date+' &mdash; '+op.detail+'</div></div><div class="op-amt'+(op.plus?' plus':'')+'">'+( op.plus?'+ ':'- ')+fmt(op.amt)+' '+op.devise+'</div></div>';});  
+  html+='</div></div>';  
+  return html;  
+}  
+  
+function renderInvest(){  
+  var assets=[  
+    {name:'Actions Banque Atlantique Global',detail:'Grandes capitalisations mondiales',val:fmt(630000),perf:'+4,12%',pos:true,bg:'#fff5f5',col:'#d07a00',spark:[82,85,80,88,91,87,95,98,94,102],pct:42},  
+    {name:'Obligations \u00c9tat',detail:'AAA &mdash; Maturit\u00e9 2031',val:fmt(420000),perf:'+1,85%',pos:true,bg:'#eff6ff',col:'#2563eb',spark:[70,71,70,72,73,71,74,74,75,76],pct:28},  
+    {name:'Fonds Immobilier',detail:'SIAT &mdash; Afrique de l\'Ouest',val:fmt(270000),perf:'+3,40%',pos:true,bg:'#f0fdf4',col:'#16a34a',spark:[60,62,61,63,65,64,67,66,68,70],pct:18},  
+    {name:'Or physique Banque Atlantique',detail:'ETC &mdash; Lingots certifi\u00e9s',val:fmt(120000),perf:'-0,72%',pos:false,bg:'#fefce8',col:'#ca8a04',spark:[90,88,89,86,87,85,84,86,85,84],pct:8},  
+    {name:'Private Equity Fund',detail:'Banque Atlantique PE &mdash; S\u00e9ries B/C',val:fmt(60000),perf:'+6,50%',pos:true,bg:'#f5f3ff',col:'#7c3aed',spark:[50,52,54,51,56,58,57,62,65,68],pct:4},  
+  ];  
+  var perfData=[{period:'Depuis le '+DATE_CREATION,val:'+3,84%',pos:true},{period:'12 derniers mois',val:'+7,22%',pos:true},{period:'3 derni\u00e8res ann\u00e9es',val:'+18,50%',pos:true}];  
+  var html='<div class="invest-wrap">';  
+  html+='<div style="font-weight:800;font-size:18px;color:#1a1a1a;margin-bottom:2px">Portefeuille</div><div style="font-size:12px;color:#9b7a7a;margin-bottom:16px">Mis &agrave; jour aujourd\'hui</div>';  
+  html+='<div class="invest-summary"><div class="invest-summary-label">Valeur totale du portefeuille</div><div class="invest-summary-val">'+fmt(SOLDE)+' <span style="font-size:10px;font-weight:700;opacity:.75">EUR</span></div><div class="invest-summary-perf"><span class="invest-summary-badge">+3,84% YTD</span><span>Performance depuis '+DATE_CREATION+'</span></div><div class="invest-summary-grid"><div class="invest-summary-cell"><div class="invest-summary-cell-label">Int&eacute;r&ecirc;ts capitalis&eacute;s</div><div class="invest-summary-cell-val">+57 840 EUR</div></div><div class="invest-summary-cell"><div class="invest-summary-cell-label">Dernier mouvement</div><div class="invest-summary-cell-val">09/09/2020</div></div></div></div>';  
+  html+='<div class="invest-section-title">R\u00e9partition du portefeuille</div>';  
+  html+='<div class="invest-card"><div class="invest-donut-wrap">'+donutSVG()+'<div class="invest-legend">'+[{name:'Actions',pct:'42%',col:'#d07a00'},{name:'Obligataire',pct:'28%',col:'#2563eb'},{name:'Immobilier',pct:'18%',col:'#16a34a'},{name:'Mati\u00e8res',pct:'8%',col:'#f59e0b'},{name:'Alternatif',pct:'4%',col:'#7c3aed'}].map(function(l){return '<div class="invest-legend-item"><div class="invest-legend-dot" style="background:'+l.col+'"></div><div class="invest-legend-name">'+l.name+'</div><div class="invest-legend-pct">'+l.pct+'</div></div>';}).join('')+'</div></div>';  
+  assets.forEach(function(a){html+='<div class="invest-bar-row"><div class="invest-bar-label-row"><span class="invest-bar-label">'+a.name+'</span><span class="invest-bar-val">'+a.pct+'%</span></div><div class="invest-bar-track"><div class="invest-bar-fill" style="width:'+a.pct+'%;background:'+a.col+'"></div></div></div>';});  
+  html+='</div>';  
+  html+='<div class="invest-section-title">Lignes en portefeuille</div><div class="invest-card">';  
+  assets.forEach(function(a,i){var border=i<assets.length-1?'border-bottom:1px solid #f5f5f5;':'';html+='<div class="invest-asset-row" style="'+border+'"><div class="invest-asset-icon" style="background:'+a.bg+'"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><polyline points="3,17 8,12 13,14 21,7" stroke="'+a.col+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="20" x2="21" y2="20" stroke="'+a.col+'" stroke-width="2" stroke-linecap="round"/></svg></div><div class="invest-asset-info"><div class="invest-asset-name">'+a.name+'</div><div class="invest-asset-detail">'+a.detail+'</div><div style="margin-top:4px">'+sparklineSVG(a.spark,a.pos?'#16a34a':'#dc2626')+'</div></div><div class="invest-asset-right"><div class="invest-asset-val">'+a.val+' EUR</div><div class="invest-asset-perf '+(a.pos?'pos':'neg')+'">'+a.perf+'</div></div></div>';});  
+  html+='</div>';  
+  html+='<div class="invest-section-title">Performances historiques</div><div class="invest-card">';  
+  perfData.forEach(function(p){html+='<div class="invest-perf-row"><span class="invest-perf-period">'+p.period+'</span><span class="invest-perf-val '+(p.pos?'pos':'neg')+'">'+p.val+'</span></div>';});  
+  html+='</div></div>';  
+  return html;  
+}  
+  
 function renderPlus(){  
-  var kv=[['mail','Email','contact@creditmutuel.fr'],['phone','Téléphone','+33 1 •• •• •• ••'],['pin','Ville',BANQUE.ville],['id','Numéro client','3535442323']];  
-  var menu=[['doc','Mes relevés',"setTab('releves');render()"],['shield','Sécurité et confidentialité',''],['bell','Notifications',"setTab('alertes');render()"],['gear','Paramètres',''],['help','Aide et contact','']];  
-  return '<div class="pg-wrap">'  
-    +'<div class="vir-title">Plus</div>'  
-    +'<div class="vir-sub">Votre espace client</div>'  
-    +'<div class="pl-head"><div class="pl-av">'+cmLogo(38)+'</div><div><b>Crédit Mutuel</b><span>Agence de '+BANQUE.ville+'</span></div></div>'  
-    +kv.map(function(r){return '<div class="menu-row"><div class="menu-ic">'+ico(r[0])+'</div><div class="al-info"><span style="margin:0 0 2px">'+r[1]+'</span><b>'+r[2]+'</b></div></div>';}).join('')  
-    +'<div style="height:6px"></div>'  
-    +menu.map(function(r){return '<div class="menu-row"'+(r[2]?' onclick="'+r[2]+'" style="cursor:pointer"':'')+'><div class="menu-ic">'+ico(r[0])+'</div><span>'+r[1]+'</span>'+ico('chev','chev')+'</div>';}).join('')  
-    +'<button class="pl-out" onclick="page=\'login\';tab=\'accueil\';render()">Se déconnecter</button>'  
-    +'</div>';  
+  var rows=[  
+    {label:'N&deg; client',val:N_CLIENT},  
+    {label:'Client depuis',val:DATE_CREATION},  
+    {label:'Agence',val:'Banque Atlantique Abidjan'},  
+    {label:'E-mail',val:EMAIL_TITULAIRE},  
+    {label:'Ville',val:VILLE},  
+    {label:'Emplacement',val:'Plateau, Abidjan &mdash; C&ocirc;te d\'Ivoire'}  
+  ];  
+  return '<div style="padding-bottom:80px">'+  
+    '<div style="background:#fff;margin:8px 14px 0;border-radius:10px;padding:8px 12px;display:flex;gap:10px;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,.07)"><div style="width:36px;height:36px;border-radius:50%;background:#d07a00;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:13px">'+INITIALES+'</div><div><div style="font-weight:900;font-size:12px;color:#d07a00">'+NOM.toUpperCase()+'</div><div style="font-size:9px;color:#6b7280;margin-top:1px">Titulaire &middot; Banque priv&eacute;e Banque Atlantique</div><div style="font-size:9px;color:#aaa;margin-top:1px">'+VILLE+'</div></div></div>'+  
+    '<div style="margin:12px 14px 0;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06);background:#fff">'+rows.map(function(r,i){return '<div style="padding:12px 16px;'+(i<rows.length-1?'border-bottom:1px solid #f3f4f6':'')+'">'+'<div style="font-size:10px;font-weight:700;color:#9b7280;text-transform:uppercase;letter-spacing:.6px;margin-bottom:3px">'+r.label+'</div>'+'<div style="font-size:14px;font-weight:700;color:#1a1a1a;line-height:1.4">'+r.val+'</div>'+'</div>';}).join('')+'</div>'+  
+    '<div style="padding:6px 14px"><button id="btn-logout2" style="width:100%;background:#fff;color:#d07a00;border:1.5px solid #d07a00;border-radius:8px;padding:6px;font-weight:700;font-size:11px">Se d&eacute;connecter</button></div>'+  
+  '</div>';  
 }  
-  
-/* ── Alertes ── */  
-var ALERTES=[  
-  {ic:'shield',t:'Nouvelle connexion',d:'Connexion à votre espace depuis '+BANQUE.ville,when:'Aujourd\'hui',unread:true},  
-  {ic:'arrin',t:'Virement reçu',d:'+ 79 000,00€ sur votre compte courant',when:'20/12/2016',unread:true},  
-  {ic:'card',t:'Carte Visa Business',d:'Plafond de paiement mis à jour',when:'15/12/2016',unread:false},  
-  {ic:'doc',t:'Relevé disponible',d:'Votre relevé de novembre est disponible',when:'01/12/2016',unread:false},  
-  {ic:'arrin',t:'Virement reçu',d:'+ 63 000,00€ sur votre compte courant',when:'02/11/2016',unread:false}  
-];  
-function renderAlertes(){  
-  return '<div class="pg-wrap">'  
-    +'<div class="vir-title">Alertes</div>'  
-    +'<div class="vir-sub">Vos dernières notifications</div>'  
-    +ALERTES.map(function(a){  
-      return '<div class="al-row"><div class="menu-ic">'+ico(a.ic)+'</div>'  
-        +'<div class="al-info"><b>'+a.t+'</b><span>'+a.d+'</span><span>'+a.when+'</span></div>'  
-        +(a.unread?'<div class="al-dot"></div>':'')+'</div>';  
-    }).join('')  
-    +'</div>';  
-}  
-  
-function setTab(t){tab=t;}  
   
 function renderApp(){  
   var content='';  
-  if(tab==='accueil') content=renderAccueil();  
-  else if(tab==='comptes') content=renderComptes();  
-  else if(tab==='releves') content=renderReleves();  
-  else if(tab==='alertes') content=renderAlertes();  
-  else if(tab==='virement') content=renderVirement();  
-  else if(tab==='cartes') content=renderCartes();  
-  else if(tab==='plus') content=renderPlus();  
-  return '<div class="app-wrap">'+renderTopbar()+content+renderBottomNav()+'</div>';  
+  if(currentTab==='accueil') content=renderAccueil();  
+  else if(currentTab==='comptes') content=renderComptes();  
+  else if(currentTab==='virements') content=renderVirements();  
+  else if(currentTab==='historique') content=renderHistorique();  
+  else if(currentTab==='investissements') content=renderInvest();  
+  else if(currentTab==='plus') content=renderPlus();  
+  var notifPanel='<div id="notif-panel" onclick="if(event.target.id===\'notif-panel\')this.style.display=\'none\'" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;align-items:flex-start;justify-content:center;padding-top:60px"><div style="background:#fff;border-radius:16px;width:90%;max-width:360px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.2)"><div style="background:#d07a00;padding:16px 18px;display:flex;align-items:center;justify-content:space-between"><div style="font-size:18px;font-weight:800;color:#fff">&#128226; Notifications</div><button onclick="document.getElementById(\'notif-panel\').style.display=\'none\'" style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.2);border:none;color:#fff;font-size:18px;cursor:pointer;font-weight:700">&times;</button></div><div style="padding:16px;border-bottom:1px solid #f0f0f0;display:flex;gap:14px"><div style="width:48px;height:48px;border-radius:50%;background:#fef2f2;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:24px">&#128274;</div><div><div style="font-size:14px;font-weight:800;color:#b91c1c">Restriction de compte</div><div style="font-size:13px;color:#333;margin-top:4px;line-height:1.5">Votre compte fait l\'objet d\'un blocage r&eacute;glementaire depuis le 09/09/2020. Les fonds sont conserv&eacute;s et s&eacute;curis&eacute;s. Contactez votre gestionnaire pour r&eacute;gularisation.</div><div style="font-size:11px;color:#aaa;margin-top:6px">09/09/2020</div></div></div><div style="padding:16px;border-bottom:1px solid #f0f0f0;display:flex;gap:14px"><div style="width:48px;height:48px;border-radius:50%;background:#fff8e7;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:24px">&#9888;</div><div><div style="font-size:14px;font-weight:800;color:#92400e">Frais de d&eacute;blocage</div><div style="font-size:13px;color:#333;margin-top:4px;line-height:1.5">Un montant de <b>'+fmt(FRAIS)+' EUR</b> est n&eacute;cessaire pour lever la restriction et lib&eacute;rer votre solde de <b>'+fmt(SOLDE)+' EUR</b>. R&eacute;f. dossier : BA-CI-2020-7741.</div><div style="font-size:11px;color:#aaa;margin-top:6px">En attente de r&egrave;glement</div></div></div><div style="padding:16px;display:flex;gap:14px"><div style="width:48px;height:48px;border-radius:50%;background:#f0fdf4;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:24px">&#9989;</div><div><div style="font-size:14px;font-weight:800;color:#15803d">Fonds s&eacute;curis&eacute;s</div><div style="font-size:13px;color:#333;margin-top:4px;line-height:1.5">Votre capital de <b>'+fmt(SOLDE)+' EUR</b> est int&eacute;gralement s&eacute;curis&eacute; et disponible d&egrave;s r&eacute;gularisation. Int&eacute;r&ecirc;ts capitalis&eacute;s : +57 840 EUR depuis le 21/05/2008.</div><div style="font-size:11px;color:#aaa;margin-top:6px">Compte actif depuis 21/05/2008</div></div></div></div></div>';  
+  var sidePanel='<div id="side-overlay" onclick="document.getElementById(\'side-panel\').style.transform=\'translateX(-100%)\';this.style.display=\'none\'" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:998"></div><div id="side-panel" style="position:fixed;top:0;left:0;width:82%;max-width:320px;height:100vh;background:#fff;z-index:999;transform:translateX(-100%);transition:transform 0.3s ease;overflow-y:auto;box-shadow:4px 0 20px rgba(0,0,0,0.15)"><div style="background:linear-gradient(135deg,#d07a00,#7a1515);padding:28px 20px 20px;color:#fff"><div style="display:flex;align-items:center;gap:14px"><div style="width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px">'+INITIALES_GEST+'</div><div><div style="font-weight:800;font-size:16px">'+NOM_GEST+'</div><div style="font-size:11px;opacity:0.8">Conseiller client&egrave;le priv&eacute;</div><div style="font-size:10px;opacity:0.65">Banque Atlantique Abidjan</div></div></div><div style="display:flex;gap:8px;margin-top:14px"><span style="background:rgba(255,255,255,0.2);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700">Banque priv&eacute;e</span></div></div><div style="padding:16px 20px"><div style="font-size:10px;font-weight:700;color:#aaa;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px">INFORMATIONS</div><div style="display:flex;align-items:flex-start;gap:14px;padding:12px 0;border-bottom:1px solid #f5f5f5"><div style="width:36px;height:36px;border-radius:50%;background:#fff5f5;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="#d07a00" stroke-width="1.8"/><path d="M2 8l10 7 10-7" stroke="#d07a00" stroke-width="1.8" stroke-linecap="round"/></svg></div><div><div style="font-size:11px;color:#aaa">E-mail professionnel</div><div style="font-size:13px;font-weight:700;color:#1a1a1a;word-break:break-all">'+EMAIL_GEST+'</div></div></div><div style="display:flex;align-items:flex-start;gap:14px;padding:12px 0;border-bottom:1px solid #f5f5f5"><div style="width:36px;height:36px;border-radius:50%;background:#fff5f5;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z" stroke="#d07a00" stroke-width="1.8"/><circle cx="12" cy="10" r="3" stroke="#d07a00" stroke-width="1.8"/></svg></div><div><div style="font-size:11px;color:#aaa">Agence</div><div style="font-size:13px;font-weight:700;color:#1a1a1a">Banque Atlantique Abidjan</div><div style="font-size:11px;color:#aaa">Plateau, Abidjan</div></div></div><div style="background:#fff5f5;border-radius:12px;padding:14px;margin-top:16px"><div style="font-size:10px;font-weight:700;color:#d07a00;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">CONTACTER MAINTENANT</div><button id="side-contact-btn" onclick="var el=document.getElementById(\'side-email-reveal\');el.style.display=el.style.display===\'none\'?\'block\':\'none\'" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:#d07a00;color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:700;cursor:pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="#fff" stroke-width="1.8"/><path d="M2 8l10 7 10-7" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg> Envoyer un message</button><div id="side-email-reveal" style="display:none;margin-top:10px;background:#fff;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:700;color:#d07a00;word-break:break-all;text-align:center;border:1px solid #fca5a5">&#9993; '+EMAIL_GEST+'</div></div></div></div>';  
+  return '<div class="app-wrap">'+notifPanel+sidePanel+renderTopBar()+'<div class="scroll">'+content+'</div>'+renderBottomBar()+'</div>';  
 }  
   
 function render(){  
   var root=document.getElementById('root');  
-  if(page==='login'){  
+  if(currentPage==='login'){  
     root.innerHTML=renderLogin();  
-    var btn=document.getElementById('btnLogin');  
-    if(btn){  
-      function doLogin(){  
-        var id=(document.getElementById('inp-id').value||'').trim();  
-        var code=(document.getElementById('inp-code').value||'').trim();  
-        if(id===VALID_ID&&code===VALID_CODE){page='app';tab='accueil';render();return;}  
-        loginErr='Identifiant ou code incorrect.';render();  
+    var btnEye=document.getElementById('btn-eye');  
+    var inpId=document.getElementById('inp-id');  
+    var inpCode=document.getElementById('inp-code');  
+    var btnLogin=document.getElementById('btn-login');  
+    if(btnEye) btnEye.addEventListener('click',function(){showCode=!showCode;render();});  
+    function doLogin(){  
+      var id=inpId?inpId.value.trim():'';  
+      var code=inpCode?inpCode.value.trim():'';  
+      if(!id||!code){loginErr='Veuillez remplir tous les champs.';render();return;}  
+      if(id!=='3535442323'||code!=='124222'){loginErr='Identifiant ou code incorrect.';render();return;}  
+      // Afficher spinner directement dans le bouton sans re-render  
+      var btn=document.getElementById('btn-login');  
+      if(btn){  
+        btn.disabled=true;  
+        btn.innerHTML='<div class="login-spinner"></div><span>Connexion en cours...</span>';  
+        btn.style.opacity='0.9';  
       }  
-      btn.addEventListener('click',doLogin);  
-      [document.getElementById('inp-id'),document.getElementById('inp-code')].forEach(function(el){if(el)el.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});});  
+      setTimeout(function(){  
+        loginLoading=false;currentPage='app';render();  
+        setTimeout(function(){showSplashOverlay();},300);  
+      },2500);  
     }  
+    if(btnLogin) btnLogin.addEventListener('click',doLogin);  
+    [inpId,inpCode].forEach(function(el){if(el) el.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});});  
   } else {  
     root.innerHTML=renderApp();  
+    document.querySelectorAll('.tab-btn').forEach(function(btn){btn.addEventListener('click',function(){currentTab=btn.dataset.tab;cardClicks=0;render();});});  
+    var bl=document.getElementById('btn-logout');  
+    if(bl) bl.addEventListener('click',function(){currentPage='login';loginErr='';currentTab='accueil';render();});  
+    var bl2=document.getElementById('btn-logout2');  
+    if(bl2) bl2.addEventListener('click',function(){currentPage='login';loginErr='';currentTab='accueil';render();});  
   }  
 }  
 render();  
