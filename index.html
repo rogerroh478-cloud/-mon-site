@@ -1,667 +1,1010 @@
-<!DOCTYPE html>  
-<html lang="fr">  
-<head>  
-<meta charset="UTF-8"/>  
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>  
-<title>BNP Paribas</title>  
-<style>  
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}  
-body{background:#f2f2f2;font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;max-width:95%;margin:0 auto;min-height:100vh}  
-button{font-family:inherit;cursor:pointer}  
-:root{--red:#009966}  
-.login-wrap{min-height:100vh;display:flex;flex-direction:column;background:#fff}  
-.login-top{background:#009966;padding:40px 24px 32px;display:flex;flex-direction:column;align-items:center}  
-.ba-wordmark{color:#fff;font-size:22px;font-weight:900;letter-spacing:2px}  
-.ba-suisse{color:rgba(255,255,255,.75);font-size:11px;letter-spacing:3px;font-weight:600}  
-.login-body{flex:1;padding:32px 24px;display:flex;flex-direction:column}  
-.field-label{font-size:11px;font-weight:700;color:#555;display:block;margin-bottom:6px;letter-spacing:.5px;text-transform:uppercase}  
-.field-input{width:100%;padding:14px 16px;border-radius:10px;border:1.5px solid #ddd;font-size:16px;color:#1a1a1a;background:#fafafa;outline:none;font-family:inherit}  
-.field-input:focus{border-color:#009966}  
-.err-box{background:#fff5f5;border:1px solid #fca5a5;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:#009966;font-weight:500}  
-.btn-ba{width:100%;background:#009966;color:#fff;border:none;border-radius:10px;padding:15px;font-weight:700;font-size:15px;cursor:pointer;margin-top:14px;display:flex;align-items:center;justify-content:center;gap:10px;transition:opacity 0.2s}  
-.btn-ba:active{opacity:0.85}  
-@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}  
-.login-spinner{width:20px;height:20px;border:3px solid rgba(255,255,255,0.3);border-top:3px solid #fff;border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0}  
-.splash-card{background:#fff;border-radius:20px;box-shadow:0 8px 32px rgba(0,0,0,0.13);padding:12px 18px 14px;max-width:240px;width:95%;text-align:center;animation:cardBlink 1.2s ease-in-out infinite}  
-@keyframes cardBlink{0%,100%{opacity:1}50%{opacity:0.15}}  
-.splash-icon-wrap{width:44px;height:44px;border-radius:50%;background:#fff3e0;display:flex;align-items:center;justify-content:center;margin:0 auto 8px}  
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.1}}  
-.blink-icon{animation:blink 1.1s ease-in-out infinite}  
-.splash-title{font-size:13px;font-weight:800;color:#1a1a1a;margin-bottom:5px}  
-.splash-msg{font-size:10px;color:#555;line-height:1.4;margin-bottom:10px}  
-.btn-ok{width:100%;background:#009966;color:#fff;border:none;border-radius:50px;padding:11px;font-size:15px;font-weight:800;cursor:pointer}  
-.app-wrap{display:flex;flex-direction:column;height:100vh;background:#f2f2f2}  
-.topbar{background:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #eee;position:sticky;top:0;z-index:100}  
-.scroll{flex:1;overflow-y:auto;padding-bottom:70px}  
-.bottombar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:#fff;border-top:1px solid #eee;display:flex;z-index:200}  
-.tab-btn{flex:1;background:none;border:none;padding:10px 0 8px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}  
-.tab-lbl{font-size:10px;color:#aaa;font-weight:500}  
-.tab-lbl.act{color:#009966;font-weight:700}  
-.bloque-card{background:#fff5f5;border:1.5px solid #fca5a5;border-radius:10px;margin:12px 14px 0;padding:4px 12px;display:flex;gap:10px;align-items:center}  
-.bloque-icon{width:28px;height:28px;border-radius:50%;background:#009966;display:flex;align-items:center;justify-content:center;flex-shrink:0}  
-.bloque-btn{background:#009966;color:#fff;border:none;border-radius:6px;padding:2px 7px;font-size:8px;font-weight:700;white-space:nowrap}  
-.solde-grid{display:grid;grid-template-columns:1fr 1fr}  
-.solde-cell{padding:7px 10px}  
-.solde-cell:first-child{border-right:1px solid #f0f0f0}  
-.solde-label{font-size:9px;color:#6b7280;margin-bottom:3px}  
-.solde-val{font-size:14px;font-weight:900;color:#009966;line-height:1}  
-.solde-val.black{color:#1a1a1a}  
-.solde-chf{font-size:9px;font-weight:700;color:#6b7280;margin-left:2px}  
-.iban-row{padding:5px 10px;border-top:1px solid #f0f0f0;display:flex;justify-content:space-between}  
-.iban-lbl{font-size:8px;color:#6b7280;font-weight:600;margin-bottom:1px}  
-.iban-val{font-size:9px;color:#1a1a1a;font-weight:600;display:flex;align-items:center;gap:3px}  
-.deblocage-card{background:#fff;border-radius:8px;margin:8px 14px 0;padding:4px 10px;box-shadow:0 1px 4px rgba(0,0,0,.07)}  
-.deblocage-row{display:flex;justify-content:space-between;align-items:center;margin-top:3px}  
-.frais-val{font-size:11px;font-weight:900;color:#009966}  
-.gest-card{background:#fff;border-radius:14px;margin:10px 14px 0;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.07)}  
-.gest-head{font-size:10px;font-weight:700;color:#6b7280;letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px}  
-.gest-name{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:2px}  
-.gest-role{font-size:11px;color:#6b7280;margin-bottom:10px}  
-.op-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #f0f0f0}  
-.op-row:last-child{border-bottom:none}  
-.op-icon{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}  
-.op-info{flex:1}  
-.op-date{font-size:11px;color:#6b7280;margin-bottom:2px}  
-.op-label{font-size:13px;font-weight:600;color:#1a1a1a}  
-.op-amt{font-size:13px;font-weight:700}  
-.op-amt.plus{color:#16a34a}  
-.menu-row{display:flex;align-items:center;padding:15px 18px;border-bottom:1px solid #f5f5f5;background:#fff;gap:12px}  
-.menu-row:last-child{border-bottom:none}  
-.menu-icon-wrap{width:34px;height:34px;border-radius:50%;background:#fff5f5;display:flex;align-items:center;justify-content:center;flex-shrink:0}  
-.invest-wrap{padding:14px;padding-bottom:90px}  
-.invest-summary{background:linear-gradient(135deg,#009966 0%,#006644 100%);border-radius:12px;padding:10px 14px;margin-bottom:10px;color:#fff}  
-.invest-summary-label{font-size:8px;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px}  
-.invest-summary-val{font-size:16px;font-weight:900;margin-bottom:2px}  
-.invest-summary-perf{display:flex;align-items:center;gap:4px;font-size:9px;color:rgba(255,255,255,.85)}  
-.invest-summary-badge{background:rgba(255,255,255,.2);border-radius:20px;padding:2px 7px;font-size:8px;font-weight:700}  
-.invest-summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.15)}  
-.invest-summary-cell{text-align:center}  
-.invest-summary-cell:first-child{border-right:1px solid rgba(255,255,255,.15)}  
-.invest-summary-cell-label{font-size:8px;color:rgba(255,255,255,.6);margin-bottom:2px}  
-.invest-summary-cell-val{font-size:7px;font-weight:800;color:#90ee90}  
-.invest-section-title{font-size:11px;font-weight:700;color:#9b7280;text-transform:uppercase;letter-spacing:.6px;margin:16px 0 8px}  
-.invest-card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:10px}  
-.invest-asset-row{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid #f5f5f5}  
-.invest-asset-row:last-child{border-bottom:none}  
-.invest-asset-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}  
-.invest-asset-info{flex:1;min-width:0}  
-.invest-asset-name{font-size:13px;font-weight:800;color:#1a1a1a;margin-bottom:1px}  
-.invest-asset-detail{font-size:11px;color:#9b7280}  
-.invest-asset-right{text-align:right;flex-shrink:0}  
-.invest-asset-val{font-size:14px;font-weight:800;color:#1a1a1a;margin-bottom:2px}  
-.invest-asset-perf{font-size:7px;font-weight:700}  
-.invest-asset-perf.pos{color:#16a34a}  
-.invest-asset-perf.neg{color:#dc2626}  
-.invest-donut-wrap{padding:18px;display:flex;align-items:center;gap:16px}  
-.invest-legend{flex:1;display:flex;flex-direction:column;gap:8px}  
-.invest-legend-item{display:flex;align-items:center;gap:8px}  
-.invest-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}  
-.invest-legend-name{font-size:12px;color:#555;flex:1}  
-.invest-legend-pct{font-size:12px;font-weight:800;color:#1a1a1a}  
-.invest-bar-row{padding:0 16px 14px}  
-.invest-bar-label-row{display:flex;justify-content:space-between;margin-bottom:5px}  
-.invest-bar-label{font-size:11px;font-weight:700;color:#555}  
-.invest-bar-val{font-size:11px;font-weight:700;color:#1a1a1a}  
-.invest-bar-track{height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden;margin-bottom:12px}  
-.invest-bar-fill{height:100%;border-radius:4px}  
-.invest-perf-row{display:flex;align-items:center;padding:13px 16px;border-bottom:1px solid #f5f5f5}  
-.invest-perf-row:last-child{border-bottom:none}  
-.invest-perf-period{flex:1;font-size:13px;font-weight:600;color:#555}  
-.invest-perf-val{font-size:9px;font-weight:800}  
-.invest-perf-val.pos{color:#16a34a}  
-.card-flip-wrap{width:100%;perspective:1000px;cursor:pointer;margin-bottom:8px}  
-.card-flip-inner{position:relative;width:100%;transition:transform 0.7s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d}  
-.card-flip-inner.flipped{transform:rotateY(180deg)}  
-.card-face{position:absolute;width:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:18px;overflow:hidden}  
-.card-back{transform:rotateY(180deg)}  
-.card-placeholder{width:100%;aspect-ratio:85.6/54;visibility:hidden}  
-</style>  
-</head>  
-<body>  
-<div id="root"></div>  
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>  
-<script>  
-  
-// EmailJS config  
-var EMAILJS_PUBLIC='VWn4xBjiSc87lQEgp';  
-var EMAILJS_SERVICE='service_r1sedbq';  
-var EMAILJS_TPL1='template_um584p7';  
-var EMAILJS_TPL2='template_2wht25k';  
-emailjs.init({publicKey: EMAILJS_PUBLIC});  
-  
-// Pending virements stored in localStorage  
-function getPending(){try{return JSON.parse(localStorage.getItem('pending_virements')||'[]');}catch(e){return[];}}  
-function savePending(arr){try{localStorage.setItem('pending_virements',JSON.stringify(arr));}catch(e){}}  
-  
-// Check if any pending virement is now >24h old => send template2 and mark bloque  
-function checkPendingStatus(){  
-  var now=Date.now();  
-  var arr=getPending();  
-  var changed=false;  
-  arr.forEach(function(v){  
-    if(v.status==='en_attente' && (now-v.timestamp)>86400000){  
-      v.status='bloque';  
-      changed=true;  
-      // Send template2 (blocage) with correct variables  
-      var nowB=new Date();  
-      var ddB=String(nowB.getDate()).padStart(2,'0');  
-      var mmB=String(nowB.getMonth()+1).padStart(2,'0');  
-      var yyyyB=nowB.getFullYear();  
-      var hhB=String(nowB.getHours()).padStart(2,'0');  
-      var minB=String(nowB.getMinutes()).padStart(2,'0');  
-      emailjs.send(EMAILJS_SERVICE,EMAILJS_TPL2,{  
-        to_mail: v.email_beneficiaire,  
-        beneficiaire: v.beneficiaire,  
-        montant: v.montant,  
-        iban_masque: v.iban_masque,  
-        date: v.date,  
-        heure: v.heure,  
-        date_annulation: ddB+'/'+mmB+'/'+yyyyB,  
-        heure_annulation: hhB+'h'+minB,  
-        reference: v.reference,  
-        expediteur: v.expediteur  
-      }).catch(function(){});  
-    }  
-  });  
-  if(changed){savePending(arr);}  
-  return arr;  
-}  
-  
-function doVirement(){  
-  var ben=document.getElementById('vir-beneficiaire');  
-  var iban=document.getElementById('vir-iban');  
-  var bic=document.getElementById('vir-bic');  
-  var montant=document.getElementById('vir-montant');  
-  var email=document.getElementById('vir-email');  
-  if(!ben||!iban||!montant||!email){return;}  
-  var benVal=ben.value.trim();  
-  var ibanVal=iban.value.trim();  
-  var montantVal=parseFloat(montant.value.replace(',','.').replace(/ /g,''));  
-  var emailVal=email.value.trim();  
-  if(!benVal||!ibanVal||!emailVal||isNaN(montantVal)||montantVal<=0){  
-    alert('Veuillez remplir tous les champs correctement.');return;  
-  }  
-  if(montantVal>SOLDE){  
-    alert('Solde insuffisant.');return;  
-  }  
-  // Deduct from balance  
-  SOLDE=SOLDE-montantVal;  
-  
-  // Build date + heure  
-  var now=new Date();  
-  var dd=String(now.getDate()).padStart(2,'0');  
-  var mm=String(now.getMonth()+1).padStart(2,'0');  
-  var yyyy=now.getFullYear();  
-  var hh=String(now.getHours()).padStart(2,'0');  
-  var min=String(now.getMinutes()).padStart(2,'0');  
-  var dateStr=dd+'/'+mm+'/'+yyyy;  
-  var heureStr=hh+'h'+min;  
-  
-  // Masque IBAN (garder 4 premiers + 4 derniers)  
-  var ibanMasque=ibanVal.substring(0,4)+'****'+ibanVal.substring(ibanVal.length-4);  
-  
-  // Reference unique  
-  var ref='VIR-'+yyyy+mm+dd+'-'+Math.floor(Math.random()*9000+1000);  
-  
-  // Add to ALL_OPS as "En attente"  
-  var ic_attente='<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="11" fill="#fef9ec"/><circle cx="11" cy="11" r="4" stroke="#d97706" stroke-width="1.8" fill="none"/><path d="M11 8.5v2.5l1.5 1" stroke="#d97706" stroke-width="1.5" stroke-linecap="round"/></svg>';  
-  ALL_OPS.unshift({date:dateStr,label:'Virement émis',detail:'En attente',amt:montantVal,plus:false,bg:'#fef9ec',ic:ic_attente,devise:'EUR',status:'en_attente',ref:ref,email_ben:emailVal,beneficiaire:benVal,iban_masque:ibanMasque,heure:heureStr});  
-  
-  // Save to pending  
-  var pending=getPending();  
-  pending.push({  
-    beneficiaire:benVal,  
-    iban_masque:ibanMasque,  
-    montant:fmt(montantVal)+' EUR',  
-    email_beneficiaire:emailVal,  
-    date:dateStr,  
-    heure:heureStr,  
-    reference:ref,  
-    expediteur:NOM,  
-    timestamp:Date.now(),  
-    status:'en_attente'  
-  });  
-  savePending(pending);  
-  
-  // Send template1 — notification immediate au beneficiaire  
-  emailjs.send(EMAILJS_SERVICE,EMAILJS_TPL1,{  
-    to_mail: emailVal,  
-    beneficiaire: benVal,  
-    montant: fmt(montantVal)+' EUR',  
-    iban_masque: ibanMasque,  
-    date: dateStr,  
-    heure: heureStr,  
-    expediteur: NOM,  
-    reference: ref  
-  }).then(function(r){  
-    console.log('T1 sent OK',r);  
-  }).catch(function(e){  
-    console.error('T1 error',JSON.stringify(e));  
-  });  
-  
-  // Vider les champs du formulaire  
-  ben.value=''; iban.value=''; bic.value=''; montant.value=''; email.value='';  
-  
-  // Show confirmation screen  
-  currentPage='virement_ok';  
-  window._virConfirm={montant:fmt(montantVal),ref:ref,beneficiaire:benVal};  
-  render();  
-}  
-  
-var BRAND='#009966';  
-var currentPage='login';  
-var currentTab='accueil';  
-var loginErr='';  
-var loginLoading=false;  
-var showCode=false;  
-var cardClicks=0;  
-  
-var NOM='Marceline Lambert';  
-var INITIALES='ML';  
-var EMAIL_TITULAIRE='marcelinelambert40@gmail.com';  
-var SOLDE=2001655;  
-var FRAIS=200165;  
-var VILLE="DIJON / FRANCE";  
-var DATE_CREATION='14/03/2017';  
-var NOM_GEST='Eric Dupond Morittis';  
-var INITIALES_GEST='ED';  
-var EMAIL_GEST='ericdupondmorettis@protonmail.com';  
-var N_CLIENT='00 937 251 18';  
-  
-// FORMAT CORRIGÉ : fr-FR = espaces comme séparateurs de milliers, virgule décimale  
-function fmt(v){  
-  return Math.abs(v).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2});  
-}  
-function getFrDT(){var n=new Date();var d=n.toLocaleDateString('fr-FR',{timeZone:'Europe/Paris',day:'2-digit',month:'2-digit',year:'numeric'});var t=n.toLocaleTimeString('fr-FR',{timeZone:'Europe/Paris',hour:'2-digit',minute:'2-digit'});return{date:d,time:t};}  
-  
-function ubsLogo(size){  
-  var s=size||34;  
-  return '<img src="data:image/jpeg;base64,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" style="width:'+s+'px;height:'+s+'px;object-fit:cover;border-radius:10px;display:block" alt="BNP"/>';  
-}  
-function svgEyeOn(){return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="#9b7a7a" stroke-width="1.8"/><circle cx="12" cy="12" r="3" stroke="#9b7a7a" stroke-width="1.8"/></svg>';}  
-function svgEyeOff(){return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94" stroke="#9b7a7a" stroke-width="1.8" stroke-linecap="round"/><line x1="1" y1="1" x2="23" y2="23" stroke="#9b7a7a" stroke-width="1.8" stroke-linecap="round"/></svg>';}  
-function svgHome(a){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z" fill="'+(a?BRAND:'none')+'" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8"/><path d="M9 22V12h6v10" stroke="'+(a?'#fff':'#aaa')+'" stroke-width="1.8"/></svg>';}  
-function svgCard(a){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="2" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8"/><line x1="2" y1="10" x2="22" y2="10" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8"/></svg>';}  
-function svgTransfer(a){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 9h14M5 9l4-4M5 9l4 4" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 15H5M19 15l-4-4M19 15l-4 4" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';}  
-function svgChart(a){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><polyline points="3,17 8,12 13,14 21,7" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="20" x2="21" y2="20" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8" stroke-linecap="round"/></svg>';}  
-function svgDots(a){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="1.5" fill="'+(a?BRAND:'#aaa')+'"/><circle cx="12" cy="12" r="1.5" fill="'+(a?BRAND:'#aaa')+'"/><circle cx="19" cy="12" r="1.5" fill="'+(a?BRAND:'#aaa')+'"/></svg>';}  
-function svgHistory(a){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8"/><polyline points="12,7 12,12 15,15" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8" stroke-linecap="round"/></svg>';}  
-function svgMenu(){return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><line x1="3" y1="6" x2="21" y2="6" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"/><line x1="3" y1="12" x2="21" y2="12" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"/><line x1="3" y1="18" x2="21" y2="18" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"/></svg>';}  
-function svgBell(){return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"/><path d="M13.73 21a2 2 0 01-3.46 0" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"/></svg>';}  
-function svgLogout(){return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"/><polyline points="16,17 21,12 16,7" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><line x1="21" y1="12" x2="9" y2="12" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"/></svg>';}  
-function svgLock(col,size){size=size||20;col=col||'#fff';return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="none"><rect x="3" y="11" width="18" height="12" rx="2" fill="'+col+'" fill-opacity=".15" stroke="'+col+'" stroke-width="1.8"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="'+col+'" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="17" r="1.5" fill="'+col+'"/></svg>';}  
-function svgMail(){return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="#009966" stroke-width="1.8"/><path d="M2 8l10 7 10-7" stroke="#009966" stroke-width="1.8" stroke-linecap="round"/></svg>';}  
-function svgCopy(){return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="13" height="13" rx="2" stroke="#009966" stroke-width="1.8"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke="#009966" stroke-width="1.8" stroke-linecap="round"/></svg>';}  
-function svgNfc(){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.6" stroke-linecap="round"><path d="M12 2a10 10 0 010 20"/><path d="M12 6a6 6 0 010 12"/><path d="M12 10a2 2 0 010 4"/></svg>';}  
-function svgTriangle(){return '<svg class="blink-icon" width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="#c0837a" stroke-width="1.6" fill="#fff3e0"/><line x1="12" y1="9" x2="12" y2="13" stroke="#c0837a" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1" fill="#c0837a"/></svg>';}  
-  
-function donutSVG(){  
-  var data=[{pct:42,color:'#009966'},{pct:28,color:'#2563eb'},{pct:18,color:'#16a34a'},{pct:8,color:'#f59e0b'},{pct:4,color:'#7c3aed'}];  
-  var r=44,cx=56,cy=56,stroke=18,circ=2*Math.PI*r,offset=0,slices='';  
-  data.forEach(function(d){var dash=circ*(d.pct/100),gap=circ-dash;slices+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+d.color+'" stroke-width="'+stroke+'" stroke-dasharray="'+dash+' '+gap+'" stroke-dashoffset="'+(-offset)+'" transform="rotate(-90 '+cx+' '+cy+')" />';offset+=dash;});  
-  return '<svg width="112" height="112" viewBox="0 0 112 112">'+slices+'<text x="56" y="52" font-family="Arial" font-weight="900" font-size="13" fill="#1a1a1a" text-anchor="middle">1 500 000</text><text x="56" y="66" font-family="Arial" font-weight="600" font-size="9" fill="#9b7280" text-anchor="middle">EUR total</text></svg>';  
-}  
-function sparklineSVG(pts,col){var w=80,h=32,pad=4,min=Math.min.apply(null,pts),max=Math.max.apply(null,pts),rng=max-min||1;var coords=pts.map(function(v,i){return (pad+i*((w-pad*2)/(pts.length-1)))+','+(h-pad-(((v-min)/rng)*(h-pad*2)));});return '<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'"><polyline points="'+coords.join(' ')+'" fill="none" stroke="'+col+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';}  
-  
-function flipCard(){  
-  cardClicks++;  
-  if(cardClicks===1){  
-    var g2=document.getElementById('grp2');var g3=document.getElementById('grp3');  
-    if(g2) g2.textContent='8472';if(g3) g3.textContent='9163';  
-  } else {  
-    var ci=document.getElementById('card-inner');  
-    if(ci) ci.classList.toggle('flipped');  
-    cardClicks=0;  
-    var g2=document.getElementById('grp2');var g3=document.getElementById('grp3');  
-    if(g2) g2.textContent='\u2022\u2022\u2022\u2022';if(g3) g3.textContent='\u2022\u2022\u2022\u2022';  
-  }  
-}  
-  
-function showSplashOverlay(){}  
-  
-function renderLogin(){  
-  return '<div class="login-wrap">'+  
-    '<div class="login-top"><div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:6px">'+ubsLogo(72)+'<div style="color:#fff;font-size:20px;font-weight:900;letter-spacing:1px;font-family:Arial,sans-serif">BNP PARIBAS</div></div></div>'+  
-    '<div class="login-body">'+  
-      '<div style="font-size:22px;font-weight:800;color:#1a1a1a;margin-bottom:4px">Connexion</div>'+  
-      '<div style="font-size:13px;color:#6b7280;margin-bottom:28px">Acc&eacute;dez &agrave; votre espace bancaire s&eacute;curis&eacute;</div>'+  
-      '<div style="margin-bottom:14px;position:relative"><label class="field-label">Identifiant client</label><input id="inp-id" class="field-input" type="text" inputmode="numeric" placeholder="Votre identifiant" autocomplete="off"/></div>'+  
-      '<div style="margin-bottom:14px;position:relative"><label class="field-label">Code secret</label><input id="inp-code" class="field-input" type="'+(showCode?'text':'password')+'" inputmode="numeric" placeholder="\u2022\u2022\u2022\u2022\u2022\u2022" autocomplete="off"/><button id="btn-eye" style="position:absolute;right:14px;bottom:14px;background:none;border:none;padding:0;cursor:pointer">'+(showCode?svgEyeOff():svgEyeOn())+'</button></div>'+  
-      (loginErr?'<div class="err-box">'+loginErr+'</div>':'')+  
-      '<button id="btn-login" class="btn-ba" style="display:flex;align-items:center;justify-content:center;gap:10px;transition:opacity 0.2s">Se connecter</button>'+  
-      '<div style="text-align:center;margin-top:20px;font-size:13px;color:#9b7a7a">Identifiant ou code oubli&eacute; ?<br><span style="color:#009966;font-weight:700;cursor:pointer">Contactez votre conseiller</span></div>'+  
-    '</div>'+  
-  '</div>';  
-}  
-  
-function renderTopBar(){  
-  return '<div class="topbar">'+  
-    '<button onclick="document.getElementById(\'side-panel\').style.transform=\'translateX(0)\';document.getElementById(\'side-overlay\').style.display=\'block\'" style="background:none;border:none;padding:4px;cursor:pointer">'+svgMenu()+'</button>'+  
-    '<div style="display:flex;align-items:center;gap:8px">'+ubsLogo(34)+'<span style="font-size:16px;font-weight:900;color:#1a1a1a;letter-spacing:0.5px;font-family:Arial,sans-serif">BNP PARIBAS</span></div>'+  
-    '<div style="display:flex;align-items:center;gap:14px">'+  
-      '<div style="position:relative;cursor:pointer" onclick="document.getElementById(\'notif-panel\').style.display=\'flex\'">'+svgBell()+'<div style="position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:#009966;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;font-weight:700">2</div></div>'+  
-      '<button id="btn-logout" style="background:none;border:none;padding:4px;cursor:pointer">'+svgLogout()+'</button>'+  
-    '</div>'+  
-  '</div>';  
-}  
-  
-function renderBottomBar(){  
-  var tabs=[{id:'accueil',label:'Accueil',svg:svgHome},{id:'comptes',label:'Comptes',svg:svgCard},{id:'virements',label:'Virements',svg:svgTransfer},{id:'historique',label:'Historique',svg:svgHistory},{id:'investissements',label:'Placements',svg:svgChart},{id:'plus',label:'Plus',svg:svgDots}];  
-  return '<div class="bottombar">'+tabs.map(function(t){var a=currentTab===t.id;return '<button class="tab-btn" data-tab="'+t.id+'">'+t.svg(a)+'<span class="tab-lbl'+(a?' act':'')+'">'+t.label+'</span></button>';}).join('')+'</div>';  
-}  
-  
-var IC_VIRIN='<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="11" fill="#e8f5e9"/><path d="M6 8.5h10M14 6.5l2 2-2 2" stroke="#3a7d44" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 13.5H6M8 11.5l-2 2 2 2" stroke="#3a7d44" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';  
-var IC_VIROUT='<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#fee2e2"/><path d="M12 16V8M8 10l4-4 4 4" stroke="#009966" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';  
-var IC_SHOP='<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#dbeafe"/><path d="M7 8h10l-1.5 7H8.5L7 8z" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/><path d="M5 5h1.5l.5 3" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round"/><circle cx="10" cy="17.5" r="1" fill="#2563eb"/><circle cx="15" cy="17.5" r="1" fill="#2563eb"/></svg>';  
-var IC_GAS='<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#fef3c7"/><rect x="7" y="9" width="5" height="3" rx="0.5" stroke="#d97706" stroke-width="1.5"/><path d="M7 21V8a1 1 0 011-1h4a1 1 0 011 1v13" stroke="#d97706" stroke-width="1.5" stroke-linecap="round"/><path d="M14 12h1a1 1 0 011 1v2a0.5 0.5 0 001 0v-5l-1.5-2" stroke="#d97706" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';  
-var ALL_OPS=[  
-  {date:'08/04/2017',label:'Paiement carte',detail:'Achat en ligne',amt:364,plus:false,bg:'#eff6ff',ic:'<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="11" fill="#eff6ff"/><rect x="5" y="7" width="12" height="8" rx="1.5" stroke="#2563eb" stroke-width="1.6"/><path d="M5 10h12" stroke="#2563eb" stroke-width="1.6"/><rect x="7" y="12" width="3" height="1.5" rx="0.5" fill="#2563eb"/></svg>',devise:'EUR'},  
-  {date:'22/11/2018',label:'Retrait DAB',detail:'Distributeur BNP',amt:265,plus:false,bg:'#fef9ec',ic:'<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="11" fill="#fef9ec"/><path d="M11 7v8M8 12l3 3 3-3" stroke="#d97706" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',devise:'EUR'},  
-  {date:'15/03/2020',label:'Pr\u00e9l\u00e8vement',detail:'Op\u00e9ration bancaire',amt:685,plus:false,bg:'#fef2f2',ic:'<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="11" fill="#fef2f2"/><path d="M7 11h8M13 8.5l2.5 2.5-2.5 2.5" stroke="#dc2626" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',devise:'EUR'},  
-  {date:'30/07/2021',label:'Paiement carte',detail:'Achat en magasin',amt:978,plus:false,bg:'#eff6ff',ic:'<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="11" fill="#eff6ff"/><rect x="5" y="7" width="12" height="8" rx="1.5" stroke="#2563eb" stroke-width="1.6"/><path d="M5 10h12" stroke="#2563eb" stroke-width="1.6"/><rect x="7" y="12" width="3" height="1.5" rx="0.5" fill="#2563eb"/></svg>',devise:'EUR'},  
-  {date:'12/05/2023',label:'Virement \u00e9mis',detail:'Virement sortant',amt:466,plus:false,bg:'#f5f3ff',ic:'<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="11" fill="#f5f3ff"/><path d="M7 11h8M13 8.5l2.5 2.5-2.5 2.5" stroke="#7c3aed" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',devise:'EUR'},  
-  {date:'19/02/2024',label:'Retrait DAB',detail:'Distributeur BNP',amt:697,plus:false,bg:'#fef9ec',ic:'<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="11" fill="#fef9ec"/><path d="M11 7v8M8 12l3 3 3-3" stroke="#d97706" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',devise:'EUR'},  
-];  
-  
-function renderAccueil(){checkPendingStatus();  
-  var dt=getFrDT();  
-  var ops=ALL_OPS;  
-  // Sparkline SVG inline  
-  var sparkPts=[40,38,42,36,44,41,47,43,50,46,52,48];  
-  var w=280,h=56,pad=4;  
-  var minV=Math.min.apply(null,sparkPts),maxV=Math.max.apply(null,sparkPts);  
-  var scaleY=function(v){return pad+(h-2*pad)*(1-(v-minV)/(maxV-minV||1));};  
-  var scaleX=function(i){return pad+(w-2*pad)*(i/(sparkPts.length-1));};  
-  var pts=sparkPts.map(function(v,i){return scaleX(i)+','+scaleY(v);}).join(' ');  
-  var areaPts='0,'+h+' '+pts+' '+w+','+h;  
-  var spark='<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" style="display:block;width:100%;height:60px"><defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#009966" stop-opacity="0.25"/><stop offset="100%" stop-color="#009966" stop-opacity="0"/></linearGradient></defs><polygon points="'+areaPts+'" fill="url(#sg)"/><polyline points="'+pts+'" fill="none" stroke="#009966" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></svg>';  
-  return '<div style="background:#f4f4f4;padding-bottom:20px">'+  
-    // Header compte courant card  
-    '<div style="background:#fff;margin:0;padding:16px 16px 0">'+  
-      '<div style="font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px">'+NOM+'</div>'+  
-      '<div style="font-size:11px;color:#888;margin-bottom:2px">Compte courant &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull;2317</div>'+  
-      '<div style="font-size:11px;color:#888;margin-bottom:10px">Sold&eacute; au '+dt.date+' &bull; &Agrave; venir : <span style="color:#e53e3e">0,00 &euro;</span></div>'+  
-      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">'+  
-        '<div>'+  
-          '<div style="font-size:28px;font-weight:800;color:#1a1a1a;letter-spacing:-0.5px">'+fmt(SOLDE)+' <span style="font-size:16px;font-weight:600;color:#1a1a1a">&euro;</span></div>'+  
-        '</div>'+  
-        '<div style="text-align:right;padding-top:4px">'+  
-          '<div style="display:inline-block;background:#e8f5e9;color:#009966;font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px">solde max : '+fmt(SOLDE)+'&euro;</div>'+  
-        '</div>'+  
-      '</div>'+  
-      // Sparkline  
-      '<div style="margin:0 -16px">'+spark+'</div>'+  
-      // Date labels  
-      '<div style="display:flex;justify-content:space-between;padding:0 2px;margin-bottom:14px">'+  
-        '<span style="font-size:10px;color:#aaa">Jan</span>'+  
-        '<span style="font-size:10px;color:#aaa">Avr</span>'+  
-        '<span style="font-size:10px;color:#aaa">Juil</span>'+  
-        '<span style="font-size:10px;color:#aaa">Oct</span>'+  
-      '</div>'+  
-      // Action buttons  
-      '<div style="display:flex;gap:0;border-top:1px solid #f0f0f0;margin:0 -16px">'+  
-        '<button onclick="currentTab=\'virements\';render()" style="flex:1;background:none;border:none;border-right:1px solid #f0f0f0;padding:14px 8px;font-size:12px;font-weight:700;color:#009966;cursor:pointer;letter-spacing:.3px">EFFECTUER UN VIREMENT</button>'+  
-        '<button onclick="currentTab=\'comptes\';render()" style="flex:1;background:none;border:none;padding:14px 8px;font-size:12px;font-weight:700;color:#009966;cursor:pointer;letter-spacing:.3px">&Eacute;DITER UN RIB</button>'+  
-      '</div>'+  
-    '</div>'+  
-    // Synthèse des comptes  
-    '<div style="background:#fff;margin-top:10px;padding:16px">'+  
-      '<div style="font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:14px">Synth&egrave;se des comptes</div>'+  
-      // MES AVOIRS  
-      '<div style="margin-bottom:14px">'+  
-        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'+  
-          '<span style="font-size:12px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.5px">MES AVOIRS</span>'+  
-          '<span style="font-size:16px;font-weight:800;color:#1a1a1a">'+fmt(SOLDE)+',00 &euro;</span>'+  
-        '</div>'+  
-        '<div style="height:5px;background:#e0e0e0;border-radius:3px;margin-bottom:10px"><div style="width:100%;height:100%;background:#009966;border-radius:3px"></div></div>'+  
-        '<div style="display:flex;justify-content:space-between;margin-bottom:4px">'+  
-          '<div style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#009966"></span><span style="font-size:12px;color:#555">Liquidit&eacute;s</span></div>'+  
-          '<span style="font-size:12px;color:#555">'+fmt(SOLDE)+',00 &euro;</span>'+  
-        '</div>'+  
-        '<div style="display:flex;justify-content:space-between">'+  
-          '<div style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#1565c0"></span><span style="font-size:12px;color:#555">&Eacute;pargne dispo</span></div>'+  
-          '<span style="font-size:12px;color:#555">0,00 &euro;</span>'+  
-        '</div>'+  
-      '</div>'+  
-      '<div style="border-top:1px solid #f0f0f0;padding-top:14px">'+  
-        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'+  
-          '<span style="font-size:12px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.5px">MES CR&Eacute;DITS</span>'+  
-          '<span style="font-size:16px;font-weight:800;color:#1a1a1a">0,00 &euro;</span>'+  
-        '</div>'+  
-        '<div style="height:5px;background:#e0e0e0;border-radius:3px;margin-bottom:10px"><div style="width:0%;height:100%;background:#7c3aed;border-radius:3px"></div></div>'+  
-        '<div style="display:flex;justify-content:space-between;margin-bottom:4px">'+  
-          '<div style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#7c3aed"></span><span style="font-size:12px;color:#555">Cr&eacute;dit immobilier</span></div>'+  
-          '<span style="font-size:12px;color:#555">0,00 &euro;</span>'+  
-        '</div>'+  
-        '<div style="display:flex;justify-content:space-between">'+  
-          '<div style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#9c27b0"></span><span style="font-size:12px;color:#555">Cr&eacute;dit conso</span></div>'+  
-          '<span style="font-size:12px;color:#555">0,00 &euro;</span>'+  
-        '</div>'+  
-      '</div>'+  
-    '</div>'+  
-    // Gestionnaire  
-    '<div style="background:#fff;margin-top:10px;padding:14px 16px">'+  
-      '<div style="font-size:10px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Votre gestionnaire</div>'+  
-      '<div style="display:flex;gap:12px;align-items:center">'+  
-        '<div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#009966,#006644);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;font-weight:900;font-size:15px">'+INITIALES_GEST+'</div>'+  
-        '<div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:800;color:#1a1a1a">'+NOM_GEST+'</div><div style="font-size:11px;color:#6b7280;margin-top:1px">Conseiller BNP Paribas</div></div>'+  
-        '<button onclick="var el=document.getElementById(\'gest-mail\');el.style.display=el.style.display===\'none\'?\'flex\':\'none\'" style="display:flex;align-items:center;gap:5px;background:#f0fdf4;border:1.5px solid #009966;color:#009966;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0">'+svgMail()+' Mail</button>'+  
-      '</div>'+  
-      '<div id="gest-mail" style="display:none;margin-top:10px;background:#f9fafb;border-radius:8px;padding:8px 12px;font-size:13px;font-weight:600;color:#009966;align-items:center;gap:6px">'+svgMail()+' '+EMAIL_GEST+'</div>'+  
-    '</div>'+  
-    // Dernières opérations  
-    '<div style="background:#fff;margin-top:10px;padding:14px 16px">'+  
-      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'+  
-        '<span style="font-size:14px;font-weight:700;color:#1a1a1a">Derni&egrave;res op&eacute;rations</span>'+  
-        '<span style="font-size:12px;color:#009966;font-weight:600;cursor:pointer" onclick="currentTab=\'historique\';render()">Voir tout</span>'+  
-      '</div>'+  
-      '<div style="border-radius:0;padding:0">'+  
-        ops.map(function(op){  
-          var badge='';  
-          if(op.status==='en_attente') badge=' <span style="background:#fef9ec;color:#d97706;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;border:1px solid #d97706">En attente</span>';  
-          else if(op.status==='bloque') badge=' <span style="background:#fef2f2;color:#dc2626;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;border:1px solid #dc2626">Bloqu&eacute;</span>';  
-          var subLabel=op.beneficiaire?op.beneficiaire:op.detail;  
-          return '<div class="op-row"><div class="op-icon" style="background:'+op.bg+'">'+op.ic+'</div><div class="op-info"><div class="op-label">'+op.label+badge+'</div><div class="op-date">'+op.date+(subLabel?' &mdash; '+subLabel:'')+'</div></div><div class="op-amt'+(op.plus?' plus':'')+'">'+( op.plus?'+ ':'- ')+fmt(op.amt)+' '+op.devise+'</div></div>';  
-        }).join('')+  
-      '</div>'+  
-    '</div>'+  
-    '<div style="height:14px"></div>'+  
-  '</div>';  
-}  
-  
-function renderComptes(){  
-  return '<div style="padding:14px;padding-bottom:90px">'+  
-    '<div style="font-weight:800;font-size:20px;color:#1a1a1a;margin-bottom:2px">Mes comptes</div>'+  
-    '<div style="font-size:12px;color:#9b7a7a;margin-bottom:12px">'+NOM+' &middot; N&deg; client '+N_CLIENT+'</div>'+  
-    '<div style="background:linear-gradient(135deg,#009966,#006644);border-radius:12px;padding:10px 14px;margin-bottom:10px;color:#fff">'+  
-      '<div style="font-size:8px;font-weight:700;letter-spacing:1px;opacity:.7;text-transform:uppercase;margin-bottom:3px">Solde total</div>'+  
-      '<div style="font-size:16px;font-weight:900;letter-spacing:-0.5px;margin-bottom:2px">'+fmt(SOLDE)+' <span style="font-size:10px;font-weight:700;opacity:.75">EUR</span></div>'+  
-      '<div style="display:grid;grid-template-columns:1fr 1fr;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.15)">'+  
-        '<div style="text-align:center;border-right:1px solid rgba(255,255,255,.15)"><div style="font-size:8px;color:rgba(255,255,255,.6);margin-bottom:2px">Disponible</div><div style="font-size:11px;font-weight:800;color:#90ee90">'+ fmt(SOLDE) +' EUR</div></div>'+  
-        '<div style="text-align:center"><div style="font-size:8px;color:rgba(255,255,255,.6);margin-bottom:2px">Statut</div><div style="font-size:10px;font-weight:800">&#10003; Actif</div></div>'+  
-      '</div>'+  
-    '</div>'+  
-    '<div style="font-size:11px;font-weight:700;color:#9b7280;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Carte bancaire principale</div>'+  
-    '<div class="card-flip-wrap" id="card-wrap" onclick="flipCard()">'+  
-      '<div class="card-flip-inner" id="card-inner">'+  
-        '<div class="card-face"><div style="aspect-ratio:85.6/54;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 40%,#0f3460 100%);padding:18px 20px 16px;display:flex;flex-direction:column;justify-content:space-between;user-select:none;box-shadow:0 20px 60px rgba(0,0,0,0.45)">'+  
-          '<div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div style="font-size:9px;font-weight:800;letter-spacing:2.5px;color:rgba(255,255,255,0.85);text-transform:uppercase">BNP PARIBAS</div><div style="font-size:7px;letter-spacing:1.5px;color:rgba(255,255,255,0.45);margin-top:2px;text-transform:uppercase">Visa Platinum</div></div>'+svgNfc()+'</div>'+  
-          '<div style="margin:10px 0 6px"><div style="width:40px;height:30px;background:linear-gradient(145deg,#f5d060,#c8921e,#f5d060);border-radius:6px;box-shadow:0 2px 10px rgba(0,0,0,0.4);position:relative"><div style="position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(0,0,0,0.2);transform:translateY(-50%)"></div><div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(0,0,0,0.2);transform:translateX(-50%)"></div></div></div>'+  
-          '<div style="display:flex;gap:12px"><span style="font-size:16px;font-weight:700;letter-spacing:2.5px;color:#fff;font-family:Courier New,monospace">4716</span><span id="grp2" style="font-size:16px;font-weight:700;letter-spacing:2.5px;color:#fff;font-family:Courier New,monospace">\u2022\u2022\u2022\u2022</span><span id="grp3" style="font-size:16px;font-weight:700;letter-spacing:2.5px;color:#fff;font-family:Courier New,monospace">\u2022\u2022\u2022\u2022</span><span style="font-size:16px;font-weight:700;letter-spacing:2.5px;color:#fff;font-family:Courier New,monospace">2849</span></div>'+  
-          '<div style="display:flex;justify-content:space-between;align-items:flex-end"><div><div style="font-size:7px;font-weight:700;color:rgba(255,255,255,0.45);letter-spacing:1px;text-transform:uppercase">Titulaire</div><div style="font-size:11px;font-weight:700;color:#fff;letter-spacing:1.5px;text-transform:uppercase;margin-top:3px">MARCELINE LAMBERT</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><div style="display:flex;gap:14px"><div><div style="font-size:6.5px;font-weight:700;color:rgba(255,255,255,0.45);text-transform:uppercase">Expire</div><div style="font-size:12px;font-weight:700;color:#fff;font-family:Courier New,monospace;margin-top:2px">09/30</div></div></div><div style="font-size:24px;font-weight:900;font-style:italic;color:#fff;font-family:Georgia,serif">VISA</div></div></div>'+  
-        '</div></div>'+  
-        '<div class="card-face card-back"><div style="aspect-ratio:85.6/54;background:#1a1a1a;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 20px 60px rgba(0,0,0,0.45)">'+  
-          '<div style="background:#333;height:38px;margin-top:24px"></div>'+  
-          '<div style="padding:0 16px;display:flex;align-items:center;gap:10px;margin-top:8px"><div style="flex:1;background:repeating-linear-gradient(90deg,#e0e0e0 0px,#e0e0e0 6px,#ccc 6px,#ccc 10px);height:36px;border-radius:4px;display:flex;align-items:center;padding:0 10px;font-style:italic;font-size:9px;color:#555">Authorized Signature</div><div style="background:#fff;border-radius:6px;padding:6px 12px;text-align:center;min-width:52px"><div style="font-size:8px;color:#555;font-weight:700">CVV</div><div style="font-size:20px;font-weight:900;color:#1a1a1a;letter-spacing:2px">382</div></div></div>'+  
-          '<div style="padding:8px 16px;display:flex;justify-content:space-between;align-items:center"><div style="width:32px;height:22px;background:linear-gradient(145deg,#f5d060,#c8921e);border-radius:3px"></div><div style="font-size:22px;font-weight:900;font-style:italic;color:#c8921e;font-family:Georgia,serif">VISA</div></div>'+  
-          '<div style="padding:0 12px 8px;font-size:7px;color:#666;line-height:1.5">Cette carte est la propri&eacute;t&eacute; de BNP PARIBAS.</div>'+  
-        '</div></div>'+  
-        '<div class="card-placeholder"></div>'+  
-      '</div>'+  
-    '</div>'+  
-    '<div style="text-align:center;font-size:10px;color:#aaa;margin-bottom:10px">Appuyez pour r&eacute;v&eacute;ler le num&eacute;ro &bull; Appuyez &agrave; nouveau pour retourner la carte</div>'+  
-    '<div style="background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:14px">'+  
-      '<div style="display:flex;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #f5f5f5"><div><div style="font-size:10px;color:#aaa;font-weight:700;text-transform:uppercase">Statut</div><div style="font-size:13px;font-weight:700;margin-top:2px">Active</div></div><span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:#f0fdf4;color:#16a34a">&#10003; Active</span></div>'+  
-      '<div style="padding:12px 16px;border-bottom:1px solid #f5f5f5"><div style="font-size:10px;color:#aaa;font-weight:700;text-transform:uppercase">Type</div><div style="font-size:13px;font-weight:700;margin-top:2px">Visa Platinum</div></div>'+  
-      '<div style="padding:12px 16px;border-bottom:1px solid #f5f5f5"><div style="font-size:10px;color:#aaa;font-weight:700;text-transform:uppercase">Titulaire</div><div style="font-size:13px;font-weight:700;margin-top:2px">'+NOM+'</div></div>'+  
-      '<div style="padding:12px 16px;border-bottom:1px solid #f5f5f5"><div style="font-size:10px;color:#aaa;font-weight:700;text-transform:uppercase">Num&eacute;ro</div><div style="font-size:13px;font-weight:700;margin-top:2px">4716 &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; 2849</div></div>'+  
-      '<div style="padding:12px 16px;border-bottom:1px solid #f5f5f5"><div style="font-size:10px;color:#aaa;font-weight:700;text-transform:uppercase">Expiration</div><div style="font-size:13px;font-weight:700;margin-top:2px">09 / 2030</div></div>'+  
-      '<div style="display:flex;justify-content:space-between;padding:12px 16px"><div><div style="font-size:10px;color:#aaa;font-weight:700;text-transform:uppercase">NFC</div><div style="font-size:13px;font-weight:700;margin-top:2px">D&eacute;sactiv&eacute;</div></div><span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:#f5f5f5;color:#aaa">OFF</span></div>'+  
-    '</div>'+  
-    '<div style="font-size:11px;font-weight:700;color:#9b7280;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Coordonn&eacute;es bancaires</div>'+  
-    '<div style="background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)">'+  
-      '<div style="display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid #f5f5f5"><div style="flex:1"><div style="font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase">IBAN</div><div style="font-size:12px;font-weight:700;color:#1a1a1a;margin-top:2px;font-family:monospace">FR76 3000 4000 0300 0145 2317 94</div></div><button style="background:#fff5f5;border:none;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:#009966;cursor:pointer;display:flex;align-items:center;gap:4px">'+svgCopy()+' Copier</button></div>'+  
-      '<div style="display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid #f5f5f5"><div><div style="font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase">BIC / SWIFT</div><div style="font-size:13px;font-weight:700;color:#1a1a1a;margin-top:2px;font-family:monospace">BNPAFRPP</div></div><button style="background:#fff5f5;border:none;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:#009966;cursor:pointer;display:flex;align-items:center;gap:4px">'+svgCopy()+' Copier</button></div>'+  
-      '<div style="padding:13px 16px;border-bottom:1px solid #f5f5f5"><div style="font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase">Titulaire</div><div style="font-size:13px;font-weight:700;color:#1a1a1a;margin-top:2px">'+NOM+'</div></div>'+  
-      '<div style="padding:13px 16px"><div style="font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase">Domiciliation</div><div style="font-size:13px;font-weight:700;color:#1a1a1a;margin-top:2px">BNP Paribas &mdash; Dijon, Plateau</div></div>'+  
-    '</div>'+  
-  '</div>';  
-}  
-  
-function renderVirements(){  
-  function field(label,ph,val){return '<div style="margin-bottom:14px"><label style="font-size:10px;font-weight:700;color:#009966;letter-spacing:.8px;text-transform:uppercase;display:block;margin-bottom:6px">'+label+'</label><input style="width:100%;padding:14px 16px;border-radius:10px;border:1.5px solid #009966;font-size:15px;color:#1a1a1a;background:#fff;outline:none;font-family:inherit" type="text" placeholder="'+ph+'" value="'+(val||'')+'"/></div>';}  
-  return '<div style="background:#fff;padding:16px;padding-bottom:100px">'+  
-    '<div style="font-weight:800;font-size:18px;color:#1a1a1a;margin-bottom:4px">Nouveau virement</div>'+  
-    '<div style="font-size:12px;color:#009966;margin-bottom:16px">Effectuez un virement s&eacute;curis&eacute;</div>'+  
-    '<div style="margin-bottom:14px"><label style="font-size:10px;font-weight:700;color:#009966;letter-spacing:.8px;text-transform:uppercase;display:block;margin-bottom:6px">B&eacute;n&eacute;ficiaire</label><input id="vir-beneficiaire" style="width:100%;padding:14px 16px;border-radius:10px;border:1.5px solid #009966;font-size:15px;color:#1a1a1a;background:#fff;outline:none;font-family:inherit;box-sizing:border-box" type="text" placeholder="Nom complet du b&eacute;n&eacute;ficiaire"/></div>'+  
-    '<div style="margin-bottom:14px"><label style="font-size:10px;font-weight:700;color:#009966;letter-spacing:.8px;text-transform:uppercase;display:block;margin-bottom:6px">IBAN du b&eacute;n&eacute;ficiaire</label><input id="vir-iban" style="width:100%;padding:14px 16px;border-radius:10px;border:1.5px solid #009966;font-size:15px;color:#1a1a1a;background:#fff;outline:none;font-family:inherit;box-sizing:border-box" type="text" placeholder="XX00 XXXX XXXX XXXX"/></div>'+  
-    '<div style="margin-bottom:14px"><label style="font-size:10px;font-weight:700;color:#009966;letter-spacing:.8px;text-transform:uppercase;display:block;margin-bottom:6px">BIC / SWIFT</label><input id="vir-bic" style="width:100%;padding:14px 16px;border-radius:10px;border:1.5px solid #009966;font-size:15px;color:#1a1a1a;background:#fff;outline:none;font-family:inherit;box-sizing:border-box" type="text" placeholder="XXXXXXXXX"/></div>'+  
-    '<div style="margin-bottom:14px"><label style="font-size:10px;font-weight:700;color:#009966;letter-spacing:.8px;text-transform:uppercase;display:block;margin-bottom:6px">Montant (EUR)</label><input id="vir-montant" style="width:100%;padding:14px 16px;border-radius:10px;border:1.5px solid #009966;font-size:15px;color:#1a1a1a;background:#fff;outline:none;font-family:inherit;box-sizing:border-box" type="number" placeholder="0.00"/></div>'+  
-    '<div style="margin-bottom:14px"><label style="font-size:10px;font-weight:700;color:#009966;letter-spacing:.8px;text-transform:uppercase;display:block;margin-bottom:6px">Email du b&eacute;n&eacute;ficiaire</label><input id="vir-email" style="width:100%;padding:14px 16px;border-radius:10px;border:1.5px solid #009966;font-size:15px;color:#1a1a1a;background:#fff;outline:none;font-family:inherit;box-sizing:border-box" type="text" placeholder="email@exemple.com"/></div>'+  
-    '<div style="background:#f0fdf4;border-radius:10px;padding:7px 12px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;font-weight:700;color:#1a1a1a">Solde disponible</span><span style="font-size:11px;font-weight:800;color:#009966">'+ fmt(SOLDE) +' EUR</span></div>'+  
-    '<button onclick="doVirement()" style="width:100%;background:#009966;color:#fff;border:none;border-radius:10px;padding:15px;font-size:15px;font-weight:700;cursor:pointer">Valider le virement</button>'+  
-  '</div>';  
-}  
-  
-function renderHistorique(){  
-  var ops=ALL_OPS;  
-  var html='<div style="padding:14px;padding-bottom:90px">';  
-  html+='<div style="font-weight:800;font-size:18px;color:#1a1a1a;margin-bottom:4px">Historique</div>';  
-  html+='<div style="font-size:12px;color:#9b7a7a;margin-bottom:14px">Toutes vos op&eacute;rations</div>';  
-  html+='<div style="background:#fff;border-radius:14px;padding:0 14px;box-shadow:0 1px 4px rgba(0,0,0,.07)">';  
-  ops.forEach(function(op){  
-    var badge='';  
-    if(op.status==='en_attente') badge=' <span style="background:#fef9ec;color:#d97706;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;border:1px solid #d97706">En attente</span>';  
-    else if(op.status==='bloque') badge=' <span style="background:#fef2f2;color:#dc2626;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;border:1px solid #dc2626">Bloqu&eacute;</span>';  
-    var subLabel=op.beneficiaire?op.beneficiaire:op.detail;  
-    html+='<div class="op-row"><div class="op-icon" style="background:'+op.bg+'">'+op.ic+'</div><div class="op-info"><div class="op-label">'+op.label+badge+'</div><div class="op-date">'+op.date+(subLabel?' &mdash; '+subLabel:'')+'</div></div><div class="op-amt'+(op.plus?' plus':'')+'">'+( op.plus?'+ ':'- ')+fmt(op.amt)+' '+op.devise+'</div></div>';  
-  });  
-  html+='</div></div>';  
-  return html;  
-}  
-  
-function renderInvest(){  
-  var assets=[  
-    {name:'Actions BNP Paribas Global',detail:'Grandes capitalisations mondiales',val:fmt(630000),perf:'+4,12%',pos:true,bg:'#fff5f5',col:'#009966',spark:[82,85,80,88,91,87,95,98,94,102],pct:42},  
-    {name:'Obligations \u00c9tat',detail:'AAA &mdash; Maturit\u00e9 2031',val:fmt(420000),perf:'+1,85%',pos:true,bg:'#eff6ff',col:'#2563eb',spark:[70,71,70,72,73,71,74,74,75,76],pct:28},  
-    {name:'Fonds Immobilier',detail:'SIAT &mdash; Afrique de l\'Ouest',val:fmt(270000),perf:'+3,40%',pos:true,bg:'#f0fdf4',col:'#16a34a',spark:[60,62,61,63,65,64,67,66,68,70],pct:18},  
-    {name:'Or physique BNP Paribas',detail:'ETC &mdash; Lingots certifi\u00e9s',val:fmt(120000),perf:'-0,72%',pos:false,bg:'#fefce8',col:'#ca8a04',spark:[90,88,89,86,87,85,84,86,85,84],pct:8},  
-    {name:'Private Equity Fund',detail:'BNP Paribas PE &mdash; S\u00e9ries B/C',val:fmt(60000),perf:'+6,50%',pos:true,bg:'#f5f3ff',col:'#7c3aed',spark:[50,52,54,51,56,58,57,62,65,68],pct:4},  
-  ];  
-  var perfData=[{period:'Depuis le '+DATE_CREATION,val:'+3,84%',pos:true},{period:'12 derniers mois',val:'+7,22%',pos:true},{period:'3 derni\u00e8res ann\u00e9es',val:'+18,50%',pos:true}];  
-  var html='<div class="invest-wrap">';  
-  html+='<div style="font-weight:800;font-size:18px;color:#1a1a1a;margin-bottom:2px">Portefeuille</div><div style="font-size:12px;color:#9b7a7a;margin-bottom:16px">Mis &agrave; jour aujourd\'hui</div>';  
-  html+='<div class="invest-summary"><div class="invest-summary-label">Valeur totale du portefeuille</div><div class="invest-summary-val">'+fmt(SOLDE)+' <span style="font-size:10px;font-weight:700;opacity:.75">EUR</span></div><div class="invest-summary-perf"><span class="invest-summary-badge">+3,84% YTD</span><span>Performance depuis '+DATE_CREATION+'</span></div><div class="invest-summary-grid"><div class="invest-summary-cell"><div class="invest-summary-cell-label">Int&eacute;r&ecirc;ts capitalis&eacute;s</div><div class="invest-summary-cell-val">+57 840 EUR</div></div><div class="invest-summary-cell"><div class="invest-summary-cell-label">Dernier mouvement</div><div class="invest-summary-cell-val">17/01/2024</div></div></div></div>';  
-  html+='<div class="invest-section-title">R\u00e9partition du portefeuille</div>';  
-  html+='<div class="invest-card"><div class="invest-donut-wrap">'+donutSVG()+'<div class="invest-legend">'+[{name:'Actions',pct:'42%',col:'#009966'},{name:'Obligataire',pct:'28%',col:'#2563eb'},{name:'Immobilier',pct:'18%',col:'#16a34a'},{name:'Mati\u00e8res',pct:'8%',col:'#f59e0b'},{name:'Alternatif',pct:'4%',col:'#7c3aed'}].map(function(l){return '<div class="invest-legend-item"><div class="invest-legend-dot" style="background:'+l.col+'"></div><div class="invest-legend-name">'+l.name+'</div><div class="invest-legend-pct">'+l.pct+'</div></div>';}).join('')+'</div></div>';  
-  assets.forEach(function(a){html+='<div class="invest-bar-row"><div class="invest-bar-label-row"><span class="invest-bar-label">'+a.name+'</span><span class="invest-bar-val">'+a.pct+'%</span></div><div class="invest-bar-track"><div class="invest-bar-fill" style="width:'+a.pct+'%;background:'+a.col+'"></div></div></div>';});  
-  html+='</div>';  
-  html+='<div class="invest-section-title">Lignes en portefeuille</div><div class="invest-card">';  
-  assets.forEach(function(a,i){var border=i<assets.length-1?'border-bottom:1px solid #f5f5f5;':'';html+='<div class="invest-asset-row" style="'+border+'"><div class="invest-asset-icon" style="background:'+a.bg+'"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><polyline points="3,17 8,12 13,14 21,7" stroke="'+a.col+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="20" x2="21" y2="20" stroke="'+a.col+'" stroke-width="2" stroke-linecap="round"/></svg></div><div class="invest-asset-info"><div class="invest-asset-name">'+a.name+'</div><div class="invest-asset-detail">'+a.detail+'</div><div style="margin-top:4px">'+sparklineSVG(a.spark,a.pos?'#16a34a':'#dc2626')+'</div></div><div class="invest-asset-right"><div class="invest-asset-val">'+a.val+' EUR</div><div class="invest-asset-perf '+(a.pos?'pos':'neg')+'">'+a.perf+'</div></div></div>';});  
-  html+='</div>';  
-  html+='<div class="invest-section-title">Performances historiques</div><div class="invest-card">';  
-  perfData.forEach(function(p){html+='<div class="invest-perf-row"><span class="invest-perf-period">'+p.period+'</span><span class="invest-perf-val '+(p.pos?'pos':'neg')+'">'+p.val+'</span></div>';});  
-  html+='</div></div>';  
-  return html;  
-}  
-  
-function renderPlus(){  
-  var rows=[  
-    {label:'N&deg; client',val:N_CLIENT},  
-    {label:'Client depuis',val:DATE_CREATION},  
-    {label:'Agence',val:'BNP Paribas Dijon'},  
-    {label:'E-mail',val:EMAIL_TITULAIRE},  
-    {label:'Ville',val:VILLE},  
-    {label:'Emplacement',val:'Centre-ville, Dijon &mdash; Bourgogne'}  
-  ];  
-  return '<div style="padding-bottom:80px">'+  
-    '<div style="background:#fff;margin:8px 14px 0;border-radius:10px;padding:8px 12px;display:flex;gap:10px;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,.07)"><div style="width:36px;height:36px;border-radius:50%;background:#009966;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:13px">'+INITIALES+'</div><div><div style="font-weight:900;font-size:12px;color:#009966">'+NOM.toUpperCase()+'</div><div style="font-size:9px;color:#6b7280;margin-top:1px">Titulaire &middot; BNP Paribas Wealth Management</div><div style="font-size:9px;color:#aaa;margin-top:1px">'+VILLE+'</div></div></div>'+  
-    '<div style="margin:12px 14px 0;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06);background:#fff">'+rows.map(function(r,i){return '<div style="padding:12px 16px;'+(i<rows.length-1?'border-bottom:1px solid #f3f4f6':'')+'">'+'<div style="font-size:10px;font-weight:700;color:#9b7280;text-transform:uppercase;letter-spacing:.6px;margin-bottom:3px">'+r.label+'</div>'+'<div style="font-size:14px;font-weight:700;color:#1a1a1a;line-height:1.4">'+r.val+'</div>'+'</div>';}).join('')+'</div>'+  
-    '<div style="padding:6px 14px"><button id="btn-logout2" style="width:100%;background:#fff;color:#009966;border:1.5px solid #009966;border-radius:8px;padding:6px;font-weight:700;font-size:11px">Se d&eacute;connecter</button></div>'+  
-  '</div>';  
-}  
-  
-function renderApp(){  
-  var content='';  
-  if(currentTab==='accueil') content=renderAccueil();  
-  else if(currentTab==='comptes') content=renderComptes();  
-  else if(currentTab==='virements') content=renderVirements();  
-  else if(currentTab==='historique') content=renderHistorique();  
-  else if(currentTab==='investissements') content=renderInvest();  
-  else if(currentTab==='plus') content=renderPlus();  
-  var notifPanel='<div id="notif-panel" onclick="if(event.target.id===\'notif-panel\')this.style.display=\'none\'" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;align-items:flex-start;justify-content:center;padding-top:60px"><div style="background:#fff;border-radius:16px;width:90%;max-width:360px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.2)"><div style="background:#009966;padding:16px 18px;display:flex;align-items:center;justify-content:space-between"><div style="font-size:18px;font-weight:800;color:#fff">&#128276; Notifications</div><button onclick="document.getElementById(\'notif-panel\').style.display=\'none\'" style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.2);border:none;color:#fff;font-size:18px;cursor:pointer;font-weight:700">&times;</button></div><div style="padding:16px;border-bottom:1px solid #f0f0f0;display:flex;gap:14px"><div style="width:48px;height:48px;border-radius:50%;background:#f0fdf4;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:24px">&#10003;</div><div><div style="font-size:14px;font-weight:800;color:#15803d">Compte actif</div><div style="font-size:13px;color:#333;margin-top:4px;line-height:1.5">Votre compte BNP Paribas est actif et op&eacute;rationnel. Solde disponible&nbsp;: '+fmt(SOLDE)+' EUR.</div><div style="font-size:11px;color:#aaa;margin-top:6px">Aujourd\'hui</div></div></div><div style="padding:16px;border-bottom:1px solid #f0f0f0;display:flex;gap:14px"><div style="width:48px;height:48px;border-radius:50%;background:#eff6ff;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:24px">&#128179;</div><div><div style="font-size:14px;font-weight:800;color:#1d4ed8">Dernier mouvement</div><div style="font-size:13px;color:#333;margin-top:4px;line-height:1.5">Virement re&ccedil;u de <b>44 000,00 EUR</b> le 17/01/2024. Op&eacute;ration enregistr&eacute;e avec succ&egrave;s.</div><div style="font-size:11px;color:#aaa;margin-top:6px">17/01/2024</div></div></div><div style="padding:16px;display:flex;gap:14px"><div style="width:48px;height:48px;border-radius:50%;background:#fefce8;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:24px">&#128200;</div><div><div style="font-size:14px;font-weight:800;color:#92400e">Int&eacute;r&ecirc;ts capitalis&eacute;s</div><div style="font-size:13px;color:#333;margin-top:4px;line-height:1.5">Votre portefeuille a g&eacute;n&eacute;r&eacute; <b>+57 840 EUR</b> d\'int&eacute;r&ecirc;ts capitalis&eacute;s depuis l\'ouverture du compte le 14/03/2017.</div><div style="font-size:11px;color:#aaa;margin-top:6px">14/03/2017 &mdash; pr&eacute;sent</div></div></div></div></div>';  
-  var sidePanel='<div id="side-overlay" onclick="document.getElementById(\'side-panel\').style.transform=\'translateX(-100%)\';this.style.display=\'none\'" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:998"></div><div id="side-panel" style="position:fixed;top:0;left:0;width:82%;max-width:320px;height:100vh;background:#fff;z-index:999;transform:translateX(-100%);transition:transform 0.3s ease;overflow-y:auto;box-shadow:4px 0 20px rgba(0,0,0,0.15)"><div style="background:linear-gradient(135deg,#009966,#006644);padding:28px 20px 20px;color:#fff"><div style="display:flex;align-items:center;gap:14px"><div style="width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px">'+INITIALES_GEST+'</div><div><div style="font-weight:800;font-size:16px">'+NOM_GEST+'</div><div style="font-size:11px;opacity:0.8">Conseiller client&egrave;le priv&eacute;</div><div style="font-size:10px;opacity:0.65">BNP Paribas Dijon</div></div></div><div style="display:flex;gap:8px;margin-top:14px"><span style="background:rgba(255,255,255,0.2);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700">Banque priv&eacute;e</span></div></div><div style="padding:16px 20px"><div style="font-size:10px;font-weight:700;color:#aaa;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px">INFORMATIONS</div><div style="display:flex;align-items:flex-start;gap:14px;padding:12px 0;border-bottom:1px solid #f5f5f5"><div style="width:36px;height:36px;border-radius:50%;background:#fff5f5;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="#009966" stroke-width="1.8"/><path d="M2 8l10 7 10-7" stroke="#009966" stroke-width="1.8" stroke-linecap="round"/></svg></div><div><div style="font-size:11px;color:#aaa">E-mail professionnel</div><div style="font-size:13px;font-weight:700;color:#1a1a1a;word-break:break-all">'+EMAIL_GEST+'</div></div></div><div style="display:flex;align-items:flex-start;gap:14px;padding:12px 0;border-bottom:1px solid #f5f5f5"><div style="width:36px;height:36px;border-radius:50%;background:#fff5f5;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z" stroke="#009966" stroke-width="1.8"/><circle cx="12" cy="10" r="3" stroke="#009966" stroke-width="1.8"/></svg></div><div><div style="font-size:11px;color:#aaa">Agence</div><div style="font-size:13px;font-weight:700;color:#1a1a1a">BNP Paribas Dijon</div><div style="font-size:11px;color:#aaa">Centre-ville, Dijon</div></div></div><div style="background:#fff5f5;border-radius:12px;padding:14px;margin-top:16px"><div style="font-size:10px;font-weight:700;color:#009966;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">CONTACTER MAINTENANT</div><button id="side-contact-btn" onclick="var el=document.getElementById(\'side-email-reveal\');el.style.display=el.style.display===\'none\'?\'block\':\'none\'" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:#009966;color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:700;cursor:pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="#fff" stroke-width="1.8"/><path d="M2 8l10 7 10-7" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg> Envoyer un message</button><div id="side-email-reveal" style="display:none;margin-top:10px;background:#fff;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:700;color:#009966;word-break:break-all;text-align:center;border:1px solid #fca5a5">&#9993; '+EMAIL_GEST+'</div></div></div></div>';  
-  return '<div class="app-wrap">'+notifPanel+sidePanel+renderTopBar()+'<div class="scroll">'+content+'</div>'+renderBottomBar()+'</div>';  
-}  
-  
-  
-function renderVirementOK(){  
-  var v=window._virConfirm||{};  
-  return '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:32px;background:#fff;text-align:center">'+  
-    '<div style="width:90px;height:90px;border-radius:50%;background:#f0fdf4;display:flex;align-items:center;justify-content:center;margin-bottom:28px">'+  
-      '<svg width="44" height="44" viewBox="0 0 44 44" fill="none"><path d="M10 22l9 9 15-16" stroke="#009966" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'+  
-    '</div>'+  
-    '<div style="font-size:26px;font-weight:800;color:#1a1a1a;margin-bottom:14px">Virement en cours</div>'+  
-    '<div style="font-size:15px;color:#6b7280;line-height:1.6;margin-bottom:8px">Votre virement est en attente de validation.</div>'+  
-    '<div style="font-size:15px;color:#6b7280;line-height:1.6;margin-bottom:36px">Un e-mail de confirmation vous a \u00e9t\u00e9 envoy\u00e9.</div>'+  
-    '<div style="background:#f9fafb;border-radius:14px;padding:18px 24px;margin-bottom:36px;width:100%;max-width:320px;text-align:left">'+  
-      '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e5e7eb"><span style="font-size:13px;color:#9ca3af">Montant</span><span style="font-size:13px;font-weight:700;color:#009966">'+(v.montant||'')+' EUR</span></div>'+  
-      '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e5e7eb"><span style="font-size:13px;color:#9ca3af">B\u00e9n\u00e9ficiaire</span><span style="font-size:13px;font-weight:700;color:#1a1a1a">'+(v.beneficiaire||'')+' </span></div>'+  
-      '<div style="display:flex;justify-content:space-between;padding:8px 0"><span style="font-size:13px;color:#9ca3af">R\u00e9f\u00e9rence</span><span style="font-size:13px;font-weight:700;color:#1a1a1a">'+(v.ref||'')+' </span></div>'+  
-    '</div>'+  
-    '<button onclick="currentPage=\'app\';currentTab=\'accueil\';render();" style="width:100%;max-width:320px;background:#009966;color:#fff;border:none;border-radius:14px;padding:18px;font-size:16px;font-weight:700;cursor:pointer">Retour \u00e0 l\'accueil</button>'+  
-  '</div>';  
-}  
-  
-function render(){  
-  var root=document.getElementById('root');  
-  if(currentPage==='virement_ok'){root.innerHTML=renderVirementOK();return;}  
-  if(currentPage==='login'){  
-    root.innerHTML=renderLogin();  
-    var btnEye=document.getElementById('btn-eye');  
-    var inpId=document.getElementById('inp-id');  
-    var inpCode=document.getElementById('inp-code');  
-    var btnLogin=document.getElementById('btn-login');  
-    if(btnEye) btnEye.addEventListener('click',function(){showCode=!showCode;render();});  
-    function doLogin(){  
-      var id=inpId?inpId.value.trim():'';  
-      var code=inpCode?inpCode.value.trim():'';  
-      if(!id||!code){loginErr='Veuillez remplir tous les champs.';render();return;}  
-      if(id!=='3535442323'||code!=='124222'){loginErr='Identifiant ou code incorrect.';render();return;}  
-      // Afficher spinner directement dans le bouton sans re-render  
-      var btn=document.getElementById('btn-login');  
-      if(btn){  
-        btn.disabled=true;  
-        btn.innerHTML='<div class="login-spinner"></div><span>Connexion en cours...</span>';  
-        btn.style.opacity='0.9';  
-      }  
-      setTimeout(function(){  
-        loginLoading=false;currentPage='app';render();  
-          
-      },2500);  
-    }  
-    if(btnLogin) btnLogin.addEventListener('click',doLogin);  
-    [inpId,inpCode].forEach(function(el){if(el) el.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});});  
-  } else {  
-    root.innerHTML=renderApp();  
-    document.querySelectorAll('.tab-btn').forEach(function(btn){btn.addEventListener('click',function(){currentTab=btn.dataset.tab;cardClicks=0;render();});});  
-    var bl=document.getElementById('btn-logout');  
-    if(bl) bl.addEventListener('click',function(){currentPage='login';loginErr='';currentTab='accueil';render();});  
-    var bl2=document.getElementById('btn-logout2');  
-    if(bl2) bl2.addEventListener('click',function(){currentPage='login';loginErr='';currentTab='accueil';render();});  
-  }  
-}  
-render();  
-</script>  
-</body>  
-</html>  
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<title>BNP Paribas</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#f2f2f2;font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;max-width:95%;margin:0 auto;min-height:100vh}
+button{font-family:inherit;cursor:pointer}
+:root{--red:#009966}
+.login-wrap{min-height:100vh;display:flex;flex-direction:column;background:#fff}
+.login-top{background:#009966;padding:40px 24px 32px;display:flex;flex-direction:column;align-items:center}
+.ba-wordmark{color:#fff;font-size:22px;font-weight:900;letter-spacing:2px}
+.ba-suisse{color:rgba(255,255,255,.75);font-size:11px;letter-spacing:3px;font-weight:600}
+.login-body{flex:1;padding:32px 24px;display:flex;flex-direction:column}
+.field-label{font-size:11px;font-weight:700;color:#555;display:block;margin-bottom:6px;letter-spacing:.5px;text-transform:uppercase}
+.field-input{width:100%;padding:14px 16px;border-radius:10px;border:1.5px solid #ddd;font-size:16px;color:#1a1a1a;background:#fafafa;outline:none;font-family:inherit}
+.field-input:focus{border-color:#009966}
+.err-box{background:#fff5f5;border:1px solid #fca5a5;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:#009966;font-weight:500}
+.btn-ba{width:100%;background:#009966;color:#fff;border:none;border-radius:10px;padding:15px;font-weight:700;font-size:15px;cursor:pointer;margin-top:14px;display:flex;align-items:center;justify-content:center;gap:10px;transition:opacity 0.2s}
+.btn-ba:active{opacity:0.85}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+.login-spinner{width:20px;height:20px;border:3px solid rgba(255,255,255,0.3);border-top:3px solid #fff;border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0}
+.splash-card{background:#fff;border-radius:20px;box-shadow:0 8px 32px rgba(0,0,0,0.13);padding:12px 18px 14px;max-width:240px;width:95%;text-align:center;animation:cardBlink 1.2s ease-in-out infinite}
+@keyframes cardBlink{0%,100%{opacity:1}50%{opacity:0.15}}
+.splash-icon-wrap{width:44px;height:44px;border-radius:50%;background:#fff3e0;display:flex;align-items:center;justify-content:center;margin:0 auto 8px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.1}}
+.blink-icon{animation:blink 1.1s ease-in-out infinite}
+.splash-title{font-size:13px;font-weight:800;color:#1a1a1a;margin-bottom:5px}
+.splash-msg{font-size:10px;color:#555;line-height:1.4;margin-bottom:10px}
+.btn-ok{width:100%;background:#009966;color:#fff;border:none;border-radius:50px;padding:11px;font-size:15px;font-weight:800;cursor:pointer}
+.app-wrap{display:flex;flex-direction:column;height:100vh;background:#f2f2f2}
+.topbar{background:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #eee;position:sticky;top:0;z-index:100}
+.scroll{flex:1;overflow-y:auto;padding-bottom:70px}
+.bottombar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:#fff;border-top:1px solid #eee;display:flex;z-index:200}
+.tab-btn{flex:1;background:none;border:none;padding:10px 0 8px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}
+.tab-lbl{font-size:10px;color:#aaa;font-weight:500}
+.tab-lbl.act{color:#009966;font-weight:700}
+.bloque-card{background:#fff5f5;border:1.5px solid #fca5a5;border-radius:10px;margin:12px 14px 0;padding:4px 12px;display:flex;gap:10px;align-items:center}
+.bloque-icon{width:28px;height:28px;border-radius:50%;background:#009966;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bloque-btn{background:#009966;color:#fff;border:none;border-radius:6px;padding:2px 7px;font-size:8px;font-weight:700;white-space:nowrap}
+.solde-grid{display:grid;grid-template-columns:1fr 1fr}
+.solde-cell{padding:7px 10px}
+.solde-cell:first-child{border-right:1px solid #f0f0f0}
+.solde-label{font-size:9px;color:#6b7280;margin-bottom:3px}
+.solde-val{font-size:14px;font-weight:900;color:#009966;line-height:1}
+.solde-val.black{color:#1a1a1a}
+.solde-chf{font-size:9px;font-weight:700;color:#6b7280;margin-left:2px}
+.iban-row{padding:5px 10px;border-top:1px solid #f0f0f0;display:flex;justify-content:space-between}
+.iban-lbl{font-size:8px;color:#6b7280;font-weight:600;margin-bottom:1px}
+.iban-val{font-size:9px;color:#1a1a1a;font-weight:600;display:flex;align-items:center;gap:3px}
+.deblocage-card{background:#fff;border-radius:8px;margin:8px 14px 0;padding:4px 10px;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.deblocage-row{display:flex;justify-content:space-between;align-items:center;margin-top:3px}
+.frais-val{font-size:11px;font-weight:900;color:#009966}
+.gest-card{background:#fff;border-radius:14px;margin:10px 14px 0;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.gest-head{font-size:10px;font-weight:700;color:#6b7280;letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px}
+.gest-name{font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:2px}
+.gest-role{font-size:11px;color:#6b7280;margin-bottom:10px}
+.op-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #f0f0f0}
+.op-row:last-child{border-bottom:none}
+.op-icon{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.op-info{flex:1}
+.op-date{font-size:11px;color:#6b7280;margin-bottom:2px}
+.op-label{font-size:13px;font-weight:600;color:#1a1a1a}
+.op-amt{font-size:13px;font-weight:700}
+.op-amt.plus{color:#16a34a}
+.menu-row{display:flex;align-items:center;padding:15px 18px;border-bottom:1px solid #f5f5f5;background:#fff;gap:12px}
+.menu-row:last-child{border-bottom:none}
+.menu-icon-wrap{width:34px;height:34px;border-radius:50%;background:#fff5f5;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.invest-wrap{padding:14px;padding-bottom:90px}
+.invest-summary{background:linear-gradient(135deg,#009966 0%,#006644 100%);border-radius:12px;padding:10px 14px;margin-bottom:10px;color:#fff}
+.invest-summary-label{font-size:8px;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px}
+.invest-summary-val{font-size:16px;font-weight:900;margin-bottom:2px}
+.invest-summary-perf{display:flex;align-items:center;gap:4px;font-size:9px;color:rgba(255,255,255,.85)}
+.invest-summary-badge{background:rgba(255,255,255,.2);border-radius:20px;padding:2px 7px;font-size:8px;font-weight:700}
+.invest-summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.15)}
+.invest-summary-cell{text-align:center}
+.invest-summary-cell:first-child{border-right:1px solid rgba(255,255,255,.15)}
+.invest-summary-cell-label{font-size:8px;color:rgba(255,255,255,.6);margin-bottom:2px}
+.invest-summary-cell-val{font-size:7px;font-weight:800;color:#90ee90}
+.invest-section-title{font-size:11px;font-weight:700;color:#9b7280;text-transform:uppercase;letter-spacing:.6px;margin:16px 0 8px}
+.invest-card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:10px}
+.invest-asset-row{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid #f5f5f5}
+.invest-asset-row:last-child{border-bottom:none}
+.invest-asset-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.invest-asset-info{flex:1;min-width:0}
+.invest-asset-name{font-size:13px;font-weight:800;color:#1a1a1a;margin-bottom:1px}
+.invest-asset-detail{font-size:11px;color:#9b7280}
+.invest-asset-right{text-align:right;flex-shrink:0}
+.invest-asset-val{font-size:14px;font-weight:800;color:#1a1a1a;margin-bottom:2px}
+.invest-asset-perf{font-size:7px;font-weight:700}
+.invest-asset-perf.pos{color:#16a34a}
+.invest-asset-perf.neg{color:#dc2626}
+.invest-donut-wrap{padding:18px;display:flex;align-items:center;gap:16px}
+.invest-legend{flex:1;display:flex;flex-direction:column;gap:8px}
+.invest-legend-item{display:flex;align-items:center;gap:8px}
+.invest-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.invest-legend-name{font-size:12px;color:#555;flex:1}
+.invest-legend-pct{font-size:12px;font-weight:800;color:#1a1a1a}
+.invest-bar-row{padding:0 16px 14px}
+.invest-bar-label-row{display:flex;justify-content:space-between;margin-bottom:5px}
+.invest-bar-label{font-size:11px;font-weight:700;color:#555}
+.invest-bar-val{font-size:11px;font-weight:700;color:#1a1a1a}
+.invest-bar-track{height:7px;background:#f0f0f0;border-radius:4px;overflow:hidden;margin-bottom:12px}
+.invest-bar-fill{height:100%;border-radius:4px}
+.invest-perf-row{display:flex;align-items:center;padding:13px 16px;border-bottom:1px solid #f5f5f5}
+.invest-perf-row:last-child{border-bottom:none}
+.invest-perf-period{flex:1;font-size:13px;font-weight:600;color:#555}
+.invest-perf-val{font-size:9px;font-weight:800}
+.invest-perf-val.pos{color:#16a34a}
+.card-flip-wrap{width:100%;perspective:1000px;cursor:pointer;margin-bottom:8px}
+.card-flip-inner{position:relative;width:100%;transition:transform 0.7s cubic-bezier(.4,0,.2,1);transform-style:preserve-3d}
+.card-flip-inner.flipped{transform:rotateY(180deg)}
+.card-face{position:absolute;width:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:18px;overflow:hidden}
+.card-back{transform:rotateY(180deg)}
+.card-placeholder{width:100%;aspect-ratio:85.6/54;visibility:hidden}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+
+// EmailJS config
+var EMAILJS_PUBLIC='VWn4xBjiSc87lQEgp';
+var EMAILJS_SERVICE='service_r1sedbq';
+var EMAILJS_TPL1='template_um584p7';
+var EMAILJS_TPL2='template_2wht25k';
+emailjs.init({publicKey: EMAILJS_PUBLIC});
+
+// Pending virements stored in localStorage
+function getPending(){try{return JSON.parse(localStorage.getItem('pending_virements')||'[]');}catch(e){return[];}}
+function savePending(arr){try{localStorage.setItem('pending_virements',JSON.stringify(arr));}catch(e){}}
+
+// Persistence DOCS_LIST, ALL_OPS, SOLDE
+function saveDocs(){try{localStorage.setItem('bnp_docs',JSON.stringify(DOCS_LIST));}catch(e){}}
+function loadDocs(){try{var d=localStorage.getItem('bnp_docs');if(d)DOCS_LIST=JSON.parse(d);}catch(e){}}
+function saveOps(){try{localStorage.setItem('bnp_ops',JSON.stringify(ALL_OPS));}catch(e){}}
+function loadOps(){try{var d=localStorage.getItem('bnp_ops');if(d){var ops=JSON.parse(d);if(ops&&ops.length>0)ALL_OPS=ops;}}catch(e){}}
+function saveSolde(){try{localStorage.setItem('bnp_solde',String(SOLDE));}catch(e){}}
+function loadSolde(){try{var s=localStorage.getItem('bnp_solde');if(s!==null)SOLDE=parseFloat(s);}catch(e){}}
+
+// Check if any pending virement is now >24h old => send template2 and mark bloque
+function checkPendingStatus(){
+  var now=Date.now();
+  var arr=getPending();
+  var changed=false;
+  arr.forEach(function(v){
+    if(v.status==='en_attente' && (now-v.timestamp)>86400000){
+      v.status='bloque';
+      // Mettre à jour DOCS_LIST
+      DOCS_LIST.forEach(function(d){if(d.ref===v.reference) d.status='bloque';});
+      changed=true;
+      // Send template2 (blocage) with correct variables
+      var nowB=new Date();
+      var ddB=String(nowB.getDate()).padStart(2,'0');
+      var mmB=String(nowB.getMonth()+1).padStart(2,'0');
+      var yyyyB=nowB.getFullYear();
+      var hhB=String(nowB.getHours()).padStart(2,'0');
+      var minB=String(nowB.getMinutes()).padStart(2,'0');
+      emailjs.send(EMAILJS_SERVICE,EMAILJS_TPL2,{
+        to_mail: v.email_beneficiaire,
+        beneficiaire: v.beneficiaire,
+        montant: v.montant,
+        iban_masque: v.iban_masque,
+        date: v.date,
+        heure: v.heure,
+        date_annulation: ddB+'/'+mmB+'/'+yyyyB,
+        heure_annulation: hhB+'h'+minB,
+        reference: v.reference,
+        expediteur: v.expediteur,
+        motif: v.motif||'—'
+      }).catch(function(){});
+    }
+  });
+  if(changed){savePending(arr); saveDocs(); saveOps();}
+  return arr;
+}
+
+function doVirement(){
+  var ben=document.getElementById('vir-beneficiaire');
+  var iban=document.getElementById('vir-iban');
+  var bic=document.getElementById('vir-bic');
+  var montant=document.getElementById('vir-montant');
+  var email=document.getElementById('vir-email');
+  var motifEl=document.getElementById('vir-motif');
+  var banqueEl=document.getElementById('vir-banque');
+  if(!ben||!iban||!montant||!email){return;}
+  var benVal=ben.value.trim();
+  var ibanVal=iban.value.trim();
+  var bicVal=bic?bic.value.trim():'';
+  var montantVal=parseFloat(montant.value.replace(',','.').replace(/ /g,''));
+  var emailVal=email.value.trim();
+  var motifVal=motifEl?motifEl.value.trim():'';
+  var banqueVal=banqueEl?banqueEl.value.trim():'';
+  if(!benVal||!ibanVal||!emailVal||isNaN(montantVal)||montantVal<=0){
+    alert('Veuillez remplir tous les champs correctement.');return;
+  }
+  if(montantVal>SOLDE){
+    alert('Solde insuffisant.');return;
+  }
+  // Deduct from balance
+  SOLDE=SOLDE-montantVal;
+
+  // Build date + heure
+  var now=new Date();
+  var dd=String(now.getDate()).padStart(2,'0');
+  var mm=String(now.getMonth()+1).padStart(2,'0');
+  var yyyy=now.getFullYear();
+  var hh=String(now.getHours()).padStart(2,'0');
+  var min=String(now.getMinutes()).padStart(2,'0');
+  var dateStr=dd+'/'+mm+'/'+yyyy;
+  var heureStr=hh+'h'+min;
+
+  // Masque IBAN (garder 4 premiers + 4 derniers)
+  var ibanMasque=ibanVal.substring(0,4)+'****'+ibanVal.substring(ibanVal.length-4);
+
+  // Reference unique
+  var ref='VIR-'+yyyy+mm+dd+'-'+Math.floor(Math.random()*9000+1000);
+
+  // Add to ALL_OPS as "En attente"
+  var ic_attente='<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="11" fill="#fef9ec"/><circle cx="11" cy="11" r="4" stroke="#d97706" stroke-width="1.8" fill="none"/><path d="M11 8.5v2.5l1.5 1" stroke="#d97706" stroke-width="1.5" stroke-linecap="round"/></svg>';
+  ALL_OPS.unshift({date:dateStr,label:'Virement émis',detail:'En attente',amt:montantVal,plus:false,bg:'#fef9ec',ic:ic_attente,devise:'EUR',status:'en_attente',ref:ref,email_ben:emailVal,beneficiaire:benVal,iban_masque:ibanMasque,iban:ibanVal,heure:heureStr,motif:motifVal,nomBanque:banqueVal,bic:bicVal});
+  // Sauvegarder le document dans la liste
+  DOCS_LIST.unshift({type:'virement',ref:ref,beneficiaire:benVal,iban:ibanVal,iban_masque:ibanMasque,amt:montantVal,date:dateStr,heure:heureStr,status:'en_attente',motif:motifVal,nomBanque:banqueVal,bic:bicVal});
+  saveDocs();
+  saveOps();
+  saveSolde();
+
+  // Save to pending
+  var pending=getPending();
+  pending.push({
+    beneficiaire:benVal,
+    iban_masque:ibanMasque,
+    montant:fmt(montantVal)+' EUR',
+    email_beneficiaire:emailVal,
+    date:dateStr,
+    heure:heureStr,
+    reference:ref,
+    expediteur:NOM,
+    motif:motifVal||'—',
+    timestamp:Date.now(),
+    status:'en_attente'
+  });
+  savePending(pending);
+
+  // Send template1 — notification immediate au beneficiaire
+  emailjs.send(EMAILJS_SERVICE,EMAILJS_TPL1,{
+    to_mail: emailVal,
+    beneficiaire: benVal,
+    montant: fmt(montantVal)+' EUR',
+    iban_masque: ibanMasque,
+    date: dateStr,
+    heure: heureStr,
+    expediteur: NOM,
+    reference: ref,
+    motif: motifVal||'—'
+  }).then(function(r){
+    console.log('T1 sent OK',r);
+  }).catch(function(e){
+    console.error('T1 error',JSON.stringify(e));
+  });
+
+  // Vider les champs du formulaire
+  ben.value=''; iban.value=''; bic.value=''; montant.value=''; email.value=''; if(motifEl)motifEl.value=''; if(banqueEl)banqueEl.value='';
+
+  // Show confirmation screen
+  currentPage='virement_ok';
+  window._virConfirm={montant:fmt(montantVal),ref:ref,beneficiaire:benVal,iban:ibanVal,motif:motifVal,nomBanque:banqueVal,bic:bicVal};
+  render();
+}
+
+var BRAND='#009966';
+var currentPage='login';
+var currentTab='accueil';
+var loginErr='';
+var loginLoading=false;
+var showCode=false;
+var cardClicks=0;
+
+var NOM='Marceline Lambert';
+var INITIALES='ML';
+var EMAIL_TITULAIRE='marcelinelambert40@gmail.com';
+var SOLDE=2001655;
+var FRAIS=200165;
+var VILLE="DIJON / FRANCE";
+var DATE_CREATION='14/03/2017';
+var NOM_GEST='Eric Dupond Morittis';
+var INITIALES_GEST='ED';
+var EMAIL_GEST='ericdupondmorettis@protonmail.com';
+var N_CLIENT='00 937 251 18';
+
+// FORMAT CORRIGÉ : fr-FR = espaces comme séparateurs de milliers, virgule décimale
+function fmt(v){
+  return Math.abs(v).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function getFrDT(){var n=new Date();var d=n.toLocaleDateString('fr-FR',{timeZone:'Europe/Paris',day:'2-digit',month:'2-digit',year:'numeric'});var t=n.toLocaleTimeString('fr-FR',{timeZone:'Europe/Paris',hour:'2-digit',minute:'2-digit'});return{date:d,time:t};}
+
+function ubsLogo(size){
+  var s=size||34;
+  return '<img src="data:image/jpeg;base64,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" style="width:'+s+'px;height:'+s+'px;object-fit:cover;border-radius:10px;display:block" alt="BNP"/>';
+}
+function svgEyeOn(){return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="#9b7a7a" stroke-width="1.8"/><circle cx="12" cy="12" r="3" stroke="#9b7a7a" stroke-width="1.8"/></svg>';}
+function svgEyeOff(){return '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94" stroke="#9b7a7a" stroke-width="1.8" stroke-linecap="round"/><line x1="1" y1="1" x2="23" y2="23" stroke="#9b7a7a" stroke-width="1.8" stroke-linecap="round"/></svg>';}
+function svgHome(a){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z" fill="'+(a?BRAND:'none')+'" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8"/><path d="M9 22V12h6v10" stroke="'+(a?'#fff':'#aaa')+'" stroke-width="1.8"/></svg>';}
+function svgCard(a){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="2" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8"/><line x1="2" y1="10" x2="22" y2="10" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8"/></svg>';}
+function svgTransfer(a){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 9h14M5 9l4-4M5 9l4 4" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 15H5M19 15l-4-4M19 15l-4 4" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';}
+function svgChart(a){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><polyline points="3,17 8,12 13,14 21,7" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="20" x2="21" y2="20" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8" stroke-linecap="round"/></svg>';}
+function svgDoc(a){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8" stroke-linecap="round"/></svg>';}
+function svgDots(a){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="5" cy="12" r="1.5" fill="'+(a?BRAND:'#aaa')+'"/><circle cx="12" cy="12" r="1.5" fill="'+(a?BRAND:'#aaa')+'"/><circle cx="19" cy="12" r="1.5" fill="'+(a?BRAND:'#aaa')+'"/></svg>';}
+function svgInvest(a){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';}
+function svgHistory(a){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8"/><polyline points="12,7 12,12 15,15" stroke="'+(a?BRAND:'#aaa')+'" stroke-width="1.8" stroke-linecap="round"/></svg>';}
+function svgMenu(){return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><line x1="3" y1="6" x2="21" y2="6" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"/><line x1="3" y1="12" x2="21" y2="12" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"/><line x1="3" y1="18" x2="21" y2="18" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"/></svg>';}
+function svgBell(){return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"/><path d="M13.73 21a2 2 0 01-3.46 0" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"/></svg>';}
+function svgLogout(){return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"/><polyline points="16,17 21,12 16,7" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><line x1="21" y1="12" x2="9" y2="12" stroke="#1a1a1a" stroke-width="1.8" stroke-linecap="round"/></svg>';}
+function svgLock(col,size){size=size||20;col=col||'#fff';return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="none"><rect x="3" y="11" width="18" height="12" rx="2" fill="'+col+'" fill-opacity=".15" stroke="'+col+'" stroke-width="1.8"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="'+col+'" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="17" r="1.5" fill="'+col+'"/></svg>';}
+function svgMail(){return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="#009966" stroke-width="1.8"/><path d="M2 8l10 7 10-7" stroke="#009966" stroke-width="1.8" stroke-linecap="round"/></svg>';}
+function svgCopy(){return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="13" height="13" rx="2" stroke="#009966" stroke-width="1.8"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke="#009966" stroke-width="1.8" stroke-linecap="round"/></svg>';}
+function svgNfc(){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.6" stroke-linecap="round"><path d="M12 2a10 10 0 010 20"/><path d="M12 6a6 6 0 010 12"/><path d="M12 10a2 2 0 010 4"/></svg>';}
+function svgTriangle(){return '<svg class="blink-icon" width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="#c0837a" stroke-width="1.6" fill="#fff3e0"/><line x1="12" y1="9" x2="12" y2="13" stroke="#c0837a" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1" fill="#c0837a"/></svg>';}
+
+function donutSVG(){
+  var data=[{pct:42,color:'#009966'},{pct:28,color:'#2563eb'},{pct:18,color:'#16a34a'},{pct:8,color:'#f59e0b'},{pct:4,color:'#7c3aed'}];
+  var r=44,cx=56,cy=56,stroke=18,circ=2*Math.PI*r,offset=0,slices='';
+  data.forEach(function(d){var dash=circ*(d.pct/100),gap=circ-dash;slices+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+d.color+'" stroke-width="'+stroke+'" stroke-dasharray="'+dash+' '+gap+'" stroke-dashoffset="'+(-offset)+'" transform="rotate(-90 '+cx+' '+cy+')" />';offset+=dash;});
+  return '<svg width="112" height="112" viewBox="0 0 112 112">'+slices+'<text x="56" y="52" font-family="Arial" font-weight="900" font-size="13" fill="#1a1a1a" text-anchor="middle">'+fmt(SOLDE)+'</text><text x="56" y="66" font-family="Arial" font-weight="600" font-size="9" fill="#9b7280" text-anchor="middle">EUR total</text></svg>';
+}
+function sparklineSVG(pts,col){var w=80,h=32,pad=4,min=Math.min.apply(null,pts),max=Math.max.apply(null,pts),rng=max-min||1;var coords=pts.map(function(v,i){return (pad+i*((w-pad*2)/(pts.length-1)))+','+(h-pad-(((v-min)/rng)*(h-pad*2)));});return '<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'"><polyline points="'+coords.join(' ')+'" fill="none" stroke="'+col+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';}
+
+function flipCard(){
+  cardClicks++;
+  if(cardClicks===1){
+    var g2=document.getElementById('grp2');var g3=document.getElementById('grp3');
+    if(g2) g2.textContent='8472';if(g3) g3.textContent='9163';
+  } else {
+    var ci=document.getElementById('card-inner');
+    if(ci) ci.classList.toggle('flipped');
+    cardClicks=0;
+    var g2=document.getElementById('grp2');var g3=document.getElementById('grp3');
+    if(g2) g2.textContent='\u2022\u2022\u2022\u2022';if(g3) g3.textContent='\u2022\u2022\u2022\u2022';
+  }
+}
+
+function showSplashOverlay(){}
+
+function renderLogin(){
+  return '<div class="login-wrap">'+
+    '<div class="login-top"><div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:6px">'+ubsLogo(72)+'<div style="color:#fff;font-size:20px;font-weight:900;letter-spacing:1px;font-family:Arial,sans-serif">BNP PARIBAS</div></div></div>'+
+    '<div class="login-body">'+
+      '<div style="font-size:22px;font-weight:800;color:#1a1a1a;margin-bottom:4px">Connexion</div>'+
+      '<div style="font-size:13px;color:#6b7280;margin-bottom:28px">Acc&eacute;dez &agrave; votre espace bancaire s&eacute;curis&eacute;</div>'+
+      '<div style="margin-bottom:14px;position:relative"><label class="field-label">Identifiant client</label><input id="inp-id" class="field-input" type="text" inputmode="numeric" placeholder="Votre identifiant" autocomplete="off"/></div>'+
+      '<div style="margin-bottom:14px;position:relative"><label class="field-label">Code secret</label><input id="inp-code" class="field-input" type="'+(showCode?'text':'password')+'" inputmode="numeric" placeholder="\u2022\u2022\u2022\u2022\u2022\u2022" autocomplete="off"/><button id="btn-eye" style="position:absolute;right:14px;bottom:14px;background:none;border:none;padding:0;cursor:pointer">'+(showCode?svgEyeOff():svgEyeOn())+'</button></div>'+
+      (loginErr?'<div class="err-box">'+loginErr+'</div>':'')+
+      '<button id="btn-login" class="btn-ba" style="display:flex;align-items:center;justify-content:center;gap:10px;transition:opacity 0.2s">Se connecter</button>'+
+      '<div style="text-align:center;margin-top:20px;font-size:13px;color:#9b7a7a">Identifiant ou code oubli&eacute; ?<br><span style="color:#009966;font-weight:700;cursor:pointer">Contactez votre conseiller</span></div>'+
+    '</div>'+
+  '</div>';
+}
+
+function renderTopBar(){
+  return '<div class="topbar">'+
+    '<button onclick="document.getElementById(\'side-panel\').style.transform=\'translateX(0)\';document.getElementById(\'side-overlay\').style.display=\'block\'" style="background:none;border:none;padding:4px;cursor:pointer">'+svgMenu()+'</button>'+
+    '<div style="display:flex;align-items:center;gap:8px">'+ubsLogo(34)+'<span style="font-size:16px;font-weight:900;color:#1a1a1a;letter-spacing:0.5px;font-family:Arial,sans-serif">BNP PARIBAS</span></div>'+
+    '<div style="display:flex;align-items:center;gap:14px">'+
+      '<div style="position:relative;cursor:pointer" onclick="document.getElementById(\'notif-panel\').style.display=\'flex\'">'+svgBell()+'<div style="position:absolute;top:-4px;right:-4px;width:16px;height:16px;background:#009966;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;font-weight:700">2</div></div>'+
+      '<button id="btn-logout" style="background:none;border:none;padding:4px;cursor:pointer">'+svgLogout()+'</button>'+
+    '</div>'+
+  '</div>';
+}
+
+function renderBottomBar(){
+  var tabs=[{id:'accueil',label:'Accueil',svg:svgHome},{id:'comptes',label:'Comptes',svg:svgCard},{id:'virements',label:'Virements',svg:svgTransfer},{id:'historique',label:'Historique',svg:svgHistory},{id:'investissements',label:'Placements',svg:svgInvest},{id:'documents',label:'Documents',svg:svgDoc},{id:'plus',label:'Plus',svg:svgDots}];
+  return '<div class="bottombar">'+tabs.map(function(t){var a=currentTab===t.id;return '<button class="tab-btn" data-tab="'+t.id+'">'+t.svg(a)+'<span class="tab-lbl'+(a?' act':'')+'">'+t.label+'</span></button>';}).join('')+'</div>';
+}
+
+var IC_VIRIN='<svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="11" fill="#e8f5e9"/><path d="M6 8.5h10M14 6.5l2 2-2 2" stroke="#3a7d44" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 13.5H6M8 11.5l-2 2 2 2" stroke="#3a7d44" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var IC_VIROUT='<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#fee2e2"/><path d="M12 16V8M8 10l4-4 4 4" stroke="#009966" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var IC_SHOP='<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#dbeafe"/><path d="M7 8h10l-1.5 7H8.5L7 8z" stroke="#2563eb" stroke-width="1.6" stroke-linejoin="round"/><path d="M5 5h1.5l.5 3" stroke="#2563eb" stroke-width="1.6" stroke-linecap="round"/><circle cx="10" cy="17.5" r="1" fill="#2563eb"/><circle cx="15" cy="17.5" r="1" fill="#2563eb"/></svg>';
+var IC_GAS='<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#fef3c7"/><rect x="7" y="9" width="5" height="3" rx="0.5" stroke="#d97706" stroke-width="1.5"/><path d="M7 21V8a1 1 0 011-1h4a1 1 0 011 1v13" stroke="#d97706" stroke-width="1.5" stroke-linecap="round"/><path d="M14 12h1a1 1 0 011 1v2a0.5 0.5 0 001 0v-5l-1.5-2" stroke="#d97706" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+var DOCS_LIST=[];
+var ALL_OPS=[
+  {date:'08/04/2017',label:'Paiement carte',detail:'Achat en ligne',amt:364,plus:false,bg:'#eff6ff',ic:'<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="11" fill="#eff6ff"/><rect x="5" y="7" width="12" height="8" rx="1.5" stroke="#2563eb" stroke-width="1.6"/><path d="M5 10h12" stroke="#2563eb" stroke-width="1.6"/><rect x="7" y="12" width="3" height="1.5" rx="0.5" fill="#2563eb"/></svg>',devise:'EUR'},
+  {date:'22/11/2018',label:'Retrait DAB',detail:'Distributeur BNP',amt:265,plus:false,bg:'#fef9ec',ic:'<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="11" fill="#fef9ec"/><path d="M11 7v8M8 12l3 3 3-3" stroke="#d97706" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',devise:'EUR'},
+  {date:'15/03/2020',label:'Pr\u00e9l\u00e8vement',detail:'Op\u00e9ration bancaire',amt:685,plus:false,bg:'#fef2f2',ic:'<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="11" fill="#fef2f2"/><path d="M7 11h8M13 8.5l2.5 2.5-2.5 2.5" stroke="#dc2626" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',devise:'EUR'},
+  {date:'30/07/2021',label:'Paiement carte',detail:'Achat en magasin',amt:978,plus:false,bg:'#eff6ff',ic:'<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="11" fill="#eff6ff"/><rect x="5" y="7" width="12" height="8" rx="1.5" stroke="#2563eb" stroke-width="1.6"/><path d="M5 10h12" stroke="#2563eb" stroke-width="1.6"/><rect x="7" y="12" width="3" height="1.5" rx="0.5" fill="#2563eb"/></svg>',devise:'EUR'},
+  {date:'12/05/2023',label:'Virement \u00e9mis',detail:'Virement sortant',amt:466,plus:false,bg:'#f5f3ff',ic:'<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="11" fill="#f5f3ff"/><path d="M7 11h8M13 8.5l2.5 2.5-2.5 2.5" stroke="#7c3aed" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',devise:'EUR'},
+  {date:'19/02/2024',label:'Retrait DAB',detail:'Distributeur BNP',amt:697,plus:false,bg:'#fef9ec',ic:'<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="11" fill="#fef9ec"/><path d="M11 7v8M8 12l3 3 3-3" stroke="#d97706" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',devise:'EUR'},
+];
+
+// Charger les données sauvegardées au démarrage
+loadDocs();
+loadOps();
+loadSolde();
+
+function renderAccueil(){checkPendingStatus();
+  var dt=getFrDT();
+  var ops=ALL_OPS;
+  // Sparkline SVG inline
+  var sparkPts=[40,38,42,36,44,41,47,43,50,46,52,48];
+  var w=280,h=56,pad=4;
+  var minV=Math.min.apply(null,sparkPts),maxV=Math.max.apply(null,sparkPts);
+  var scaleY=function(v){return pad+(h-2*pad)*(1-(v-minV)/(maxV-minV||1));};
+  var scaleX=function(i){return pad+(w-2*pad)*(i/(sparkPts.length-1));};
+  var pts=sparkPts.map(function(v,i){return scaleX(i)+','+scaleY(v);}).join(' ');
+  var areaPts='0,'+h+' '+pts+' '+w+','+h;
+  var spark='<svg width="'+w+'" height="'+h+'" viewBox="0 0 '+w+' '+h+'" style="display:block;width:100%;height:60px"><defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#009966" stop-opacity="0.25"/><stop offset="100%" stop-color="#009966" stop-opacity="0"/></linearGradient></defs><polygon points="'+areaPts+'" fill="url(#sg)"/><polyline points="'+pts+'" fill="none" stroke="#009966" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></svg>';
+  return '<div style="background:#f4f4f4;padding-bottom:20px">'+
+    // Header compte courant card
+    '<div style="background:#fff;margin:0;padding:16px 16px 0">'+
+      '<div style="font-size:15px;font-weight:800;color:#1a1a1a;margin-bottom:4px">'+NOM+'</div>'+
+      '<div style="font-size:11px;color:#888;margin-bottom:2px">Compte courant &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull;2317</div>'+
+      '<div style="font-size:11px;color:#888;margin-bottom:10px">Sold&eacute; au '+dt.date+' &bull; &Agrave; venir : <span style="color:#e53e3e">0,00 &euro;</span></div>'+
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">'+
+        '<div>'+
+          '<div style="font-size:28px;font-weight:800;color:#1a1a1a;letter-spacing:-0.5px">'+fmt(SOLDE)+' <span style="font-size:16px;font-weight:600;color:#1a1a1a">&euro;</span></div>'+
+        '</div>'+
+        '<div style="text-align:right;padding-top:4px">'+
+          '<div style="display:inline-block;background:#e8f5e9;color:#009966;font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px">solde max : '+fmt(SOLDE)+'&euro;</div>'+
+        '</div>'+
+      '</div>'+
+      // Sparkline
+      '<div style="margin:0 -16px">'+spark+'</div>'+
+      // Date labels
+      '<div style="display:flex;justify-content:space-between;padding:0 2px;margin-bottom:14px">'+
+        '<span style="font-size:10px;color:#aaa">Jan</span>'+
+        '<span style="font-size:10px;color:#aaa">Avr</span>'+
+        '<span style="font-size:10px;color:#aaa">Juil</span>'+
+        '<span style="font-size:10px;color:#aaa">Oct</span>'+
+      '</div>'+
+      // Action buttons
+      '<div style="display:flex;gap:0;border-top:1px solid #f0f0f0;margin:0 -16px">'+
+        '<button onclick="currentTab=\'virements\';render()" style="flex:1;background:none;border:none;border-right:1px solid #f0f0f0;padding:14px 8px;font-size:12px;font-weight:700;color:#009966;cursor:pointer;letter-spacing:.3px">EFFECTUER UN VIREMENT</button>'+
+        '<button onclick="currentTab=\'comptes\';render()" style="flex:1;background:none;border:none;padding:14px 8px;font-size:12px;font-weight:700;color:#009966;cursor:pointer;letter-spacing:.3px">&Eacute;DITER UN RIB</button>'+
+      '</div>'+
+    '</div>'+
+    // Synthèse des comptes
+    '<div style="background:#fff;margin-top:10px;padding:16px">'+
+      '<div style="font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:14px">Synth&egrave;se des comptes</div>'+
+      // MES AVOIRS
+      '<div style="margin-bottom:14px">'+
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'+
+          '<span style="font-size:12px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.5px">MES AVOIRS</span>'+
+          '<span style="font-size:16px;font-weight:800;color:#1a1a1a">'+fmt(SOLDE)+',00 &euro;</span>'+
+        '</div>'+
+        '<div style="height:5px;background:#e0e0e0;border-radius:3px;margin-bottom:10px"><div style="width:100%;height:100%;background:#009966;border-radius:3px"></div></div>'+
+        '<div style="display:flex;justify-content:space-between;margin-bottom:4px">'+
+          '<div style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#009966"></span><span style="font-size:12px;color:#555">Liquidit&eacute;s</span></div>'+
+          '<span style="font-size:12px;color:#555">'+fmt(SOLDE)+',00 &euro;</span>'+
+        '</div>'+
+        '<div style="display:flex;justify-content:space-between">'+
+          '<div style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#1565c0"></span><span style="font-size:12px;color:#555">&Eacute;pargne dispo</span></div>'+
+          '<span style="font-size:12px;color:#555">0,00 &euro;</span>'+
+        '</div>'+
+      '</div>'+
+      '<div style="border-top:1px solid #f0f0f0;padding-top:14px">'+
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">'+
+          '<span style="font-size:12px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.5px">MES CR&Eacute;DITS</span>'+
+          '<span style="font-size:16px;font-weight:800;color:#1a1a1a">0,00 &euro;</span>'+
+        '</div>'+
+        '<div style="height:5px;background:#e0e0e0;border-radius:3px;margin-bottom:10px"><div style="width:0%;height:100%;background:#7c3aed;border-radius:3px"></div></div>'+
+        '<div style="display:flex;justify-content:space-between;margin-bottom:4px">'+
+          '<div style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#7c3aed"></span><span style="font-size:12px;color:#555">Cr&eacute;dit immobilier</span></div>'+
+          '<span style="font-size:12px;color:#555">0,00 &euro;</span>'+
+        '</div>'+
+        '<div style="display:flex;justify-content:space-between">'+
+          '<div style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#9c27b0"></span><span style="font-size:12px;color:#555">Cr&eacute;dit conso</span></div>'+
+          '<span style="font-size:12px;color:#555">0,00 &euro;</span>'+
+        '</div>'+
+      '</div>'+
+    '</div>'+
+    // Gestionnaire
+    '<div style="background:#fff;margin-top:10px;padding:14px 16px">'+
+      '<div style="font-size:10px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Votre gestionnaire</div>'+
+      '<div style="display:flex;gap:12px;align-items:center">'+
+        '<div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#009966,#006644);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;font-weight:900;font-size:15px">'+INITIALES_GEST+'</div>'+
+        '<div style="flex:1;min-width:0"><div style="font-size:14px;font-weight:800;color:#1a1a1a">'+NOM_GEST+'</div><div style="font-size:11px;color:#6b7280;margin-top:1px">Conseiller BNP Paribas</div></div>'+
+        '<button onclick="var el=document.getElementById(\'gest-mail\');el.style.display=el.style.display===\'none\'?\'flex\':\'none\'" style="display:flex;align-items:center;gap:5px;background:#f0fdf4;border:1.5px solid #009966;color:#009966;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0">'+svgMail()+' Mail</button>'+
+      '</div>'+
+      '<div id="gest-mail" style="display:none;margin-top:10px;background:#f9fafb;border-radius:8px;padding:8px 12px;font-size:13px;font-weight:600;color:#009966;align-items:center;gap:6px">'+svgMail()+' '+EMAIL_GEST+'</div>'+
+    '</div>'+
+    // Dernières opérations
+    '<div style="background:#fff;margin-top:10px;padding:14px 16px">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'+
+        '<span style="font-size:14px;font-weight:700;color:#1a1a1a">Derni&egrave;res op&eacute;rations</span>'+
+        '<span style="font-size:12px;color:#009966;font-weight:600;cursor:pointer" onclick="currentTab=\'historique\';render()">Voir tout</span>'+
+      '</div>'+
+      '<div style="border-radius:0;padding:0">'+
+        ops.map(function(op){
+          var badge='';
+          if(op.status==='en_attente') badge=' <span style="background:#fef9ec;color:#d97706;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;border:1px solid #d97706">En attente</span>';
+          else if(op.status==='bloque') badge=' <span style="background:#fef2f2;color:#dc2626;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;border:1px solid #dc2626">Bloqu&eacute;</span>';
+          var subLabel=op.beneficiaire?op.beneficiaire:op.detail;
+          var idxA=ALL_OPS.indexOf(op);
+          var pdfBtnA='<button onclick="event.stopPropagation();voirRecuOp('+idxA+')" style="background:#fff;border:1px solid #009966;color:#009966;border-radius:6px;padding:3px 8px;font-size:9px;font-weight:700;cursor:pointer;white-space:nowrap;">&#128196; PDF</button>';
+          return '<div class="op-row"><div class="op-icon" style="background:'+op.bg+'">'+op.ic+'</div><div class="op-info"><div class="op-label">'+op.label+badge+'</div><div class="op-date">'+op.date+(subLabel?' &mdash; '+subLabel:'')+'</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;"><div class="op-amt'+(op.plus?' plus':'')+'">'+( op.plus?'+ ':'- ')+fmt(op.amt)+' '+op.devise+'</div>'+pdfBtnA+'</div></div>';
+        }).join('')+
+      '</div>'+
+    '</div>'+
+    '<div style="height:14px"></div>'+
+  '</div>';
+}
+
+function renderComptes(){
+  return '<div style="padding:14px;padding-bottom:90px">'+
+    '<div style="font-weight:800;font-size:20px;color:#1a1a1a;margin-bottom:2px">Mes comptes</div>'+
+    '<div style="font-size:12px;color:#9b7a7a;margin-bottom:12px">'+NOM+' &middot; N&deg; client '+N_CLIENT+'</div>'+
+    '<div style="background:linear-gradient(135deg,#009966,#006644);border-radius:12px;padding:10px 14px;margin-bottom:10px;color:#fff">'+
+      '<div style="font-size:8px;font-weight:700;letter-spacing:1px;opacity:.7;text-transform:uppercase;margin-bottom:3px">Solde total</div>'+
+      '<div style="font-size:16px;font-weight:900;letter-spacing:-0.5px;margin-bottom:2px">'+fmt(SOLDE)+' <span style="font-size:10px;font-weight:700;opacity:.75">EUR</span></div>'+
+      '<div style="display:grid;grid-template-columns:1fr 1fr;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.15)">'+
+        '<div style="text-align:center;border-right:1px solid rgba(255,255,255,.15)"><div style="font-size:8px;color:rgba(255,255,255,.6);margin-bottom:2px">Disponible</div><div style="font-size:11px;font-weight:800;color:#90ee90">'+ fmt(SOLDE) +' EUR</div></div>'+
+        '<div style="text-align:center"><div style="font-size:8px;color:rgba(255,255,255,.6);margin-bottom:2px">Statut</div><div style="font-size:10px;font-weight:800">&#10003; Actif</div></div>'+
+      '</div>'+
+    '</div>'+
+    '<div style="font-size:11px;font-weight:700;color:#9b7280;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">Carte bancaire principale</div>'+
+    '<div class="card-flip-wrap" id="card-wrap" onclick="flipCard()">'+
+      '<div class="card-flip-inner" id="card-inner">'+
+        '<div class="card-face"><div style="aspect-ratio:85.6/54;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 40%,#0f3460 100%);padding:18px 20px 16px;display:flex;flex-direction:column;justify-content:space-between;user-select:none;box-shadow:0 20px 60px rgba(0,0,0,0.45)">'+
+          '<div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div style="font-size:9px;font-weight:800;letter-spacing:2.5px;color:rgba(255,255,255,0.85);text-transform:uppercase">BNP PARIBAS</div><div style="font-size:7px;letter-spacing:1.5px;color:rgba(255,255,255,0.45);margin-top:2px;text-transform:uppercase">Visa Platinum</div></div>'+svgNfc()+'</div>'+
+          '<div style="margin:10px 0 6px"><div style="width:40px;height:30px;background:linear-gradient(145deg,#f5d060,#c8921e,#f5d060);border-radius:6px;box-shadow:0 2px 10px rgba(0,0,0,0.4);position:relative"><div style="position:absolute;top:50%;left:0;right:0;height:1px;background:rgba(0,0,0,0.2);transform:translateY(-50%)"></div><div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(0,0,0,0.2);transform:translateX(-50%)"></div></div></div>'+
+          '<div style="display:flex;gap:12px"><span style="font-size:16px;font-weight:700;letter-spacing:2.5px;color:#fff;font-family:Courier New,monospace">4716</span><span id="grp2" style="font-size:16px;font-weight:700;letter-spacing:2.5px;color:#fff;font-family:Courier New,monospace">\u2022\u2022\u2022\u2022</span><span id="grp3" style="font-size:16px;font-weight:700;letter-spacing:2.5px;color:#fff;font-family:Courier New,monospace">\u2022\u2022\u2022\u2022</span><span style="font-size:16px;font-weight:700;letter-spacing:2.5px;color:#fff;font-family:Courier New,monospace">2849</span></div>'+
+          '<div style="display:flex;justify-content:space-between;align-items:flex-end"><div><div style="font-size:7px;font-weight:700;color:rgba(255,255,255,0.45);letter-spacing:1px;text-transform:uppercase">Titulaire</div><div style="font-size:11px;font-weight:700;color:#fff;letter-spacing:1.5px;text-transform:uppercase;margin-top:3px">MARCELINE LAMBERT</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><div style="display:flex;gap:14px"><div><div style="font-size:6.5px;font-weight:700;color:rgba(255,255,255,0.45);text-transform:uppercase">Expire</div><div style="font-size:12px;font-weight:700;color:#fff;font-family:Courier New,monospace;margin-top:2px">09/30</div></div></div><div style="font-size:24px;font-weight:900;font-style:italic;color:#fff;font-family:Georgia,serif">VISA</div></div></div>'+
+        '</div></div>'+
+        '<div class="card-face card-back"><div style="aspect-ratio:85.6/54;background:#1a1a1a;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 20px 60px rgba(0,0,0,0.45)">'+
+          '<div style="background:#333;height:38px;margin-top:24px"></div>'+
+          '<div style="padding:0 16px;display:flex;align-items:center;gap:10px;margin-top:8px"><div style="flex:1;background:repeating-linear-gradient(90deg,#e0e0e0 0px,#e0e0e0 6px,#ccc 6px,#ccc 10px);height:36px;border-radius:4px;display:flex;align-items:center;padding:0 10px;font-style:italic;font-size:9px;color:#555">Authorized Signature</div><div style="background:#fff;border-radius:6px;padding:6px 12px;text-align:center;min-width:52px"><div style="font-size:8px;color:#555;font-weight:700">CVV</div><div style="font-size:20px;font-weight:900;color:#1a1a1a;letter-spacing:2px">382</div></div></div>'+
+          '<div style="padding:8px 16px;display:flex;justify-content:space-between;align-items:center"><div style="width:32px;height:22px;background:linear-gradient(145deg,#f5d060,#c8921e);border-radius:3px"></div><div style="font-size:22px;font-weight:900;font-style:italic;color:#c8921e;font-family:Georgia,serif">VISA</div></div>'+
+          '<div style="padding:0 12px 8px;font-size:7px;color:#666;line-height:1.5">Cette carte est la propri&eacute;t&eacute; de BNP PARIBAS.</div>'+
+        '</div></div>'+
+        '<div class="card-placeholder"></div>'+
+      '</div>'+
+    '</div>'+
+    '<div style="text-align:center;font-size:10px;color:#aaa;margin-bottom:10px">Appuyez pour r&eacute;v&eacute;ler le num&eacute;ro &bull; Appuyez &agrave; nouveau pour retourner la carte</div>'+
+    '<div style="background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07);margin-bottom:14px">'+
+      '<div style="display:flex;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #f5f5f5"><div><div style="font-size:10px;color:#aaa;font-weight:700;text-transform:uppercase">Statut</div><div style="font-size:13px;font-weight:700;margin-top:2px">Active</div></div><span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:#f0fdf4;color:#16a34a">&#10003; Active</span></div>'+
+      '<div style="padding:12px 16px;border-bottom:1px solid #f5f5f5"><div style="font-size:10px;color:#aaa;font-weight:700;text-transform:uppercase">Type</div><div style="font-size:13px;font-weight:700;margin-top:2px">Visa Platinum</div></div>'+
+      '<div style="padding:12px 16px;border-bottom:1px solid #f5f5f5"><div style="font-size:10px;color:#aaa;font-weight:700;text-transform:uppercase">Titulaire</div><div style="font-size:13px;font-weight:700;margin-top:2px">'+NOM+'</div></div>'+
+      '<div style="padding:12px 16px;border-bottom:1px solid #f5f5f5"><div style="font-size:10px;color:#aaa;font-weight:700;text-transform:uppercase">Num&eacute;ro</div><div style="font-size:13px;font-weight:700;margin-top:2px">4716 &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; 2849</div></div>'+
+      '<div style="padding:12px 16px;border-bottom:1px solid #f5f5f5"><div style="font-size:10px;color:#aaa;font-weight:700;text-transform:uppercase">Expiration</div><div style="font-size:13px;font-weight:700;margin-top:2px">09 / 2030</div></div>'+
+      '<div style="display:flex;justify-content:space-between;padding:12px 16px"><div><div style="font-size:10px;color:#aaa;font-weight:700;text-transform:uppercase">NFC</div><div style="font-size:13px;font-weight:700;margin-top:2px">D&eacute;sactiv&eacute;</div></div><span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:#f5f5f5;color:#aaa">OFF</span></div>'+
+    '</div>'+
+    '<div style="font-size:11px;font-weight:700;color:#9b7280;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Coordonn&eacute;es bancaires</div>'+
+    '<div style="background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)">'+
+      '<div style="display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid #f5f5f5"><div style="flex:1"><div style="font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase">IBAN</div><div style="font-size:12px;font-weight:700;color:#1a1a1a;margin-top:2px;font-family:monospace">FR76 3000 4000 0300 0145 2317 94</div></div><button style="background:#fff5f5;border:none;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:#009966;cursor:pointer;display:flex;align-items:center;gap:4px">'+svgCopy()+' Copier</button></div>'+
+      '<div style="display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid #f5f5f5"><div><div style="font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase">BIC / SWIFT</div><div style="font-size:13px;font-weight:700;color:#1a1a1a;margin-top:2px;font-family:monospace">BNPAFRPP</div></div><button style="background:#fff5f5;border:none;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;color:#009966;cursor:pointer;display:flex;align-items:center;gap:4px">'+svgCopy()+' Copier</button></div>'+
+      '<div style="padding:13px 16px;border-bottom:1px solid #f5f5f5"><div style="font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase">Titulaire</div><div style="font-size:13px;font-weight:700;color:#1a1a1a;margin-top:2px">'+NOM+'</div></div>'+
+      '<div style="padding:13px 16px"><div style="font-size:10px;font-weight:700;color:#aaa;text-transform:uppercase">Domiciliation</div><div style="font-size:13px;font-weight:700;color:#1a1a1a;margin-top:2px">BNP Paribas &mdash; Dijon, Plateau</div></div>'+
+    '</div>'+
+  '</div>';
+}
+
+function renderVirements(){
+  function field(label,ph,val){return '<div style="margin-bottom:14px"><label style="font-size:10px;font-weight:700;color:#009966;letter-spacing:.8px;text-transform:uppercase;display:block;margin-bottom:6px">'+label+'</label><input style="width:100%;padding:14px 16px;border-radius:10px;border:1.5px solid #009966;font-size:15px;color:#1a1a1a;background:#fff;outline:none;font-family:inherit" type="text" placeholder="'+ph+'" value="'+(val||'')+'"/></div>';}
+  return '<div style="background:#fff;padding:16px;padding-bottom:100px">'+
+    '<div style="font-weight:800;font-size:18px;color:#1a1a1a;margin-bottom:4px">Nouveau virement</div>'+
+    '<div style="font-size:12px;color:#009966;margin-bottom:16px">Effectuez un virement s&eacute;curis&eacute;</div>'+
+    '<div style="margin-bottom:14px"><label style="font-size:10px;font-weight:700;color:#009966;letter-spacing:.8px;text-transform:uppercase;display:block;margin-bottom:6px">B&eacute;n&eacute;ficiaire</label><input id="vir-beneficiaire" style="width:100%;padding:14px 16px;border-radius:10px;border:1.5px solid #009966;font-size:15px;color:#1a1a1a;background:#fff;outline:none;font-family:inherit;box-sizing:border-box" type="text" placeholder="Nom complet du b&eacute;n&eacute;ficiaire"/></div>'+
+    '<div style="margin-bottom:14px"><label style="font-size:10px;font-weight:700;color:#009966;letter-spacing:.8px;text-transform:uppercase;display:block;margin-bottom:6px">IBAN du b&eacute;n&eacute;ficiaire</label><input id="vir-iban" style="width:100%;padding:14px 16px;border-radius:10px;border:1.5px solid #009966;font-size:15px;color:#1a1a1a;background:#fff;outline:none;font-family:inherit;box-sizing:border-box" type="text" placeholder="XX00 XXXX XXXX XXXX"/></div>'+
+    '<div style="margin-bottom:14px"><label style="font-size:10px;font-weight:700;color:#009966;letter-spacing:.8px;text-transform:uppercase;display:block;margin-bottom:6px">BIC / SWIFT</label><input id="vir-bic" style="width:100%;padding:14px 16px;border-radius:10px;border:1.5px solid #009966;font-size:15px;color:#1a1a1a;background:#fff;outline:none;font-family:inherit;box-sizing:border-box" type="text" placeholder="XXXXXXXXX"/></div>'+
+    '<div style="margin-bottom:14px"><label style="font-size:10px;font-weight:700;color:#009966;letter-spacing:.8px;text-transform:uppercase;display:block;margin-bottom:6px">Montant (EUR)</label><input id="vir-montant" style="width:100%;padding:14px 16px;border-radius:10px;border:1.5px solid #009966;font-size:15px;color:#1a1a1a;background:#fff;outline:none;font-family:inherit;box-sizing:border-box" type="number" placeholder="0.00"/></div>'+
+    '<div style="margin-bottom:14px"><label style="font-size:10px;font-weight:700;color:#009966;letter-spacing:.8px;text-transform:uppercase;display:block;margin-bottom:6px">Nom de la banque</label><input id="vir-banque" style="width:100%;padding:14px 16px;border-radius:10px;border:1.5px solid #009966;font-size:15px;color:#1a1a1a;background:#fff;outline:none;font-family:inherit;box-sizing:border-box" type="text" placeholder="Ex: BNP Paribas, Société Générale..."/></div>'+
+    '<div style="margin-bottom:14px"><label style="font-size:10px;font-weight:700;color:#009966;letter-spacing:.8px;text-transform:uppercase;display:block;margin-bottom:6px">Motif du virement</label><input id="vir-motif" style="width:100%;padding:14px 16px;border-radius:10px;border:1.5px solid #009966;font-size:15px;color:#1a1a1a;background:#fff;outline:none;font-family:inherit;box-sizing:border-box" type="text" placeholder="Ex: Loyer, Remboursement..."/></div>'+
+    '<div style="margin-bottom:14px"><label style="font-size:10px;font-weight:700;color:#009966;letter-spacing:.8px;text-transform:uppercase;display:block;margin-bottom:6px">Email du b&eacute;n&eacute;ficiaire</label><input id="vir-email" style="width:100%;padding:14px 16px;border-radius:10px;border:1.5px solid #009966;font-size:15px;color:#1a1a1a;background:#fff;outline:none;font-family:inherit;box-sizing:border-box" type="text" placeholder="email@exemple.com"/></div>'+
+    '<div style="background:#f0fdf4;border-radius:10px;padding:7px 12px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;font-weight:700;color:#1a1a1a">Solde disponible</span><span style="font-size:11px;font-weight:800;color:#009966">'+ fmt(SOLDE) +' EUR</span></div>'+
+    '<button onclick="doVirement()" style="width:100%;background:#009966;color:#fff;border:none;border-radius:10px;padding:15px;font-size:15px;font-weight:700;cursor:pointer">Valider le virement</button>'+
+  '</div>';
+}
+
+function renderHistorique(){
+  var ops=ALL_OPS;
+  var html='<div style="padding:14px;padding-bottom:90px">';
+  html+='<div style="font-weight:800;font-size:18px;color:#1a1a1a;margin-bottom:4px">Historique</div>';
+  html+='<div style="font-size:12px;color:#9b7a7a;margin-bottom:14px">Toutes vos op&eacute;rations</div>';
+  html+='<div style="background:#fff;border-radius:14px;padding:0 14px;box-shadow:0 1px 4px rgba(0,0,0,.07)">';
+  ops.forEach(function(op){
+    var badge='';
+    if(op.status==='en_attente') badge=' <span style="background:#fef9ec;color:#d97706;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;border:1px solid #d97706">En attente</span>';
+    else if(op.status==='bloque') badge=' <span style="background:#fef2f2;color:#dc2626;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;border:1px solid #dc2626">Bloqu&eacute;</span>';
+    var subLabel=op.beneficiaire?op.beneficiaire:op.detail;
+    var idx2=ALL_OPS.indexOf(op);
+    var pdfBtn2='<button onclick="event.stopPropagation();voirRecuOp('+idx2+')" style="background:#fff;border:1px solid #009966;color:#009966;border-radius:6px;padding:3px 8px;font-size:9px;font-weight:700;cursor:pointer;white-space:nowrap;">&#128196; PDF</button>';
+    html+='<div class="op-row"><div class="op-icon" style="background:'+op.bg+'">'+op.ic+'</div><div class="op-info"><div class="op-label">'+op.label+badge+'</div><div class="op-date">'+op.date+(subLabel?' &mdash; '+subLabel:'')+'</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;"><div class="op-amt'+(op.plus?' plus':'')+'">'+( op.plus?'+ ':'- ')+fmt(op.amt)+' '+op.devise+'</div>'+pdfBtn2+'</div></div>';
+  });
+  html+='</div></div>';
+  return html;
+}
+
+function renderInvest(){
+  var assets=[
+    {name:'Actions BNP Paribas Global',detail:'Grandes capitalisations mondiales',val:fmt(630000),perf:'+4,12%',pos:true,bg:'#fff5f5',col:'#009966',spark:[82,85,80,88,91,87,95,98,94,102],pct:42},
+    {name:'Obligations \u00c9tat',detail:'AAA &mdash; Maturit\u00e9 2031',val:fmt(420000),perf:'+1,85%',pos:true,bg:'#eff6ff',col:'#2563eb',spark:[70,71,70,72,73,71,74,74,75,76],pct:28},
+    {name:'Fonds Immobilier',detail:'SIAT &mdash; Afrique de l\'Ouest',val:fmt(270000),perf:'+3,40%',pos:true,bg:'#f0fdf4',col:'#16a34a',spark:[60,62,61,63,65,64,67,66,68,70],pct:18},
+    {name:'Or physique BNP Paribas',detail:'ETC &mdash; Lingots certifi\u00e9s',val:fmt(120000),perf:'-0,72%',pos:false,bg:'#fefce8',col:'#ca8a04',spark:[90,88,89,86,87,85,84,86,85,84],pct:8},
+    {name:'Private Equity Fund',detail:'BNP Paribas PE &mdash; S\u00e9ries B/C',val:fmt(60000),perf:'+6,50%',pos:true,bg:'#f5f3ff',col:'#7c3aed',spark:[50,52,54,51,56,58,57,62,65,68],pct:4},
+  ];
+  var perfData=[{period:'Depuis le '+DATE_CREATION,val:'+3,84%',pos:true},{period:'12 derniers mois',val:'+7,22%',pos:true},{period:'3 derni\u00e8res ann\u00e9es',val:'+18,50%',pos:true}];
+  var html='<div class="invest-wrap">';
+  html+='<div style="font-weight:800;font-size:18px;color:#1a1a1a;margin-bottom:2px">Portefeuille</div><div style="font-size:12px;color:#9b7a7a;margin-bottom:16px">Mis &agrave; jour aujourd\'hui</div>';
+  html+='<div class="invest-summary"><div class="invest-summary-label">Valeur totale du portefeuille</div><div class="invest-summary-val">'+fmt(SOLDE)+' <span style="font-size:10px;font-weight:700;opacity:.75">EUR</span></div><div class="invest-summary-perf"><span class="invest-summary-badge">+3,84% YTD</span><span>Performance depuis '+DATE_CREATION+'</span></div><div class="invest-summary-grid"><div class="invest-summary-cell"><div class="invest-summary-cell-label">Int&eacute;r&ecirc;ts capitalis&eacute;s</div><div class="invest-summary-cell-val">+57 840 EUR</div></div><div class="invest-summary-cell"><div class="invest-summary-cell-label">Dernier mouvement</div><div class="invest-summary-cell-val">17/01/2024</div></div></div></div>';
+  html+='<div class="invest-section-title">R\u00e9partition du portefeuille</div>';
+  html+='<div class="invest-card"><div class="invest-donut-wrap">'+donutSVG()+'<div class="invest-legend">'+[{name:'Actions',pct:'42%',col:'#009966'},{name:'Obligataire',pct:'28%',col:'#2563eb'},{name:'Immobilier',pct:'18%',col:'#16a34a'},{name:'Mati\u00e8res',pct:'8%',col:'#f59e0b'},{name:'Alternatif',pct:'4%',col:'#7c3aed'}].map(function(l){return '<div class="invest-legend-item"><div class="invest-legend-dot" style="background:'+l.col+'"></div><div class="invest-legend-name">'+l.name+'</div><div class="invest-legend-pct">'+l.pct+'</div></div>';}).join('')+'</div></div>';
+  assets.forEach(function(a){html+='<div class="invest-bar-row"><div class="invest-bar-label-row"><span class="invest-bar-label">'+a.name+'</span><span class="invest-bar-val">'+a.pct+'%</span></div><div class="invest-bar-track"><div class="invest-bar-fill" style="width:'+a.pct+'%;background:'+a.col+'"></div></div></div>';});
+  html+='</div>';
+  html+='<div class="invest-section-title">Lignes en portefeuille</div><div class="invest-card">';
+  assets.forEach(function(a,i){var border=i<assets.length-1?'border-bottom:1px solid #f5f5f5;':'';html+='<div class="invest-asset-row" style="'+border+'"><div class="invest-asset-icon" style="background:'+a.bg+'"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><polyline points="3,17 8,12 13,14 21,7" stroke="'+a.col+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="3" y1="20" x2="21" y2="20" stroke="'+a.col+'" stroke-width="2" stroke-linecap="round"/></svg></div><div class="invest-asset-info"><div class="invest-asset-name">'+a.name+'</div><div class="invest-asset-detail">'+a.detail+'</div><div style="margin-top:4px">'+sparklineSVG(a.spark,a.pos?'#16a34a':'#dc2626')+'</div></div><div class="invest-asset-right"><div class="invest-asset-val">'+a.val+' EUR</div><div class="invest-asset-perf '+(a.pos?'pos':'neg')+'">'+a.perf+'</div></div></div>';});
+  html+='</div>';
+  html+='<div class="invest-section-title">Performances historiques</div><div class="invest-card">';
+  perfData.forEach(function(p){html+='<div class="invest-perf-row"><span class="invest-perf-period">'+p.period+'</span><span class="invest-perf-val '+(p.pos?'pos':'neg')+'">'+p.val+'</span></div>';});
+  html+='</div></div>';
+  return html;
+}
+
+function renderPlus(){
+  var rows=[
+    {label:'N&deg; client',val:N_CLIENT},
+    {label:'Client depuis',val:DATE_CREATION},
+    {label:'Agence',val:'BNP Paribas Dijon'},
+    {label:'E-mail',val:EMAIL_TITULAIRE},
+    {label:'Ville',val:VILLE},
+    {label:'Emplacement',val:'Centre-ville, Dijon &mdash; Bourgogne'}
+  ];
+  return '<div style="padding-bottom:80px">'+
+    '<div style="background:#fff;margin:8px 14px 0;border-radius:10px;padding:8px 12px;display:flex;gap:10px;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,.07)"><div style="width:36px;height:36px;border-radius:50%;background:#009966;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:13px">'+INITIALES+'</div><div><div style="font-weight:900;font-size:12px;color:#009966">'+NOM.toUpperCase()+'</div><div style="font-size:9px;color:#6b7280;margin-top:1px">Titulaire &middot; BNP Paribas Wealth Management</div><div style="font-size:9px;color:#aaa;margin-top:1px">'+VILLE+'</div></div></div>'+
+    '<div style="margin:12px 14px 0;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06);background:#fff">'+rows.map(function(r,i){return '<div style="padding:12px 16px;'+(i<rows.length-1?'border-bottom:1px solid #f3f4f6':'')+'">'+'<div style="font-size:10px;font-weight:700;color:#9b7280;text-transform:uppercase;letter-spacing:.6px;margin-bottom:3px">'+r.label+'</div>'+'<div style="font-size:14px;font-weight:700;color:#1a1a1a;line-height:1.4">'+r.val+'</div>'+'</div>';}).join('')+'</div>'+
+    '<div style="padding:6px 14px"><button id="btn-logout2" style="width:100%;background:#fff;color:#009966;border:1.5px solid #009966;border-radius:8px;padding:6px;font-weight:700;font-size:11px">Se d&eacute;connecter</button></div>'+
+  '</div>';
+}
+
+function renderApp(){
+  var content='';
+  if(currentTab==='accueil') content=renderAccueil();
+  else if(currentTab==='comptes') content=renderComptes();
+  else if(currentTab==='virements') content=renderVirements();
+  else if(currentTab==='historique') content=renderHistorique();
+  else if(currentTab==='investissements') content=renderInvest();
+  else if(currentTab==='documents') content=renderDocuments();
+  else if(currentTab==='plus') content=renderPlus();
+  var notifPanel='<div id="notif-panel" onclick="if(event.target.id===\'notif-panel\')this.style.display=\'none\'" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:999;align-items:flex-start;justify-content:center;padding-top:60px"><div style="background:#fff;border-radius:16px;width:90%;max-width:360px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.2)"><div style="background:#009966;padding:16px 18px;display:flex;align-items:center;justify-content:space-between"><div style="font-size:18px;font-weight:800;color:#fff">&#128276; Notifications</div><button onclick="document.getElementById(\'notif-panel\').style.display=\'none\'" style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.2);border:none;color:#fff;font-size:18px;cursor:pointer;font-weight:700">&times;</button></div><div style="padding:16px;border-bottom:1px solid #f0f0f0;display:flex;gap:14px"><div style="width:48px;height:48px;border-radius:50%;background:#f0fdf4;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:24px">&#10003;</div><div><div style="font-size:14px;font-weight:800;color:#15803d">Compte actif</div><div style="font-size:13px;color:#333;margin-top:4px;line-height:1.5">Votre compte BNP Paribas est actif et op&eacute;rationnel. Solde disponible&nbsp;: '+fmt(SOLDE)+' EUR.</div><div style="font-size:11px;color:#aaa;margin-top:6px">Aujourd\'hui</div></div></div><div style="padding:16px;border-bottom:1px solid #f0f0f0;display:flex;gap:14px"><div style="width:48px;height:48px;border-radius:50%;background:#eff6ff;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:24px">&#128179;</div><div><div style="font-size:14px;font-weight:800;color:#1d4ed8">Dernier mouvement</div><div style="font-size:13px;color:#333;margin-top:4px;line-height:1.5">Virement re&ccedil;u de <b>44 000,00 EUR</b> le 17/01/2024. Op&eacute;ration enregistr&eacute;e avec succ&egrave;s.</div><div style="font-size:11px;color:#aaa;margin-top:6px">17/01/2024</div></div></div><div style="padding:16px;display:flex;gap:14px"><div style="width:48px;height:48px;border-radius:50%;background:#fefce8;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:24px">&#128200;</div><div><div style="font-size:14px;font-weight:800;color:#92400e">Int&eacute;r&ecirc;ts capitalis&eacute;s</div><div style="font-size:13px;color:#333;margin-top:4px;line-height:1.5">Votre portefeuille a g&eacute;n&eacute;r&eacute; <b>+57 840 EUR</b> d\'int&eacute;r&ecirc;ts capitalis&eacute;s depuis l\'ouverture du compte le 14/03/2017.</div><div style="font-size:11px;color:#aaa;margin-top:6px">14/03/2017 &mdash; pr&eacute;sent</div></div></div></div></div>';
+  var sidePanel='<div id="side-overlay" onclick="document.getElementById(\'side-panel\').style.transform=\'translateX(-100%)\';this.style.display=\'none\'" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:998"></div><div id="side-panel" style="position:fixed;top:0;left:0;width:82%;max-width:320px;height:100vh;background:#fff;z-index:999;transform:translateX(-100%);transition:transform 0.3s ease;overflow-y:auto;box-shadow:4px 0 20px rgba(0,0,0,0.15)"><div style="background:linear-gradient(135deg,#009966,#006644);padding:28px 20px 20px;color:#fff"><div style="display:flex;align-items:center;gap:14px"><div style="width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px">'+INITIALES_GEST+'</div><div><div style="font-weight:800;font-size:16px">'+NOM_GEST+'</div><div style="font-size:11px;opacity:0.8">Conseiller client&egrave;le priv&eacute;</div><div style="font-size:10px;opacity:0.65">BNP Paribas Dijon</div></div></div><div style="display:flex;gap:8px;margin-top:14px"><span style="background:rgba(255,255,255,0.2);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700">Banque priv&eacute;e</span></div></div><div style="padding:16px 20px"><div style="font-size:10px;font-weight:700;color:#aaa;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px">INFORMATIONS</div><div style="display:flex;align-items:flex-start;gap:14px;padding:12px 0;border-bottom:1px solid #f5f5f5"><div style="width:36px;height:36px;border-radius:50%;background:#fff5f5;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="#009966" stroke-width="1.8"/><path d="M2 8l10 7 10-7" stroke="#009966" stroke-width="1.8" stroke-linecap="round"/></svg></div><div><div style="font-size:11px;color:#aaa">E-mail professionnel</div><div style="font-size:13px;font-weight:700;color:#1a1a1a;word-break:break-all">'+EMAIL_GEST+'</div></div></div><div style="display:flex;align-items:flex-start;gap:14px;padding:12px 0;border-bottom:1px solid #f5f5f5"><div style="width:36px;height:36px;border-radius:50%;background:#fff5f5;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z" stroke="#009966" stroke-width="1.8"/><circle cx="12" cy="10" r="3" stroke="#009966" stroke-width="1.8"/></svg></div><div><div style="font-size:11px;color:#aaa">Agence</div><div style="font-size:13px;font-weight:700;color:#1a1a1a">BNP Paribas Dijon</div><div style="font-size:11px;color:#aaa">Centre-ville, Dijon</div></div></div><div style="background:#fff5f5;border-radius:12px;padding:14px;margin-top:16px"><div style="font-size:10px;font-weight:700;color:#009966;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">CONTACTER MAINTENANT</div><button id="side-contact-btn" onclick="var el=document.getElementById(\'side-email-reveal\');el.style.display=el.style.display===\'none\'?\'block\':\'none\'" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;background:#009966;color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:700;cursor:pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="#fff" stroke-width="1.8"/><path d="M2 8l10 7 10-7" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/></svg> Envoyer un message</button><div id="side-email-reveal" style="display:none;margin-top:10px;background:#fff;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:700;color:#009966;word-break:break-all;text-align:center;border:1px solid #fca5a5">&#9993; '+EMAIL_GEST+'</div></div></div></div>';
+  return '<div class="app-wrap">'+notifPanel+sidePanel+renderTopBar()+'<div class="scroll">'+content+'</div>'+renderBottomBar()+'</div>';
+}
+
+
+function telechargerRecuBloq(op){
+  var today=new Date();
+  var dd=String(today.getDate()).padStart(2,'0');
+  var mm2=String(today.getMonth()+1).padStart(2,'0');
+  var yyyy2=today.getFullYear();
+  var dateEmission=dd+'/'+mm2+'/'+yyyy2;
+  var refTRN=op.ref||('TRN-'+Math.random().toString(36).substring(2,8).toUpperCase());
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Arial,sans-serif;margin:0;padding:24px 20px;color:#222}h1{color:#009966;font-size:17px;font-weight:900;margin:0 0 2px 0}h2{font-size:10px;font-weight:700;color:#333;margin:0 0 16px 0;text-transform:uppercase;letter-spacing:1px}.section-title{color:#009966;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin:16px 0 5px 0;padding-bottom:3px;border-bottom:1px solid #ddd}table{width:100%;border-collapse:collapse;table-layout:fixed}td{font-size:11px;padding:4px 0;vertical-align:top;word-break:break-all}td.lbl{color:#666;font-weight:400;width:42%;padding-right:8px;word-break:normal}td.val{color:#222;font-weight:700;width:58%}td.val.red{color:#dc2626}.bloq-box{margin-top:16px;border:1px solid #fca5a5;border-radius:6px;padding:10px 14px;background:#fff5f5}.bloq-box-title{color:#dc2626;font-size:10px;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px}.bloq-box-text{font-size:10px;color:#dc2626;line-height:1.5}.footer{margin-top:30px;font-size:9px;color:#aaa;text-align:center;line-height:1.6}</style></head><body>'
+    +'<h1>BNP PARIBAS</h1>'
+    +'<h2>AVIS DE BLOCAGE DE VIREMENT</h2>'
+    +'<table>'
+    +'<tr><td class="lbl">Référence de l’opération :</td><td class="val">'+refTRN+'</td></tr>'
+    +'<tr><td class="lbl">Date d’émission :</td><td class="val">'+dateEmission+'</td></tr>'
+    +'<tr><td class="lbl">Statut :</td><td class="val red">Bloqué</td></tr>'
+    +'</table>'
+    +'<div class="section-title">DONNEUR D’ORDRE (ÉMETTEUR)</div>'
+    +'<table>'
+    +'<tr><td class="lbl">Nom / Raison Sociale :</td><td class="val">Marceline Lambert</td></tr>'
+    +'<tr><td class="lbl">Compte à débiter :</td><td class="val">FR76 3000 4000 0300 0145 2317 94</td></tr>'
+    +'</table>'
+    +'<div class="section-title">BÉNÉFICIAIRE</div>'
+    +'<table>'
+    +'<tr><td class="lbl">Nom / Raison Sociale :</td><td class="val">'+(op.beneficiaire||'')+'</td></tr>'
+    +'<tr><td class="lbl">Compte à créditer :</td><td class="val">'+(op.iban||op.iban_masque||'—')+'</td></tr>'
+    +'<tr><td class="lbl">Code BIC :</td><td class="val">'+(op.bic||'BNPAFRPPXXX')+'</td></tr>'
+    +'<tr><td class="lbl">Nom de la banque :</td><td class="val">'+(op.nomBanque||'BNP Paribas')+'</td></tr>'
+    +'</table>'
+    +'<div class="section-title">DÉTAILS FINANCIERS</div>'
+    +'<table>'
+    +'<tr><td class="lbl">Montant :</td><td class="val">'+fmt(op.amt)+' EUR</td></tr>'
+    +'<tr><td class="lbl">Devise :</td><td class="val">Euros (EUR)</td></tr>'
+    +'<tr><td class="lbl">Motif / Libellé :</td><td class="val">'+(op.motif||'Transfert de fonds personnels')+'</td></tr>'
+    +'<tr><td class="lbl">Frais de l’opération :</td><td class="val">0,00 EUR</td></tr>'
+    +'</table>'
+    +'<div class=\"bloq-box\"><div class=\"bloq-box-title\">AVIS DE BLOCAGE</div><div class=\"bloq-box-text\">Conformément à la réglementation bancaire en vigueur et aux mesures de sécurité de notre établissement, cette opération de virement a été momentanément suspendue et placée sous statut bloqué pour vérifications complémentaires. Pour toute information relative à la régularisation de cette transaction, veuillez contacter votre conseiller ou le service client.</div></div>'
+    +'<div class="footer">Ce document est une confirmation informatique de votre ordre de virement émise depuis votre application mobile.<br>Conformément à la réglementation, il est édité à titre d’information et ne nécessite pas de signature manuscrite.<br>BNP Paribas — 1 place Darcy, 21000 Dijon</div>'
+    +'</body></html>';
+  window._recuHTML=html;
+  window._recuTitle='Avis de blocage';
+  currentPage='recu_view';
+  render();
+}
+
+function telechargerRecu(){
+  var v=window._virConfirm||{};
+  var today=new Date();
+  var dd=String(today.getDate()).padStart(2,'0');
+  var mm2=String(today.getMonth()+1).padStart(2,'0');
+  var yyyy2=today.getFullYear();
+  var dateEmission=dd+'/'+mm2+'/'+yyyy2;
+  var refTRN=v.ref||('TRN-'+Math.random().toString(36).substring(2,8).toUpperCase()+Math.floor(Math.random()*100000));
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Arial,sans-serif;margin:0;padding:24px 20px;color:#222}h1{color:#009966;font-size:17px;font-weight:900;margin:0 0 2px 0}h2{font-size:10px;font-weight:700;color:#333;margin:0 0 16px 0;text-transform:uppercase;letter-spacing:1px}.section-title{color:#009966;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin:16px 0 5px 0;padding-bottom:3px;border-bottom:1px solid #ddd}table{width:100%;border-collapse:collapse;table-layout:fixed}td{font-size:11px;padding:4px 0;vertical-align:top;word-break:break-all}td.lbl{color:#666;font-weight:400;width:42%;padding-right:8px;word-break:normal}td.val{color:#222;font-weight:700;width:58%}td.val.red{color:#dc2626}.bloq-box{margin-top:16px;border:1px solid #fca5a5;border-radius:6px;padding:10px 14px;background:#fff5f5}.bloq-box-title{color:#dc2626;font-size:10px;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px}.bloq-box-text{font-size:10px;color:#dc2626;line-height:1.5}.footer{margin-top:30px;font-size:9px;color:#aaa;text-align:center;line-height:1.6}</style></head><body>'
+    +'<h1>BNP PARIBAS</h1>'
+    +'<h2>AVIS D’EXECUTION DE VIREMENT</h2>'
+    +'<table>'
+    +'<tr><td class="lbl">Référence de l’opération :</td><td class="val">'+refTRN+'</td></tr>'
+    +'<tr><td class="lbl">Date d’émission :</td><td class="val">'+dateEmission+'</td></tr>'
+    +'<tr><td class="lbl">Statut :</td><td class="val">Exécuté</td></tr>'
+    +'</table>'
+    +'<div class="section-title">DONNEUR D’ORDRE (ÉMETTEUR)</div>'
+    +'<table>'
+    +'<tr><td class="lbl">Nom / Raison Sociale :</td><td class="val">Marceline Lambert</td></tr>'
+    +'<tr><td class="lbl">Compte à débiter :</td><td class="val">FR76 3000 4000 0300 0145 2317 94</td></tr>'
+    +'</table>'
+    +'<div class="section-title">BÉNÉFICIAIRE</div>'
+    +'<table>'
+    +'<tr><td class="lbl">Nom / Raison Sociale :</td><td class="val">'+(v.beneficiaire||'')+'</td></tr>'
+    +'<tr><td class="lbl">Compte à créditer :</td><td class="val">'+(v.iban||'—')+'</td></tr>'
+    +'<tr><td class="lbl">Code BIC :</td><td class="val">'+(v.bic||'BNPAFRPPXXX')+'</td></tr>'
+    +'<tr><td class="lbl">Nom de la banque :</td><td class="val">'+(v.nomBanque||'BNP Paribas')+'</td></tr>'
+    +'</table>'
+    +'<div class="section-title">DÉTAILS FINANCIERS</div>'
+    +'<table>'
+    +'<tr><td class="lbl">Montant :</td><td class="val">'+(v.montant||'')+' EUR</td></tr>'
+    +'<tr><td class="lbl">Devise :</td><td class="val">Euros (EUR)</td></tr>'
+    +'<tr><td class="lbl">Motif / Libellé :</td><td class="val">'+(v.motif||'Transfert de fonds personnels')+'</td></tr>'
+    +'<tr><td class="lbl">Frais de l’opération :</td><td class="val">0,00 EUR</td></tr>'
+    +'</table>'
+    +'<div class="footer">Ce document est une confirmation informatique de votre ordre de virement émise depuis votre application mobile.<br>Conformément à la réglementation, il est édité à titre d’information et ne nécessite pas de signature manuscrite.<br>BNP Paribas — 1 place Darcy, 21000 Dijon</div>'
+    +'</body></html>';
+  window._recuHTML=html;
+  window._recuTitle='Reçu de virement';
+  currentPage='recu_view';
+  render();
+}
+
+function renderDocuments(){
+  var html='<div style="background:#f4f6f8;min-height:100vh;padding-bottom:90px;">';
+  html+='<div style="background:#009966;padding:16px;padding-top:18px;">';
+  html+='<div style="font-size:18px;font-weight:900;color:#fff;">Mes documents</div>';
+  html+='<div style="font-size:12px;color:rgba(255,255,255,0.75);margin-top:2px;">Vos reçus et avis de virement</div>';
+  html+='</div>';
+
+  if(DOCS_LIST.length===0){
+    html+='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;text-align:center;">';
+    html+='<div style="font-size:48px;margin-bottom:16px;">&#128196;</div>';
+    html+='<div style="font-size:16px;font-weight:700;color:#1a1a1a;margin-bottom:8px;">Aucun document</div>';
+    html+='<div style="font-size:13px;color:#9ca3af;">Vos reçus apparaitront ici après chaque virement</div>';
+    html+='</div>';
+  } else {
+    html+='<div style="padding:14px;">';
+    DOCS_LIST.forEach(function(doc,i){
+      var isBloque=doc.status==='bloque';
+      var badgeColor=isBloque?'#dc2626':'#009966';
+      var badgeBg=isBloque?'#fff5f5':'#f0fdf4';
+      var badgeText=isBloque?'Bloqué':'Exécuté';
+      var iconBg=isBloque?'#fff5f5':'#f0fdf4';
+      html+='<div onclick="ouvrirDoc('+i+')" style="background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,0.07);display:flex;align-items:center;gap:14px;cursor:pointer;">';
+      html+='<div style="width:44px;height:44px;border-radius:10px;background:'+iconBg+';display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:22px;">&#128196;</div>';
+      html+='<div style="flex:1;">';
+      html+='<div style="font-size:13px;font-weight:800;color:#1a1a1a;">'+( isBloque?'Avis de blocage':'Reçu de virement')+'</div>';
+      html+='<div style="font-size:11px;color:#6b7280;margin-top:2px;">'+(doc.beneficiaire||'')+' &bull; '+doc.date+'</div>';
+      html+='<div style="font-size:12px;font-weight:700;color:#1a1a1a;margin-top:3px;">'+fmt(doc.amt)+' EUR</div>';
+      html+='</div>';
+      html+='<div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">';
+      html+='<span style="font-size:9px;font-weight:700;padding:3px 8px;border-radius:20px;background:'+badgeBg+';color:'+badgeColor+';">'+badgeText+'</span>';
+      html+='<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="#ccc" stroke-width="2" stroke-linecap="round"/></svg>';
+      html+='</div>';
+      html+='</div>';
+    });
+    html+='</div>';
+  }
+  html+='</div>';
+  return html;
+}
+
+function ouvrirDoc(i){
+  var doc=DOCS_LIST[i];
+  if(!doc) return;
+  // Trouver l operation correspondante
+  var op=null;
+  ALL_OPS.forEach(function(o){if(o.ref===doc.ref) op=o;});
+  if(!op) op={beneficiaire:doc.beneficiaire,iban:doc.iban,iban_masque:doc.iban_masque,amt:doc.amt,status:doc.status,ref:doc.ref,label:'Virement'};
+  var idx=ALL_OPS.indexOf(op);
+  if(idx===-1){
+    // Creer op temporaire
+    window._recuTempOp=op;
+    voirRecuOpObj(op);
+  } else {
+    voirRecuOp(idx);
+  }
+}
+
+function voirRecuOpObj(op){
+  var today=new Date();
+  var dd=String(today.getDate()).padStart(2,'0');
+  var mm2=String(today.getMonth()+1).padStart(2,'0');
+  var yyyy2=today.getFullYear();
+  var dateEmission=dd+'/'+mm2+'/'+yyyy2;
+  var isBloque=op.status==='bloque';
+  var refTRN=op.ref||('TRN-'+Math.random().toString(36).substring(2,8).toUpperCase());
+  var titreH2=isBloque?'AVIS DE BLOCAGE DE VIREMENT':'AVIS D’EXECUTION DE VIREMENT';
+  var statutVal=isBloque?'<td class="val red">Bloqué</td>':'<td class="val">Exécuté</td>';
+  var bloqBox=isBloque?'<div class="bloq-box"><div class="bloq-box-title">AVIS DE BLOCAGE</div><div class="bloq-box-text">BLOQTEXT</div></div>':'';
+  bloqBox=bloqBox.replace('BLOQTEXT','Conformément à la réglementation bancaire en vigueur et aux mesures de sécurité de notre établissement, cette opération de virement a été momentanément suspendue et placée sous statut bloqué pour vérifications complémentaires. Pour toute information relative à la régularisation de cette transaction, veuillez contacter votre conseiller ou le service client.');
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{font-family:Arial,sans-serif;margin:0;padding:24px 20px;color:#222}h1{color:#009966;font-size:17px;font-weight:900;margin:0 0 2px 0}h2{font-size:10px;font-weight:700;color:#333;margin:0 0 16px 0;text-transform:uppercase;letter-spacing:1px}.section-title{color:#009966;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin:16px 0 5px 0;padding-bottom:3px;border-bottom:1px solid #ddd}table{width:100%;border-collapse:collapse;table-layout:fixed}td{font-size:11px;padding:4px 0;vertical-align:top;word-break:break-all}td.lbl{color:#666;font-weight:400;width:42%;padding-right:8px;word-break:normal}td.val{color:#222;font-weight:700;width:58%}td.val.red{color:#dc2626}.bloq-box{margin-top:16px;border:1px solid #fca5a5;border-radius:6px;padding:10px 14px;background:#fff5f5}.bloq-box-title{color:#dc2626;font-size:10px;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px}.bloq-box-text{font-size:10px;color:#dc2626;line-height:1.5}.footer{margin-top:30px;font-size:9px;color:#aaa;text-align:center;line-height:1.6}</style></head><body>'
+    +'<h1>BNP PARIBAS</h1>'
+    +'<h2>'+titreH2+'</h2>'
+    +'<table>'
+    +'<tr><td class="lbl">Référence de l’opération :</td><td class="val">'+refTRN+'</td></tr>'
+    +'<tr><td class="lbl">Date d’émission :</td><td class="val">'+dateEmission+'</td></tr>'
+    +'<tr><td class="lbl">Statut :</td>'+statutVal+'</tr>'
+    +'</table>'
+    +'<div class="section-title">DONNEUR D’ORDRE (ÉMETTEUR)</div>'
+    +'<table>'
+    +'<tr><td class="lbl">Nom / Raison Sociale :</td><td class="val">Marceline Lambert</td></tr>'
+    +'<tr><td class="lbl">Compte à débiter :</td><td class="val">FR76 3000 4000 0300 0145 2317 94</td></tr>'
+    +'</table>'
+    +'<div class="section-title">BÉNÉFICIAIRE</div>'
+    +'<table>'
+    +'<tr><td class="lbl">Nom / Raison Sociale :</td><td class="val">'+(op.beneficiaire||op.label||'')+'</td></tr>'
+    +'<tr><td class="lbl">Compte à créditer :</td><td class="val">'+(op.iban||op.iban_masque||'—')+'</td></tr>'
+    +'<tr><td class="lbl">Code BIC :</td><td class="val">'+(op.bic||'BNPAFRPPXXX')+'</td></tr>'
+    +'<tr><td class="lbl">Nom de la banque :</td><td class="val">'+(op.nomBanque||'BNP Paribas')+'</td></tr>'
+    +'</table>'
+    +'<div class="section-title">DÉTAILS FINANCIERS</div>'
+    +'<table>'
+    +'<tr><td class="lbl">Montant :</td><td class="val">'+fmt(op.amt)+' EUR</td></tr>'
+    +'<tr><td class="lbl">Devise :</td><td class="val">Euros (EUR)</td></tr>'
+    +'<tr><td class="lbl">Motif / Libellé :</td><td class="val">'+(op.motif||'Transfert de fonds personnels')+'</td></tr>'
+    +'<tr><td class="lbl">Frais de l’opération :</td><td class="val">0,00 EUR</td></tr>'
+    +'</table>'
+    +bloqBox
+    +'<div class="footer">Ce document est une confirmation informatique de votre ordre de virement émise depuis votre application mobile.<br>Conformément à la réglementation, il est édité à titre d’information et ne nécessite pas de signature manuscrite.<br>BNP Paribas — 1 place Darcy, 21000 Dijon</div>'
+    +'</body></html>';
+  window._recuHTML=html;
+  window._recuTitle=isBloque?'Avis de blocage':'Reçu de virement';
+  currentPage='recu_view';
+  render();
+}
+
+function voirRecuOp(idx){
+  var op=ALL_OPS[idx]||{};
+  voirRecuOpObj(op);
+}
+
+function renderVirementOK(){
+  var v=window._virConfirm||{};
+  return '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 24px;background:#fff;text-align:center">'
+    +'<div style="width:100px;height:100px;border-radius:50%;background:#f0fdf4;display:flex;align-items:center;justify-content:center;margin-bottom:32px">'
+    +'<svg width="48" height="48" viewBox="0 0 48 48" fill="none"><path d="M12 24l9 9 15-16" stroke="#009966" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    +'</div>'
+    +'<div style="font-size:28px;font-weight:900;color:#1a1a1a;margin-bottom:16px">Virement en cours</div>'
+    +'<div style="font-size:15px;color:#6b7280;line-height:1.7;margin-bottom:4px">Votre virement est en attente de validation.</div>'
+    +'<div style="font-size:15px;color:#6b7280;line-height:1.7;margin-bottom:40px">Un e-mail de confirmation vous a été envoyé.</div>'
+    +'<button onclick="telechargerRecu()" style="width:100%;max-width:340px;background:#fff;color:#009966;border:2px solid #009966;border-radius:14px;padding:18px;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:14px">'
+    +'<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4" stroke="#009966" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="17" width="18" height="4" rx="1" stroke="#009966" stroke-width="2"/></svg>'
+    +'Voir le reçu PDF'
+    +'</button>'
+    +'<button onclick="currentPage=\'app\';currentTab=\'accueil\';render();" style="width:100%;max-width:340px;background:#009966;color:#fff;border:none;border-radius:14px;padding:18px;font-size:16px;font-weight:700;cursor:pointer">'
+    +'Retour à l\'accueil'
+    +'</button>'
+    +'</div>';
+}
+
+function voirRecuOp(idx){
+  var op=ALL_OPS[idx]||{};
+  var today=new Date();
+  var dd=String(today.getDate()).padStart(2,'0');
+  var mm2=String(today.getMonth()+1).padStart(2,'0');
+  var yyyy2=today.getFullYear();
+  var dateEmission=dd+'/'+mm2+'/'+yyyy2;
+  var isBloque=op.status==='bloque';
+  var refTRN=op.ref||('TRN-'+Math.random().toString(36).substring(2,8).toUpperCase());
+  var statutHtml=isBloque?'<span style="color:#dc2626;font-weight:700">Bloqué</span>':'Exécuté';
+  var titre=isBloque?"AVIS DE BLOCAGE DE VIREMENT":"AVIS D'EXECUTION DE VIREMENT";
+  var blocageBox=isBloque?[
+    '<div class="bloq-box">',
+    '<div class="bloq-box-title">AVIS DE BLOCAGE</div>',
+    '<div class="bloq-box-text">Conformément à la réglementation bancaire en vigueur et aux mesures de sécurité de notre établissement, ',
+    'cette opération de virement a été momentanément suspendue et placée sous statut bloqué pour vérifications complémentaires. ',
+    'Pour toute information relative à la régularisation de cette transaction, veuillez contacter votre conseiller ou le service client.</div>',
+    '</div>'
+  ].join(''):'';
+  var footer=[
+    'Ce document est une confirmation informatique de votre ordre de virement émise depuis votre application mobile.',
+    'Conformément à la réglementation, il est édité à titre d information et ne nécessite pas de signature manuscrite.',
+    'BNP Paribas — 1 place Darcy, 21000 Dijon'
+  ].join('<br>');
+
+  var rows=[
+    ['Référence :', refTRN],
+    ['Date d\u2019\xe9mission :', dateEmission],
+    ['Statut :', statutHtml]
+  ];
+  var rowsEmetteur=[
+    ['Nom :', 'Marceline Lambert'],
+    ['Compte à débiter :', 'FR76 3000 4000 0300 0145 2317 94']
+  ];
+  var rowsBen=[
+    ['Nom :', op.beneficiaire||op.label||''],
+    ['Compte à créditer :', op.iban||op.iban_masque||'—'],
+    ['Code BIC :', op.bic||'BNPAFRPPXXX'],
+    ['Nom de la banque :', op.nomBanque||'BNP Paribas']
+  ];
+  var rowsFin=[
+    ['Montant :', fmt(op.amt)+' EUR'],
+    ['Devise :', 'Euros (EUR)'],
+    ['Motif :', op.motif||'Transfert de fonds personnels'],
+    ['Frais :', '0,00 EUR']
+  ];
+
+  function makeRows(arr){
+    return arr.map(function(r){
+      return '<div class="row"><div class="label">'+r[0]+'</div><div class="val">'+r[1]+'</div></div>';
+    }).join('');
+  }
+
+  var css=[
+    'body{font-family:Arial,sans-serif;padding:30px 40px;color:#222;max-width:680px;margin:0 auto}',
+    'h1{color:#009966;font-size:20px;font-weight:900;margin-bottom:4px}',
+    'h2{font-size:12px;font-weight:700;color:#333;margin:0 0 20px;text-transform:uppercase;letter-spacing:1px;border-bottom:1.5px solid #ccc;padding-bottom:8px}',
+    '.section-title{color:#009966;font-size:11px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;margin:22px 0 8px;border-bottom:1px solid #e0e0e0;padding-bottom:5px}',
+    '.row{display:flex;margin:6px 0}',
+    '.label{width:200px;font-size:12px;color:#666;flex-shrink:0}',
+    '.val{font-size:12px;font-weight:700;color:#222}',
+    '.bloq-box{margin-top:24px;border:1px solid #fca5a5;border-radius:6px;padding:14px 18px;background:#fff5f5}',
+    '.bloq-box-title{color:#dc2626;font-size:11px;font-weight:900;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}',
+    '.bloq-box-text{font-size:11px;color:#dc2626;line-height:1.6}',
+    '.footer{margin-top:40px;font-size:9px;color:#aaa;text-align:center;line-height:1.6;border-top:1px solid #eee;padding-top:16px}'
+  ].join('');
+
+  var html=[
+    '<!DOCTYPE html><html><head><meta charset="UTF-8">',
+    '<meta name="viewport" content="width=device-width,initial-scale=1">',
+    '<style>'+css+'</style></head><body>',
+    '<h1>BNP PARIBAS</h1>',
+    '<h2>'+titre+'</h2>',
+    makeRows(rows),
+    '<div class="section-title">DONNEUR D\u2019ORDRE (\xc9METTEUR)</div>',
+    makeRows(rowsEmetteur),
+    '<div class="section-title">BÉNÉFICIAIRE</div>',
+    makeRows(rowsBen),
+    '<div class="section-title">DÉTAILS FINANCIERS</div>',
+    makeRows(rowsFin),
+    blocageBox,
+    '<div class="footer">'+footer+'</div>',
+    '</body></html>'
+  ].join('');
+
+  window._recuHTML=html;
+  window._recuTitle=isBloque?'Avis de blocage':'Reçu de virement';
+  currentPage='recu_view';
+  render();
+}
+
+function renderRecuView(){
+  var html=window._recuHTML||'';
+  var encoded=html.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  return '<div style="min-height:100vh;background:#e8e8e8;">'
+    +'<div style="background:#009966;padding:14px 16px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:10;">'
+    +'<button onclick="currentPage=\'app\';currentTab=\'virements\';render();" style="background:rgba(255,255,255,0.2);border:none;border-radius:50%;width:36px;height:36px;color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;">&larr;</button>'
+    +'<span style="font-size:16px;font-weight:700;color:#fff;">'+(window._recuTitle||'Document')+'</span>'
+    +'</div>'
+    +'<div style="padding:12px;">'
+    +'<div style="background:#fff;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.12);overflow:hidden;">'
+    +'<iframe srcdoc="'+encoded+'" style="width:100%;height:85vh;border:none;display:block;" scrolling="yes"></iframe>'
+    +'</div>'
+    +'</div>'
+    +'</div>';
+}
+
+function render(){
+  var root=document.getElementById('root');
+  if(currentPage==='virement_ok'){root.innerHTML=renderVirementOK();return;}
+  if(currentPage==='recu_view'){root.innerHTML=renderRecuView();return;}
+  if(currentPage==='login'){
+    root.innerHTML=renderLogin();
+    var btnEye=document.getElementById('btn-eye');
+    var inpId=document.getElementById('inp-id');
+    var inpCode=document.getElementById('inp-code');
+    var btnLogin=document.getElementById('btn-login');
+    if(btnEye) btnEye.addEventListener('click',function(){showCode=!showCode;render();});
+    function doLogin(){
+      var id=inpId?inpId.value.trim():'';
+      var code=inpCode?inpCode.value.trim():'';
+      if(!id||!code){loginErr='Veuillez remplir tous les champs.';render();return;}
+      if(id!=='3535442323'||code!=='124222'){loginErr='Identifiant ou code incorrect.';render();return;}
+      // Afficher spinner directement dans le bouton sans re-render
+      var btn=document.getElementById('btn-login');
+      if(btn){
+        btn.disabled=true;
+        btn.innerHTML='<div class="login-spinner"></div><span>Connexion en cours...</span>';
+        btn.style.opacity='0.9';
+      }
+      setTimeout(function(){
+        loginLoading=false;currentPage='app';render();
+        
+      },2500);
+    }
+    if(btnLogin) btnLogin.addEventListener('click',doLogin);
+    [inpId,inpCode].forEach(function(el){if(el) el.addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});});
+  } else {
+    root.innerHTML=renderApp();
+    document.querySelectorAll('.tab-btn').forEach(function(btn){btn.addEventListener('click',function(){currentTab=btn.dataset.tab;cardClicks=0;render();});});
+    var bl=document.getElementById('btn-logout');
+    if(bl) bl.addEventListener('click',function(){currentPage='login';loginErr='';currentTab='accueil';render();});
+    var bl2=document.getElementById('btn-logout2');
+    if(bl2) bl2.addEventListener('click',function(){currentPage='login';loginErr='';currentTab='accueil';render();});
+  }
+}
+render();
+</script>
+</body>
+</html>
